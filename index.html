@@ -194,6 +194,8 @@
                         <li class="script-item active" data-script="yt-downloader">yt_downloader.py</li>
                         <li class="script-item" data-script="pdf-converter">pdf_converter.py</li>
                         <li class="script-item" data-script="data-scraper">auto_scraper.py</li>
+                        <li class="script-item" data-script="monkeytype">monkytype.py</li>
+                        <li class="script-item" data-script="password-gen">password_generator.py</li>
                     </ul>
                 </div>
                 
@@ -215,6 +217,81 @@
                             <button id="run-btn">Run Script</button>
                         </div>
                         <div id="dynamic-output"></div>
+                    </div>
+                    
+                    <div class="gui-body" id="gui-output" style="display: none;">
+                        <div class="gui-tabs">
+                            <button class="gui-tab active" data-tab="password-tab">Password</button>
+                            <button class="gui-tab" data-tab="passphrase-tab">Passphrase</button>
+                        </div>
+                        
+                        <div class="gui-tab-content active" id="password-tab">
+                            <div class="result-area">
+                                <input type="text" id="pg-result" class="gui-input read-only" readonly>
+                                <button class="gui-btn primary" id="pg-refresh">Refresh</button>
+                                <button class="gui-btn" id="pg-copy">Copy</button>
+                            </div>
+                            
+                            <div class="gui-options">
+                                <h4 class="options-title">Options</h4>
+                                
+                                <div class="option-row">
+                                    <label id="pg-length-label">Length: 14</label>
+                                    <input type="range" id="pg-length" min="5" max="128" value="14" class="gui-slider">
+                                </div>
+                                
+                                <div class="option-group">
+                                    <label>Include</label>
+                                    <div class="checkbox-row">
+                                        <label class="checkbox-label"><input type="checkbox" id="pg-upper" checked> A-Z</label>
+                                        <label class="checkbox-label"><input type="checkbox" id="pg-lower" checked> a-z</label>
+                                        <label class="checkbox-label"><input type="checkbox" id="pg-nums" checked> 0-9</label>
+                                        <label class="checkbox-label"><input type="checkbox" id="pg-syms"> !@#$%^&*</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="option-row dual">
+                                    <div class="dual-item">
+                                        <label>Min numbers:</label>
+                                        <input type="number" id="pg-min-nums" class="gui-input small" value="1" min="0">
+                                    </div>
+                                    <div class="dual-item">
+                                        <label>Min special:</label>
+                                        <input type="number" id="pg-min-syms" class="gui-input small" value="0" min="0">
+                                    </div>
+                                </div>
+                                
+                                <div class="option-row">
+                                    <label class="checkbox-label"><input type="checkbox" id="pg-ambig"> Avoid ambiguous characters (l, 1, I, O, 0)</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="gui-tab-content" id="passphrase-tab">
+                            <div class="result-area">
+                                <input type="text" id="pp-result" class="gui-input read-only" readonly>
+                                <button class="gui-btn primary" id="pp-refresh">Refresh</button>
+                                <button class="gui-btn" id="pp-copy">Copy</button>
+                            </div>
+                            
+                            <div class="gui-options">
+                                <h4 class="options-title">Options</h4>
+                                
+                                <div class="option-row">
+                                    <label id="pp-words-label">Number of words: 4</label>
+                                    <input type="range" id="pp-words" min="3" max="12" value="4" class="gui-slider">
+                                </div>
+                                
+                                <div class="option-row split">
+                                    <label>Separator:</label>
+                                    <input type="text" id="pp-sep" class="gui-input small" value="-">
+                                </div>
+                                
+                                <div class="option-row">
+                                    <label class="checkbox-label"><input type="checkbox" id="pp-cap"> Capitalize words</label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -566,3 +566,158 @@ ul, ol {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* =========================================
+   GUI Styles (Password Generator)
+========================================= */
+.gui-body {
+  background-color: #f0f2f5;
+  color: #333;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.gui-tabs {
+  display: flex;
+  background-color: #e9ecef;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.gui-tab {
+  padding: 10px 25px;
+  background: transparent;
+  border: none;
+  border-right: 1px solid #dee2e6;
+  color: #495057;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.gui-tab.active {
+  background-color: #f8f9fa;
+  color: #0d6efd;
+  font-weight: bold;
+  border-bottom: 2px solid #0d6efd;
+}
+
+.gui-tab-content {
+  display: none;
+  padding: 20px;
+  background-color: #f8f9fa;
+  flex-grow: 1;
+}
+
+.gui-tab-content.active {
+  display: block;
+}
+
+.result-area {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.gui-input {
+  border: 1px solid #dcdcdc;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+.gui-input.read-only {
+  background-color: #fcfcfc;
+  flex-grow: 1;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 16px;
+}
+
+.gui-input.small {
+  width: 60px;
+}
+
+.gui-btn {
+  background-color: #e9ecef;
+  color: #333;
+  border: 1px solid #dcdcdc;
+  border-radius: 6px;
+  padding: 8px 15px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.gui-btn:hover {
+  background-color: #dee2e6;
+}
+
+.gui-btn.primary {
+  background-color: #0d6efd;
+  color: white;
+  border: none;
+}
+
+.gui-btn.primary:hover {
+  background-color: #0b5ed7;
+}
+
+.gui-options {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  background-color: white;
+}
+
+.options-title {
+  margin-top: -30px;
+  background: white;
+  display: inline-block;
+  padding: 0 5px;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.option-row {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.option-row.split {
+  justify-content: flex-start;
+}
+
+.option-row.dual {
+  display: flex;
+  gap: 30px;
+}
+
+.dual-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gui-slider {
+  flex-grow: 1;
+}
+
+.option-group {
+  margin-bottom: 15px;
+}
+
+.checkbox-row {
+  display: flex;
+  gap: 15px;
+  margin-top: 5px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}

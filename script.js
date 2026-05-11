@@ -112,11 +112,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="output-line success-msg">[✓] Data scraped and saved to scraped_data.csv (243 rows).</div>
                 `;
             }
+        },
+        'monkeytype': {
+            cmd: 'python3 monkytype.py',
+            promptReq: 'Press Enter to start typing bot:',
+            placeholder: '(No input required)',
+            simulate: (input) => {
+                return `
+                    <div class="output-line system-msg">Initializing Playwright...</div>
+                    <div class="output-line system-msg">Launching chromium browser...</div>
+                    <div class="output-line system-msg">Navigating to https://monkeytype.com/...</div>
+                    <div class="output-line system-msg">Waiting 5 seconds for page to load and cookies to be accepted...</div>
+                    <div class="output-line system-msg">Starting the typing automation!</div>
+                    <div class="output-line system-msg">Extracting words and typing...</div>
+                    <div class="output-line success-msg">[✓] Test finished! Look at that speed.</div>
+                `;
+            }
         }
     };
 
     const scriptItems = document.querySelectorAll('.script-item');
     const terminalOutput = document.getElementById('terminal-output');
+    const guiOutput = document.getElementById('gui-output');
     
     // Function to render the initial state of a script
     const renderTerminal = (scriptKey) => {
@@ -174,12 +191,188 @@ document.addEventListener('DOMContentLoaded', () => {
             scriptItems.forEach(i => i.classList.remove('active'));
             item.classList.add('active');
             
-            // Render corresponding terminal UI
             const scriptKey = item.getAttribute('data-script');
-            renderTerminal(scriptKey);
+            
+            if (scriptKey === 'password-gen') {
+                terminalOutput.style.display = 'none';
+                guiOutput.style.display = 'flex';
+                document.querySelector('.terminal-title').innerText = 'Password Generator App';
+            } else {
+                terminalOutput.style.display = 'block';
+                guiOutput.style.display = 'none';
+                document.querySelector('.terminal-title').innerText = 'user@dsb-macbook: ~/automation-scripts';
+                // Render corresponding terminal UI
+                renderTerminal(scriptKey);
+            }
         });
     });
 
     // Initialize first script
     renderTerminal('yt-downloader');
+
+    // ==========================================
+    // Password Generator GUI Logic
+    // ==========================================
+    
+    // GUI Tabs Logic
+    const guiTabs = document.querySelectorAll('.gui-tab');
+    const guiTabContents = document.querySelectorAll('.gui-tab-content');
+    
+    guiTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            guiTabs.forEach(t => t.classList.remove('active'));
+            guiTabContents.forEach(c => c.classList.remove('active'));
+            
+            tab.classList.add('active');
+            document.getElementById(tab.getAttribute('data-tab')).classList.add('active');
+        });
+    });
+
+    // Password Elements
+    const pgResult = document.getElementById('pg-result');
+    const pgLength = document.getElementById('pg-length');
+    const pgLengthLabel = document.getElementById('pg-length-label');
+    const pgUpper = document.getElementById('pg-upper');
+    const pgLower = document.getElementById('pg-lower');
+    const pgNums = document.getElementById('pg-nums');
+    const pgSyms = document.getElementById('pg-syms');
+    const pgMinNums = document.getElementById('pg-min-nums');
+    const pgMinSyms = document.getElementById('pg-min-syms');
+    const pgAmbig = document.getElementById('pg-ambig');
+    const pgRefresh = document.getElementById('pg-refresh');
+    const pgCopy = document.getElementById('pg-copy');
+
+    // Passphrase Elements
+    const ppResult = document.getElementById('pp-result');
+    const ppWords = document.getElementById('pp-words');
+    const ppWordsLabel = document.getElementById('pp-words-label');
+    const ppSep = document.getElementById('pp-sep');
+    const ppCap = document.getElementById('pp-cap');
+    const ppRefresh = document.getElementById('pp-refresh');
+    const ppCopy = document.getElementById('pp-copy');
+
+    const wordlist = [
+        "apple", "brave", "crane", "dance", "eagle", "flame", "grape", "house", "image", "juice",
+        "knife", "lemon", "mouse", "night", "ocean", "peace", "queen", "river", "snake", "train",
+        "uncle", "voice", "water", "x-ray", "yacht", "zebra", "cloud", "storm", "light", "shadow",
+        "forest", "mountain", "valley", "spring", "summer", "autumn", "winter", "silver", "gold"
+    ];
+
+    function generatePassword() {
+        const length = parseInt(pgLength.value);
+        const useUpper = pgUpper.checked;
+        const useLower = pgLower.checked;
+        const useNums = pgNums.checked;
+        const useSyms = pgSyms.checked;
+        const avoidAmbig = pgAmbig.checked;
+        
+        const minNums = parseInt(pgMinNums.value) || 0;
+        const minSyms = parseInt(pgMinSyms.value) || 0;
+
+        let upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        let lowerChars = "abcdefghijklmnopqrstuvwxyz";
+        let numChars = "0123456789";
+        let symChars = "!@#$%^&*";
+        const ambiguousChars = "l1IO0";
+
+        if (avoidAmbig) {
+            upperChars = upperChars.split('').filter(c => !ambiguousChars.includes(c)).join('');
+            lowerChars = lowerChars.split('').filter(c => !ambiguousChars.includes(c)).join('');
+            numChars = numChars.split('').filter(c => !ambiguousChars.includes(c)).join('');
+        }
+
+        let pool = "";
+        if (useUpper) pool += upperChars;
+        if (useLower) pool += lowerChars;
+        if (useNums) pool += numChars;
+        if (useSyms) pool += symChars;
+
+        if (!pool) {
+            pgResult.value = "Select at least one character set.";
+            return;
+        }
+
+        let passwordChars = [];
+        
+        if (useNums && minNums > 0) {
+            for (let i = 0; i < Math.min(minNums, length); i++) {
+                passwordChars.push(numChars[Math.floor(Math.random() * numChars.length)]);
+            }
+        }
+        
+        if (useSyms && minSyms > 0) {
+            for (let i = 0; i < Math.min(minSyms, length - passwordChars.length); i++) {
+                passwordChars.push(symChars[Math.floor(Math.random() * symChars.length)]);
+            }
+        }
+
+        const remainingLength = length - passwordChars.length;
+        for (let i = 0; i < remainingLength; i++) {
+            passwordChars.push(pool[Math.floor(Math.random() * pool.length)]);
+        }
+
+        // Shuffle
+        for (let i = passwordChars.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [passwordChars[i], passwordChars[j]] = [passwordChars[j], passwordChars[i]];
+        }
+
+        pgResult.value = passwordChars.join('').substring(0, length);
+    }
+
+    function generatePassphrase() {
+        const numWords = parseInt(ppWords.value);
+        const separator = ppSep.value;
+        const capitalize = ppCap.checked;
+
+        let words = [];
+        for (let i = 0; i < numWords; i++) {
+            let word = wordlist[Math.floor(Math.random() * wordlist.length)];
+            if (capitalize) {
+                word = word.charAt(0).toUpperCase() + word.slice(1);
+            }
+            words.push(word);
+        }
+
+        ppResult.value = words.join(separator);
+    }
+
+    // Attach Events
+    pgLength.addEventListener('input', (e) => {
+        pgLengthLabel.innerText = \`Length: \${e.target.value}\`;
+        generatePassword();
+    });
+    
+    [pgUpper, pgLower, pgNums, pgSyms, pgAmbig, pgMinNums, pgMinSyms].forEach(el => {
+        el.addEventListener('change', generatePassword);
+        el.addEventListener('input', generatePassword);
+    });
+    
+    pgRefresh.addEventListener('click', generatePassword);
+    pgCopy.addEventListener('click', () => {
+        navigator.clipboard.writeText(pgResult.value);
+        pgCopy.innerText = "Copied!";
+        setTimeout(() => pgCopy.innerText = "Copy", 2000);
+    });
+
+    ppWords.addEventListener('input', (e) => {
+        ppWordsLabel.innerText = \`Number of words: \${e.target.value}\`;
+        generatePassphrase();
+    });
+
+    [ppSep, ppCap].forEach(el => {
+        el.addEventListener('change', generatePassphrase);
+        el.addEventListener('input', generatePassphrase);
+    });
+    
+    ppRefresh.addEventListener('click', generatePassphrase);
+    ppCopy.addEventListener('click', () => {
+        navigator.clipboard.writeText(ppResult.value);
+        ppCopy.innerText = "Copied!";
+        setTimeout(() => ppCopy.innerText = "Copy", 2000);
+    });
+
+    // Initial Generation
+    generatePassword();
+    generatePassphrase();
 });
