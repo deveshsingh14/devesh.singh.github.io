@@ -63,70 +63,157 @@ document.addEventListener('DOMContentLoaded', () => {
         revealObserver.observe(element);
     });
 
-    // Interactive Terminal UI Logic
+    // ==========================================
+    // Animated Terminal Line-by-Line Engine
+    // ==========================================
+    let currentAnimation = null; // track running animation so we can cancel
+
+    /** Types out lines one-by-one into #dynamic-output with realistic delays */
+    const animateLines = (lines, container, onDone) => {
+        let i = 0;
+        const next = () => {
+            if (i >= lines.length) { if (onDone) onDone(); return; }
+            const { html, delay } = lines[i];
+            const div = document.createElement('div');
+            div.innerHTML = html;
+            // start invisible, then fade in
+            div.style.opacity = '0';
+            div.style.transform = 'translateY(4px)';
+            div.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+            container.appendChild(div);
+            requestAnimationFrame(() => { div.style.opacity = '1'; div.style.transform = 'translateY(0)'; });
+            container.scrollTop = container.scrollHeight;
+            i++;
+            currentAnimation = setTimeout(next, delay);
+        };
+        next();
+    };
+
+    /** Builds a progress bar string from 0-100% */
+    const progressBar = (pct) => {
+        const filled = Math.round(pct / 5);
+        const empty = 20 - filled;
+        return `[${'█'.repeat(filled)}${'░'.repeat(empty)}] ${pct}%`;
+    };
+
+    // Interactive Terminal UI Logic — enhanced simulations
     const scripts = {
         'yt-downloader': {
             cmd: 'python3 yt_downloader.py',
             promptReq: 'Enter YouTube URL:',
-            placeholder: 'https://youtube.com/watch?v=...',
-            simulate: (input) => {
-                if(!input.includes('youtube.com') && !input.includes('youtu.be')) {
-                    return `<div class="output-line error-msg">Error: Invalid YouTube URL format.</div>`;
+            placeholder: 'https://youtube.com/watch?v=dQw4w9WgXcQ',
+            simulate: (input, container, onDone) => {
+                if (!input.includes('youtube.com') && !input.includes('youtu.be')) {
+                    animateLines([
+                        { html: '<div class="output-line error-msg">✗ Error: Invalid YouTube URL. Expected youtube.com or youtu.be link.</div>', delay: 200 },
+                        { html: '<div class="output-line system-msg">Usage: python3 yt_downloader.py [URL]</div>', delay: 0 }
+                    ], container, onDone);
+                    return;
                 }
-                return `
-                    <div class="output-line system-msg">Analyzing URL: ${input}</div>
-                    <div class="output-line system-msg">Fetching video streams...</div>
-                    <div class="output-line system-msg">Downloading highest resolution (1080p)...</div>
-                    <div class="output-line success-msg">[✓] Download complete: video_output.mp4</div>
-                `;
+                const videoId = input.includes('v=') ? input.split('v=')[1]?.split('&')[0] : input.split('/').pop();
+                animateLines([
+                    { html: `<div class="output-line system-msg">[yt-dlp] Analyzing URL: ${input}</div>`, delay: 600 },
+                    { html: `<div class="output-line system-msg">[yt-dlp] Extracting video ID: ${videoId || 'dQw4w9WgXcQ'}...</div>`, delay: 500 },
+                    { html: '<div class="output-line system-msg">[info] Available formats:</div>', delay: 300 },
+                    { html: '<div class="output-line system-msg" style="opacity:.7">  • 1080p  mp4   │ 137+140  │ 24.8 MiB</div>', delay: 150 },
+                    { html: '<div class="output-line system-msg" style="opacity:.7">  •  720p  mp4   │ 136+140  │ 14.2 MiB</div>', delay: 150 },
+                    { html: '<div class="output-line system-msg" style="opacity:.7">  •  480p  mp4   │ 135+140  │  8.5 MiB</div>', delay: 150 },
+                    { html: '<div class="output-line system-msg">[download] Selecting best quality: 1080p mp4</div>', delay: 700 },
+                    { html: `<div class="output-line system-msg">[download] ${progressBar(0)}</div>`, delay: 300 },
+                    { html: `<div class="output-line system-msg">[download] ${progressBar(25)}</div>`, delay: 350 },
+                    { html: `<div class="output-line system-msg">[download] ${progressBar(50)}</div>`, delay: 300 },
+                    { html: `<div class="output-line system-msg">[download] ${progressBar(75)}</div>`, delay: 350 },
+                    { html: `<div class="output-line system-msg">[download] ${progressBar(100)}</div>`, delay: 400 },
+                    { html: '<div class="output-line system-msg">[ffmpeg] Merging video + audio streams...</div>', delay: 600 },
+                    { html: '<div class="output-line success-msg">[✓] Download complete → ~/Downloads/video_output.mp4 (24.8 MiB)</div>', delay: 0 }
+                ], container, onDone);
             }
         },
         'pdf-converter': {
             cmd: 'python3 pdf_converter.py',
-            promptReq: 'Enter file path to convert (PDF -> DOCX):',
+            promptReq: 'Enter file path to convert (PDF → DOCX):',
             placeholder: '~/documents/resume.pdf',
-            simulate: (input) => {
-                if(!input.endsWith('.pdf')) {
-                    return `<div class="output-line error-msg">Error: File must be a .pdf</div>`;
+            simulate: (input, container, onDone) => {
+                if (!input.endsWith('.pdf')) {
+                    animateLines([
+                        { html: '<div class="output-line error-msg">✗ Error: Input file must have a .pdf extension.</div>', delay: 200 },
+                        { html: '<div class="output-line system-msg">Supported formats: .pdf → .docx</div>', delay: 0 }
+                    ], container, onDone);
+                    return;
                 }
                 const filename = input.split('/').pop().replace('.pdf', '');
-                return `
-                    <div class="output-line system-msg">Reading ${input}...</div>
-                    <div class="output-line system-msg">Extracting text and formatting...</div>
-                    <div class="output-line success-msg">[✓] Conversion successful: ${filename}.docx saved.</div>
-                `;
+                const pages = Math.floor(Math.random() * 15) + 3;
+                animateLines([
+                    { html: `<div class="output-line system-msg">[converter] Opening ${input}...</div>`, delay: 500 },
+                    { html: `<div class="output-line system-msg">[converter] Detected ${pages} pages, PDF version 1.7</div>`, delay: 400 },
+                    { html: '<div class="output-line system-msg">[converter] Extracting text layers...</div>', delay: 600 },
+                    { html: '<div class="output-line system-msg">[converter] Parsing embedded fonts and images...</div>', delay: 500 },
+                    { html: `<div class="output-line system-msg">[converter] Processing ${progressBar(0)}</div>`, delay: 300 },
+                    { html: `<div class="output-line system-msg">[converter] Processing ${progressBar(35)}</div>`, delay: 350 },
+                    { html: `<div class="output-line system-msg">[converter] Processing ${progressBar(70)}</div>`, delay: 300 },
+                    { html: `<div class="output-line system-msg">[converter] Processing ${progressBar(100)}</div>`, delay: 400 },
+                    { html: '<div class="output-line system-msg">[converter] Rebuilding document structure for DOCX...</div>', delay: 500 },
+                    { html: `<div class="output-line success-msg">[✓] Saved: ~/${filename}.docx (${pages} pages converted)</div>`, delay: 0 }
+                ], container, onDone);
             }
         },
         'data-scraper': {
             cmd: 'python3 auto_scraper.py',
             promptReq: 'Enter target URL to scrape:',
-            placeholder: 'https://example.com',
-            simulate: (input) => {
-                if(!input.startsWith('http')) {
-                    return `<div class="output-line error-msg">Error: Please enter a valid HTTP/HTTPS URL.</div>`;
+            placeholder: 'https://example.com/products',
+            simulate: (input, container, onDone) => {
+                if (!input.startsWith('http')) {
+                    animateLines([
+                        { html: '<div class="output-line error-msg">✗ Error: URL must start with http:// or https://</div>', delay: 0 }
+                    ], container, onDone);
+                    return;
                 }
-                return `
-                    <div class="output-line system-msg">Initializing headless browser...</div>
-                    <div class="output-line system-msg">Navigating to ${input}...</div>
-                    <div class="output-line system-msg">Extracting DOM nodes and tabular data...</div>
-                    <div class="output-line success-msg">[✓] Data scraped and saved to scraped_data.csv (243 rows).</div>
-                `;
+                const domain = input.replace(/https?:\/\//, '').split('/')[0];
+                const rows = Math.floor(Math.random() * 400) + 50;
+                animateLines([
+                    { html: '<div class="output-line system-msg">[scraper] Launching headless Chromium (Playwright)...</div>', delay: 700 },
+                    { html: `<div class="output-line system-msg">[scraper] Navigating to ${input}</div>`, delay: 600 },
+                    { html: `<div class="output-line system-msg">[scraper] Waiting for page load on ${domain}...</div>`, delay: 500 },
+                    { html: '<div class="output-line system-msg">[scraper] Page loaded — status 200 OK</div>', delay: 300 },
+                    { html: '<div class="output-line system-msg">[scraper] Detecting page structure...</div>', delay: 400 },
+                    { html: '<div class="output-line system-msg">[scraper] Found: 3 tables, 12 lists, 47 links</div>', delay: 350 },
+                    { html: '<div class="output-line system-msg">[scraper] Extracting tabular data...</div>', delay: 500 },
+                    { html: `<div class="output-line system-msg">[scraper] Rows collected: ${progressBar(0)}</div>`, delay: 250 },
+                    { html: `<div class="output-line system-msg">[scraper] Rows collected: ${progressBar(40)}</div>`, delay: 300 },
+                    { html: `<div class="output-line system-msg">[scraper] Rows collected: ${progressBar(80)}</div>`, delay: 250 },
+                    { html: `<div class="output-line system-msg">[scraper] Rows collected: ${progressBar(100)}</div>`, delay: 350 },
+                    { html: '<div class="output-line system-msg">[scraper] Cleaning duplicates and normalizing columns...</div>', delay: 400 },
+                    { html: `<div class="output-line success-msg">[✓] Saved: scraped_data.csv (${rows} rows × 8 columns)</div>`, delay: 0 }
+                ], container, onDone);
             }
         },
         'monkeytype': {
             cmd: 'python3 monkytype.py',
-            promptReq: 'Press Enter to start typing bot:',
-            placeholder: '(No input required)',
-            simulate: (input) => {
-                return `
-                    <div class="output-line system-msg">Initializing Playwright...</div>
-                    <div class="output-line system-msg">Launching chromium browser...</div>
-                    <div class="output-line system-msg">Navigating to https://monkeytype.com/...</div>
-                    <div class="output-line system-msg">Waiting 5 seconds for page to load and cookies to be accepted...</div>
-                    <div class="output-line system-msg">Starting the typing automation!</div>
-                    <div class="output-line system-msg">Extracting words and typing...</div>
-                    <div class="output-line success-msg">[✓] Test finished! Look at that speed.</div>
-                `;
+            promptReq: 'Press Enter to start the typing bot:',
+            placeholder: '(press Enter or type "start")',
+            simulate: (input, container, onDone) => {
+                const wpm = Math.floor(Math.random() * 40) + 120;
+                const acc = (Math.random() * 2 + 97.5).toFixed(1);
+                const words = ['the', 'quick', 'brown', 'fox', 'jumps', 'over', 'a', 'lazy', 'dog', 'near', 'the', 'river', 'bank', 'while', 'birds', 'fly'];
+                let wordStr = '';
+                words.forEach((w, i) => {
+                    wordStr += `<span style="color: #27c93f">${w}</span> `;
+                });
+                animateLines([
+                    { html: '<div class="output-line system-msg">[bot] Initializing Playwright...</div>', delay: 500 },
+                    { html: '<div class="output-line system-msg">[bot] Launching chromium (headless=false)...</div>', delay: 600 },
+                    { html: '<div class="output-line system-msg">[bot] Navigating to https://monkeytype.com/...</div>', delay: 700 },
+                    { html: '<div class="output-line system-msg">[bot] Accepting cookies...</div>', delay: 400 },
+                    { html: '<div class="output-line system-msg">[bot] Waiting for DOM ready...</div>', delay: 500 },
+                    { html: '<div class="output-line system-msg">[bot] Test mode: 30 seconds</div>', delay: 300 },
+                    { html: '<div class="output-line system-msg">[bot] Starting typing automation ▊</div>', delay: 400 },
+                    { html: `<div class="output-line system-msg" style="word-break:break-word">[bot] Typing: ${wordStr}</div>`, delay: 800 },
+                    { html: `<div class="output-line system-msg">[bot] Progress: ${progressBar(30)}</div>`, delay: 500 },
+                    { html: `<div class="output-line system-msg">[bot] Progress: ${progressBar(65)}</div>`, delay: 500 },
+                    { html: `<div class="output-line system-msg">[bot] Progress: ${progressBar(100)}</div>`, delay: 400 },
+                    { html: '<div class="output-line system-msg">[bot] Test complete! Extracting results...</div>', delay: 500 },
+                    { html: `<div class="output-line success-msg" style="font-size:1em">[✓] Results → WPM: ${wpm} │ Accuracy: ${acc}% │ Raw: ${wpm + 8}</div>`, delay: 0 }
+                ], container, onDone);
             }
         }
     };
@@ -137,6 +224,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Function to render the initial state of a script
     const renderTerminal = (scriptKey) => {
+        // Cancel any running animation
+        if (currentAnimation) { clearTimeout(currentAnimation); currentAnimation = null; }
+
         const script = scripts[scriptKey];
         terminalOutput.innerHTML = `
             <div class="output-line"><span class="prompt">$</span> <span class="command">${script.cmd}</span></div>
@@ -158,29 +248,33 @@ document.addEventListener('DOMContentLoaded', () => {
         const dynamicOutput = document.getElementById('dynamic-output');
 
         const executeSim = () => {
-            const val = inputField.value.trim();
-            if(!val) return;
+            let val = inputField.value.trim();
+            // For monkeytype, allow empty input
+            if (!val && scriptKey !== 'monkeytype') return;
+            if (scriptKey === 'monkeytype' && !val) val = 'start';
             
             // Disable input while running
             inputField.disabled = true;
             runBtn.disabled = true;
-            runBtn.innerText = 'Running...';
+            runBtn.innerHTML = '<span class="spinner"></span> Running…';
+            runBtn.classList.add('running');
             
-            dynamicOutput.innerHTML = `<div class="output-line system-msg">Executing...</div>`;
+            dynamicOutput.innerHTML = '';
             
-            // Simulate processing delay
-            setTimeout(() => {
-                dynamicOutput.innerHTML = scripts[scriptKey].simulate(val);
+            // Call the animated simulate function
+            scripts[scriptKey].simulate(val, dynamicOutput, () => {
                 inputField.disabled = false;
                 runBtn.disabled = false;
                 runBtn.innerText = 'Run Script';
+                runBtn.classList.remove('running');
                 inputField.value = '';
-            }, 1500);
+                inputField.focus();
+            });
         };
 
         runBtn.addEventListener('click', executeSim);
         inputField.addEventListener('keypress', (e) => {
-            if(e.key === 'Enter') executeSim();
+            if (e.key === 'Enter') executeSim();
         });
     };
 
@@ -194,6 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const scriptKey = item.getAttribute('data-script');
             
             if (scriptKey === 'password-gen') {
+                if (currentAnimation) { clearTimeout(currentAnimation); currentAnimation = null; }
                 terminalOutput.style.display = 'none';
                 guiOutput.style.display = 'flex';
                 document.querySelector('.terminal-title').innerText = 'Password Generator App';
@@ -339,7 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Attach Events
     pgLength.addEventListener('input', (e) => {
-        pgLengthLabel.innerText = \`Length: \${e.target.value}\`;
+        pgLengthLabel.innerText = `Length: ${e.target.value}`;
         generatePassword();
     });
     
@@ -356,7 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     ppWords.addEventListener('input', (e) => {
-        ppWordsLabel.innerText = \`Number of words: \${e.target.value}\`;
+        ppWordsLabel.innerText = `Number of words: ${e.target.value}`;
         generatePassphrase();
     });
 
