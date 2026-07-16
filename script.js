@@ -462,17 +462,9 @@ document.addEventListener('DOMContentLoaded', () => {
         "forest", "mountain", "valley", "spring", "summer", "autumn", "winter", "silver", "gold"
     ];
 
-    function generatePassword() {
-        const length = parseInt(pgLength.value);
-        const useUpper = pgUpper.checked;
-        const useLower = pgLower.checked;
-        const useNums = pgNums.checked;
-        const useSyms = pgSyms.checked;
-        const avoidAmbig = pgAmbig.checked;
+    function generatePasswordString(options) {
+        const { length, useUpper, useLower, useNums, useSyms, avoidAmbig, minNums, minSyms } = options;
         
-        const minNums = parseInt(pgMinNums.value) || 0;
-        const minSyms = parseInt(pgMinSyms.value) || 0;
-
         let upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         let lowerChars = "abcdefghijklmnopqrstuvwxyz";
         let numChars = "0123456789";
@@ -492,8 +484,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (useSyms) pool += symChars;
 
         if (!pool) {
-            pgResult.value = "Select at least one character set.";
-            return;
+            return "Select at least one character set.";
         }
 
         let passwordChars = [];
@@ -521,13 +512,26 @@ document.addEventListener('DOMContentLoaded', () => {
             [passwordChars[i], passwordChars[j]] = [passwordChars[j], passwordChars[i]];
         }
 
-        pgResult.value = passwordChars.join('').substring(0, length);
+        return passwordChars.join('').substring(0, length);
     }
 
-    function generatePassphrase() {
-        const numWords = parseInt(ppWords.value);
-        const separator = ppSep.value;
-        const capitalize = ppCap.checked;
+    function generatePassword() {
+        const options = {
+            length: parseInt(pgLength.value),
+            useUpper: pgUpper.checked,
+            useLower: pgLower.checked,
+            useNums: pgNums.checked,
+            useSyms: pgSyms.checked,
+            avoidAmbig: pgAmbig.checked,
+            minNums: parseInt(pgMinNums.value) || 0,
+            minSyms: parseInt(pgMinSyms.value) || 0
+        };
+
+        pgResult.value = generatePasswordString(options);
+    }
+
+    function generatePassphraseString(options) {
+        const { numWords, separator, capitalize } = options;
 
         let words = [];
         for (let i = 0; i < numWords; i++) {
@@ -538,7 +542,17 @@ document.addEventListener('DOMContentLoaded', () => {
             words.push(word);
         }
 
-        ppResult.value = words.join(separator);
+        return words.join(separator);
+    }
+
+    function generatePassphrase() {
+        const options = {
+            numWords: parseInt(ppWords.value),
+            separator: ppSep.value,
+            capitalize: ppCap.checked
+        };
+
+        ppResult.value = generatePassphraseString(options);
     }
 
     // Attach Events
