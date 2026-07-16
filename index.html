@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Devesh Singh Baish | Automation Engineer</title>
-    <meta name="description" content="Devesh Singh Baish is an Automation Engineer who builds resilient frameworks bridging the gap between development and delivery.">
+    <title>Devesh Singh Baish | DevOps Engineer</title>
+    <meta name="description" content="Devesh Singh Baish is a DevOps Engineer who builds resilient CI/CD pipelines and cloud infrastructure bridging the gap between development and operations.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
@@ -28,12 +28,13 @@
 
     <!-- Hero Section (Full Viewport) -->
     <header id="hero" class="hero section-dark">
-        <div class="container reveal active">
+        <canvas id="hero-canvas"></canvas>
+        <div class="container reveal active hero-content-wrapper">
             <p class="hero-intro">Hi, my name is</p>
             <h1 class="hero-title">Devesh Singh Baish.</h1>
-            <h2 class="hero-subtitle">I build automated ecosystems.</h2>
+            <h2 class="hero-subtitle">I build <span id="typewriter"></span><span class="cursor">|</span></h2>
             <p class="hero-desc">
-                I'm an Automation Engineer at HotelKey, specializing in building resilient CI/CD pipelines and Python frameworks that bridge development and cloud delivery.
+                I'm a DevOps Engineer at HotelKey, specializing in building scalable cloud infrastructure, resilient CI/CD pipelines, and automated deployments.
             </p>
             
             <ul class="social-links hero-socials" aria-label="Social media">
@@ -63,10 +64,10 @@
             <div class="about-content">
                 <div class="text-block">
                     <p>
-                        Back in 2021, I started my journey in Computer Science and Engineering at G.H. Raisoni College, Nagpur. Since then, I've had the privilege of building software in diverse environments, from crafting deep learning models for satellite data at <a href="https://www.isro.gov.in/SpaceApplicationsCentre.html" target="_blank" rel="noreferrer" class="highlight-link">ISRO's Space Applications Centre</a> to my current role as an Automation Engineer at <a href="https://hotelkeyapp.com/" target="_blank" rel="noreferrer" class="highlight-link">HotelKey</a>.
+                        Back in 2021, I started my journey in Computer Science and Engineering at G.H. Raisoni College, Nagpur. Since then, I've had the privilege of building software in diverse environments, from crafting deep learning models for satellite data at <a href="https://www.isro.gov.in/SpaceApplicationsCentre.html" target="_blank" rel="noreferrer" class="highlight-link">ISRO's Space Applications Centre</a> to my current role as a DevOps Engineer at <a href="https://hotelkeyapp.com/" target="_blank" rel="noreferrer" class="highlight-link">HotelKey</a>.
                     </p>
                     <p>
-                        My main focus these days is architecting Python-based ecosystems that streamline integration and deployment. I thrive on building resilient CI/CD pipelines and automated solutions that bridge the gap between development and cloud delivery, ensuring our hospitality software scales seamlessly.
+                        My main focus these days is architecting scalable cloud infrastructure and streamlining integration and deployment. I thrive on building resilient CI/CD pipelines, containerized environments, and automated solutions that bridge the gap between development and operations, ensuring our hospitality software scales seamlessly.
                     </p>
                     <p>
                         When I'm not coding, you can probably find me fulfilling my duties as a Senior Division Cadet in the NCC Air Wing, where I'm trained in aircraft flying and drill marching, or maybe working on personal deep learning projects exploring stock market prediction algorithms.
@@ -85,14 +86,14 @@
                 <div class="job-card">
                     <div class="job-date">June 2025 to Present</div>
                     <div class="job-details">
-                        <h3>Automation Engineer <span class="company">@ HotelKey</span></h3>
-                        <p class="job-desc">Architected a Python-based ecosystem to streamline integration and deployment. Designed and optimized CI/CD pipelines leveraging Jenkins and Bitbucket to accelerate release cycles for cloud-based infrastructure. Orchestrated REST APIs using Python and managed large-scale data migrations with automated SQL scripts.</p>
+                        <h3>DevOps Engineer <span class="company">@ HotelKey</span></h3>
+                        <p class="job-desc">Architected scalable cloud infrastructure and streamlined integration and deployment. Designed and optimized CI/CD pipelines leveraging Jenkins, Docker, and Bitbucket to accelerate release cycles. Orchestrated automated infrastructure provisioning and managed large-scale deployments.</p>
                         <ul class="skill-tags">
-                            <li>Python</li>
+                            <li>AWS</li>
+                            <li>Docker</li>
                             <li>Jenkins</li>
-                            <li>Bitbucket</li>
-                            <li>SQL</li>
-                            <li>REST APIs</li>
+                            <li>CI/CD</li>
+                            <li>Python</li>
                         </ul>
                     </div>
                 </div>
@@ -182,19 +183,19 @@
     </section>
 
     <!-- Tools & Scripts Section -->
-    <section id="tools" class="section section-dark reveal" aria-label="Python Tools">
+    <section id="tools" class="section section-dark reveal" aria-label="DevOps Tools">
         <div class="container">
-            <h2 class="section-title">Interactive Python Scripts</h2>
-            <p style="margin-bottom: 2rem; max-width: 600px;">Explore some of the automation scripts I've built. Select a script below to run a live simulation in the terminal.</p>
+            <h2 class="section-title">Interactive DevOps Tools</h2>
+            <p style="margin-bottom: 2rem; max-width: 600px;">Explore some of the DevOps automation tools I've built. Select a tool below to run a live simulation in the terminal.</p>
             
             <div class="terminal-container">
                 <div class="terminal-sidebar">
-                    <div class="terminal-header">Scripts</div>
+                    <div class="terminal-header">Tools</div>
                     <ul class="script-list">
-                        <li class="script-item active" data-script="yt-downloader">yt_downloader.py</li>
-                        <li class="script-item" data-script="pdf-converter">pdf_converter.py</li>
-                        <li class="script-item" data-script="data-scraper">auto_scraper.py</li>
-                        <li class="script-item" data-script="monkeytype">monkytype.py</li>
+                        <li class="script-item active" data-script="k8s-deploy">k8s-deploy.sh</li>
+                        <li class="script-item" data-script="docker-build">docker-build.py</li>
+                        <li class="script-item" data-script="aws-monitor">aws-monitor.py</li>
+                        <li class="script-item" data-script="log-analyzer">log-analyzer.sh</li>
                         <li class="script-item" data-script="password-gen">password_generator.py</li>
                     </ul>
                 </div>
@@ -206,14 +207,14 @@
                             <span class="control minimize"></span>
                             <span class="control maximize"></span>
                         </div>
-                        <div class="terminal-title">user@dsb-macbook: ~/automation-scripts</div>
+                        <div class="terminal-title">user@dsb-macbook: ~/devops-tools</div>
                     </div>
                     <div class="terminal-body" id="terminal-output">
-                        <div class="output-line"><span class="prompt">$</span> <span class="command">python3 yt_downloader.py</span></div>
-                        <div class="output-line system-msg">Loading YouTube API...</div>
-                        <div class="output-line prompt-req">Enter YouTube URL:</div>
+                        <div class="output-line"><span class="prompt">$</span> <span class="command">./k8s-deploy.sh</span></div>
+                        <div class="output-line system-msg">Loading Kubernetes Context...</div>
+                        <div class="output-line prompt-req">Enter Deployment Name:</div>
                         <div class="interactive-input">
-                            <span class="prompt">></span> <input type="text" id="tool-input" placeholder="https://youtube.com/watch?v=..." autocomplete="off">
+                            <span class="prompt">></span> <input type="text" id="tool-input" placeholder="frontend-app" autocomplete="off">
                             <button id="run-btn">Run Script</button>
                         </div>
                         <div id="dynamic-output"></div>

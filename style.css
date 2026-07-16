@@ -178,6 +178,35 @@ ul, ol {
   justify-content: center;
   min-height: 100vh;
   padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+#hero-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero-content-wrapper {
+  position: relative;
+  z-index: 2;
+}
+
+.cursor {
+  display: inline-block;
+  width: 10px;
+  animation: blink 1s step-end infinite;
+  color: var(--teal);
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 .hero-intro {
@@ -338,12 +367,10 @@ ul, ol {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: var(--transition);
+  transition: transform 0.1s;
   box-shadow: 0 10px 30px -15px var(--navy-shadow);
-}
-
-.project-card:hover {
-  transform: translateY(-7px);
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
 .folder-icon {
