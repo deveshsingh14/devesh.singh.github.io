@@ -552,12 +552,14 @@ document.addEventListener('DOMContentLoaded', () => {
         el.addEventListener('input', generatePassword);
     });
     
+    function copyToClipboard(textToCopy, buttonElement) {
+        navigator.clipboard.writeText(textToCopy);
+        buttonElement.innerText = "Copied!";
+        setTimeout(() => buttonElement.innerText = "Copy", 2000);
+    }
+
     pgRefresh.addEventListener('click', generatePassword);
-    pgCopy.addEventListener('click', () => {
-        navigator.clipboard.writeText(pgResult.value);
-        pgCopy.innerText = "Copied!";
-        setTimeout(() => pgCopy.innerText = "Copy", 2000);
-    });
+    pgCopy.addEventListener('click', () => copyToClipboard(pgResult.value, pgCopy));
 
     ppWords.addEventListener('input', (e) => {
         ppWordsLabel.innerText = `Number of words: ${e.target.value}`;
@@ -570,11 +572,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     ppRefresh.addEventListener('click', generatePassphrase);
-    ppCopy.addEventListener('click', () => {
-        navigator.clipboard.writeText(ppResult.value);
-        ppCopy.innerText = "Copied!";
-        setTimeout(() => ppCopy.innerText = "Copy", 2000);
-    });
+    ppCopy.addEventListener('click', () => copyToClipboard(ppResult.value, ppCopy));
 
     // Initial Generation
     generatePassword();
