@@ -482,6 +482,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const pgRefresh = document.getElementById('pg-refresh');
     const pgCopy = document.getElementById('pg-copy');
 
+    const BASE_UPPER_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const BASE_LOWER_CHARS = "abcdefghijklmnopqrstuvwxyz";
+    const BASE_NUM_CHARS = "0123456789";
+    const AMBIGUOUS_CHARS = "l1IO0";
+
+    const UNAMBIG_UPPER_CHARS = BASE_UPPER_CHARS.split('').filter(c => !AMBIGUOUS_CHARS.includes(c)).join('');
+    const UNAMBIG_LOWER_CHARS = BASE_LOWER_CHARS.split('').filter(c => !AMBIGUOUS_CHARS.includes(c)).join('');
+    const UNAMBIG_NUM_CHARS = BASE_NUM_CHARS.split('').filter(c => !AMBIGUOUS_CHARS.includes(c)).join('');
+
     // Passphrase Elements
     const ppResult = document.getElementById('pp-result');
     const ppWords = document.getElementById('pp-words');
@@ -515,16 +524,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const minNums = parseInt(pgMinNums.value) || 0;
         const minSyms = parseInt(pgMinSyms.value) || 0;
 
-        let upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        let lowerChars = "abcdefghijklmnopqrstuvwxyz";
-        let numChars = "0123456789";
+        let upperChars = BASE_UPPER_CHARS;
+        let lowerChars = BASE_LOWER_CHARS;
+        let numChars = BASE_NUM_CHARS;
         let symChars = "!@#$%^&*";
-        const ambiguousChars = "l1IO0";
 
         if (avoidAmbig) {
-            upperChars = upperChars.split('').filter(c => !ambiguousChars.includes(c)).join('');
-            lowerChars = lowerChars.split('').filter(c => !ambiguousChars.includes(c)).join('');
-            numChars = numChars.split('').filter(c => !ambiguousChars.includes(c)).join('');
+            upperChars = UNAMBIG_UPPER_CHARS;
+            lowerChars = UNAMBIG_LOWER_CHARS;
+            numChars = UNAMBIG_NUM_CHARS;
         }
 
         let pool = "";
