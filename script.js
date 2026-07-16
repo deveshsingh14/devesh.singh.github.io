@@ -425,7 +425,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handle clicking different scripts in sidebar
     scriptItems.forEach(item => {
-        item.addEventListener('click', () => {
+        const selectScript = () => {
             // Update active class
             scriptItems.forEach(i => i.classList.remove('active'));
             item.classList.add('active');
@@ -443,6 +443,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelector('.terminal-title').innerText = 'user@dsb-macbook: ~/devops-tools';
                 // Render corresponding terminal UI
                 renderTerminal(scriptKey);
+            }
+        };
+
+        item.addEventListener('click', selectScript);
+        item.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                selectScript();
             }
         });
     });
