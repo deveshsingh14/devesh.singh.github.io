@@ -176,9 +176,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 for (let j = i + 1; j < particles.length; j++) {
                     const dx = particles[i].x - particles[j].x;
                     const dy = particles[i].y - particles[j].y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const distSq = dx * dx + dy * dy;
 
-                    if (dist < 150) {
+                    if (distSq < 22500) { // 150 * 150
+                        const dist = Math.sqrt(distSq);
                         ctx.beginPath();
                         ctx.moveTo(particles[i].x, particles[i].y);
                         ctx.lineTo(particles[j].x, particles[j].y);
@@ -314,6 +315,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     { html: '<div class="output-line system-msg">----------------------------------------</div>', delay: 200 },
                     { html: '<div class="output-line system-msg">[aws] Alert: High CPU on i-0f9e8d7c6b5a, triggering auto-scaling policy...</div>', delay: 600 },
                     { html: `<div class="output-line success-msg">[✓] Monitoring check complete. Auto-scaling action initiated.</div>`, delay: 0 }
+                ], container, onDone);
+            }
+        },
+        'playwright-test': {
+            cmd: 'npx playwright test',
+            promptReq: 'Enter Test Suite Name:',
+            placeholder: 'e2e-checkout',
+            simulate: (input, container, onDone) => {
+                if (!input) input = 'e2e-checkout';
+                const words = ['the', 'quick', 'brown', 'fox', 'jumps', 'over', 'a', 'lazy', 'dog', 'near', 'the', 'river', 'bank', 'while', 'birds', 'fly'];
+                const wordStr = words.map(w => `<span style="color: #27c93f">${w}</span> `).join('');
+                animateLines([
+                    { html: '<div class="output-line system-msg">[bot] Initializing Playwright...</div>', delay: 500 },
+                    { html: `<div class="output-line system-msg">[bot] Testing phrase mapping: ${wordStr}</div>`, delay: 400 },
+                    { html: `<div class="output-line system-msg">[playwright] Running 1 test in suite ${input}...</div>`, delay: 600 },
+                    { html: `<div class="output-line system-msg">[playwright] ✅ Test passed.</div>`, delay: 400 },
+                    { html: `<div class="output-line success-msg">[✓] Playwright suite ${input} successfully executed.</div>`, delay: 0 }
                 ], container, onDone);
             }
         },
