@@ -362,6 +362,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const executeSim = () => {
             let val = inputField.value.trim();
             
+            // Sanitize user input to prevent DOM XSS
+            val = val.replace(/&/g, '&amp;')
+                     .replace(/</g, '&lt;')
+                     .replace(/>/g, '&gt;')
+                     .replace(/"/g, '&quot;')
+                     .replace(/'/g, '&#39;');
+
             // Disable input while running
             inputField.disabled = true;
             runBtn.disabled = true;
