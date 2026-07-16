@@ -462,6 +462,12 @@ document.addEventListener('DOMContentLoaded', () => {
         "forest", "mountain", "valley", "spring", "summer", "autumn", "winter", "silver", "gold"
     ];
 
+    function getSecureRandom() {
+        const randomBuffer = new Uint32Array(1);
+        window.crypto.getRandomValues(randomBuffer);
+        return randomBuffer[0] / (0xFFFFFFFF + 1);
+    }
+
     function generatePassword() {
         const length = parseInt(pgLength.value);
         const useUpper = pgUpper.checked;
@@ -500,24 +506,24 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (useNums && minNums > 0) {
             for (let i = 0; i < Math.min(minNums, length); i++) {
-                passwordChars.push(numChars[Math.floor(Math.random() * numChars.length)]);
+                passwordChars.push(numChars[Math.floor(getSecureRandom() * numChars.length)]);
             }
         }
         
         if (useSyms && minSyms > 0) {
             for (let i = 0; i < Math.min(minSyms, length - passwordChars.length); i++) {
-                passwordChars.push(symChars[Math.floor(Math.random() * symChars.length)]);
+                passwordChars.push(symChars[Math.floor(getSecureRandom() * symChars.length)]);
             }
         }
 
         const remainingLength = length - passwordChars.length;
         for (let i = 0; i < remainingLength; i++) {
-            passwordChars.push(pool[Math.floor(Math.random() * pool.length)]);
+            passwordChars.push(pool[Math.floor(getSecureRandom() * pool.length)]);
         }
 
         // Shuffle
         for (let i = passwordChars.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
+            const j = Math.floor(getSecureRandom() * (i + 1));
             [passwordChars[i], passwordChars[j]] = [passwordChars[j], passwordChars[i]];
         }
 
@@ -531,7 +537,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let words = [];
         for (let i = 0; i < numWords; i++) {
-            let word = wordlist[Math.floor(Math.random() * wordlist.length)];
+            let word = wordlist[Math.floor(getSecureRandom() * wordlist.length)];
             if (capitalize) {
                 word = word.charAt(0).toUpperCase() + word.slice(1);
             }
