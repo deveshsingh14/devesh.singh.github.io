@@ -64,6 +64,150 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==========================================
+    // Typewriter Effect
+    // ==========================================
+    const phrases = ["resilient cloud ecosystems.", "automated deployment pipelines.", "scalable infrastructure.", "reliable CI/CD processes."];
+    let currentPhraseIndex = 0;
+    let isDeleting = false;
+    let txt = '';
+    const typewriterElement = document.getElementById('typewriter');
+
+    function typeWriter() {
+        const fullTxt = phrases[currentPhraseIndex];
+
+        if (isDeleting) {
+            txt = fullTxt.substring(0, txt.length - 1);
+        } else {
+            txt = fullTxt.substring(0, txt.length + 1);
+        }
+
+        if(typewriterElement) typewriterElement.innerHTML = txt;
+
+        let typeSpeed = 100;
+
+        if (isDeleting) {
+            typeSpeed /= 2;
+        }
+
+        if (!isDeleting && txt === fullTxt) {
+            typeSpeed = 2000;
+            isDeleting = true;
+        } else if (isDeleting && txt === '') {
+            isDeleting = false;
+            currentPhraseIndex = (currentPhraseIndex + 1) % phrases.length;
+            typeSpeed = 500;
+        }
+
+        setTimeout(typeWriter, typeSpeed);
+    }
+
+    if(typewriterElement) typeWriter();
+
+    // ==========================================
+    // Interactive Canvas Background (Network/Particles)
+    // ==========================================
+    const canvas = document.getElementById('hero-canvas');
+    if (canvas) {
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = document.getElementById('hero').offsetHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.radius = Math.random() * 2 + 1;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(100, 255, 218, 0.3)';
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const numParticles = Math.min(Math.floor(window.innerWidth / 20), 100);
+            for (let i = 0; i < numParticles; i++) {
+                particles.push(new Particle());
+            }
+        }
+        initParticles();
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, width, height);
+
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+
+                // Draw connections
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 150) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(100, 255, 218, ${0.15 - dist/1000})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+    }
+
+    // ==========================================
+    // 3D Tilt Effect for Project Cards
+    // ==========================================
+    const projectCards = document.querySelectorAll('.project-card');
+
+    projectCards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left; // x position within the element
+            const y = e.clientY - rect.top;  // y position within the element
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = ((y - centerY) / centerY) * -10; // Max rotation 10deg
+            const rotateY = ((x - centerX) / centerX) * 10;
+
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+        });
+    });
+
+    // ==========================================
     // Animated Terminal Line-by-Line Engine
     // ==========================================
     let currentAnimation = null; // track running animation so we can cancel
@@ -98,121 +242,89 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Interactive Terminal UI Logic — enhanced simulations
     const scripts = {
-        'yt-downloader': {
-            cmd: 'python3 yt_downloader.py',
-            promptReq: 'Enter YouTube URL:',
-            placeholder: 'https://youtube.com/watch?v=dQw4w9WgXcQ',
+        'k8s-deploy': {
+            cmd: './k8s-deploy.sh',
+            promptReq: 'Enter Deployment Name:',
+            placeholder: 'frontend-app',
             simulate: (input, container, onDone) => {
-                if (!input.includes('youtube.com') && !input.includes('youtu.be')) {
-                    animateLines([
-                        { html: '<div class="output-line error-msg">✗ Error: Invalid YouTube URL. Expected youtube.com or youtu.be link.</div>', delay: 200 },
-                        { html: '<div class="output-line system-msg">Usage: python3 yt_downloader.py [URL]</div>', delay: 0 }
-                    ], container, onDone);
-                    return;
-                }
-                const videoId = input.includes('v=') ? input.split('v=')[1]?.split('&')[0] : input.split('/').pop();
+                if (!input) input = 'frontend-app';
                 animateLines([
-                    { html: `<div class="output-line system-msg">[yt-dlp] Analyzing URL: ${input}</div>`, delay: 600 },
-                    { html: `<div class="output-line system-msg">[yt-dlp] Extracting video ID: ${videoId || 'dQw4w9WgXcQ'}...</div>`, delay: 500 },
-                    { html: '<div class="output-line system-msg">[info] Available formats:</div>', delay: 300 },
-                    { html: '<div class="output-line system-msg" style="opacity:.7">  • 1080p  mp4   │ 137+140  │ 24.8 MiB</div>', delay: 150 },
-                    { html: '<div class="output-line system-msg" style="opacity:.7">  •  720p  mp4   │ 136+140  │ 14.2 MiB</div>', delay: 150 },
-                    { html: '<div class="output-line system-msg" style="opacity:.7">  •  480p  mp4   │ 135+140  │  8.5 MiB</div>', delay: 150 },
-                    { html: '<div class="output-line system-msg">[download] Selecting best quality: 1080p mp4</div>', delay: 700 },
-                    { html: `<div class="output-line system-msg">[download] ${progressBar(0)}</div>`, delay: 300 },
-                    { html: `<div class="output-line system-msg">[download] ${progressBar(25)}</div>`, delay: 350 },
-                    { html: `<div class="output-line system-msg">[download] ${progressBar(50)}</div>`, delay: 300 },
-                    { html: `<div class="output-line system-msg">[download] ${progressBar(75)}</div>`, delay: 350 },
-                    { html: `<div class="output-line system-msg">[download] ${progressBar(100)}</div>`, delay: 400 },
-                    { html: '<div class="output-line system-msg">[ffmpeg] Merging video + audio streams...</div>', delay: 600 },
-                    { html: '<div class="output-line success-msg">[✓] Download complete → ~/Downloads/video_output.mp4 (24.8 MiB)</div>', delay: 0 }
+                    { html: `<div class="output-line system-msg">[kubectl] Setting context to cluster 'prod-cluster-us-east-1'...</div>`, delay: 500 },
+                    { html: `<div class="output-line system-msg">[kubectl] Analyzing deployment manifest for ${input}...</div>`, delay: 400 },
+                    { html: `<div class="output-line system-msg">[kubectl] Validating resource requests and limits...</div>`, delay: 300 },
+                    { html: '<div class="output-line system-msg">[helm] Upgrading release...</div>', delay: 600 },
+                    { html: `<div class="output-line system-msg">[k8s] ${progressBar(0)}</div>`, delay: 300 },
+                    { html: `<div class="output-line system-msg">[k8s] ${progressBar(25)} Creating new ReplicaSet...</div>`, delay: 350 },
+                    { html: `<div class="output-line system-msg">[k8s] ${progressBar(50)} Terminating old pods...</div>`, delay: 300 },
+                    { html: `<div class="output-line system-msg">[k8s] ${progressBar(75)} Waiting for readiness probes...</div>`, delay: 350 },
+                    { html: `<div class="output-line system-msg">[k8s] ${progressBar(100)} Rollout successful!</div>`, delay: 400 },
+                    { html: `<div class="output-line success-msg">[✓] Deployment ${input} successfully rolled out to prod.</div>`, delay: 0 }
                 ], container, onDone);
             }
         },
-        'pdf-converter': {
-            cmd: 'python3 pdf_converter.py',
-            promptReq: 'Enter file path to convert (PDF → DOCX):',
-            placeholder: '~/documents/resume.pdf',
+        'docker-build': {
+            cmd: 'python3 docker-build.py',
+            promptReq: 'Enter Repository/Image Name:',
+            placeholder: 'hotelkey/auth-service',
             simulate: (input, container, onDone) => {
-                if (!input.endsWith('.pdf')) {
-                    animateLines([
-                        { html: '<div class="output-line error-msg">✗ Error: Input file must have a .pdf extension.</div>', delay: 200 },
-                        { html: '<div class="output-line system-msg">Supported formats: .pdf → .docx</div>', delay: 0 }
-                    ], container, onDone);
-                    return;
-                }
-                const filename = input.split('/').pop().replace('.pdf', '');
-                const pages = Math.floor(Math.random() * 15) + 3;
+                if (!input) input = 'hotelkey/auth-service';
                 animateLines([
-                    { html: `<div class="output-line system-msg">[converter] Opening ${input}...</div>`, delay: 500 },
-                    { html: `<div class="output-line system-msg">[converter] Detected ${pages} pages, PDF version 1.7</div>`, delay: 400 },
-                    { html: '<div class="output-line system-msg">[converter] Extracting text layers...</div>', delay: 600 },
-                    { html: '<div class="output-line system-msg">[converter] Parsing embedded fonts and images...</div>', delay: 500 },
-                    { html: `<div class="output-line system-msg">[converter] Processing ${progressBar(0)}</div>`, delay: 300 },
-                    { html: `<div class="output-line system-msg">[converter] Processing ${progressBar(35)}</div>`, delay: 350 },
-                    { html: `<div class="output-line system-msg">[converter] Processing ${progressBar(70)}</div>`, delay: 300 },
-                    { html: `<div class="output-line system-msg">[converter] Processing ${progressBar(100)}</div>`, delay: 400 },
-                    { html: '<div class="output-line system-msg">[converter] Rebuilding document structure for DOCX...</div>', delay: 500 },
-                    { html: `<div class="output-line success-msg">[✓] Saved: ~/${filename}.docx (${pages} pages converted)</div>`, delay: 0 }
+                    { html: `<div class="output-line system-msg">[docker] Fetching latest commit for ${input}...</div>`, delay: 400 },
+                    { html: `<div class="output-line system-msg">[docker] Building image with tag v2.4.1...</div>`, delay: 500 },
+                    { html: '<div class="output-line system-msg">[docker] Step 1/7 : FROM python:3.9-slim</div>', delay: 300 },
+                    { html: '<div class="output-line system-msg">[docker] ---> 8a9b6c4d2e1f</div>', delay: 100 },
+                    { html: '<div class="output-line system-msg">[docker] Step 2/7 : WORKDIR /app</div>', delay: 200 },
+                    { html: '<div class="output-line system-msg">[docker] ---> Running in 3b2a1c4d5e6f</div>', delay: 150 },
+                    { html: '<div class="output-line system-msg">[docker] Step 3/7 : COPY requirements.txt .</div>', delay: 200 },
+                    { html: '<div class="output-line system-msg">[docker] Step 4/7 : RUN pip install -r requirements.txt</div>', delay: 600 },
+                    { html: `<div class="output-line system-msg">[docker] Installing packages ${progressBar(50)}</div>`, delay: 400 },
+                    { html: `<div class="output-line system-msg">[docker] Installing packages ${progressBar(100)}</div>`, delay: 400 },
+                    { html: '<div class="output-line system-msg">[docker] Successfully built 9f8e7d6c5b4a</div>', delay: 300 },
+                    { html: '<div class="output-line system-msg">[docker] Pushing to Amazon ECR...</div>', delay: 500 },
+                    { html: `<div class="output-line success-msg">[✓] Image ${input}:v2.4.1 successfully built and pushed.</div>`, delay: 0 }
                 ], container, onDone);
             }
         },
-        'data-scraper': {
-            cmd: 'python3 auto_scraper.py',
-            promptReq: 'Enter target URL to scrape:',
-            placeholder: 'https://example.com/products',
+        'aws-monitor': {
+            cmd: 'python3 aws-monitor.py',
+            promptReq: 'Enter AWS Service to monitor:',
+            placeholder: 'EC2 / RDS / Lambda',
             simulate: (input, container, onDone) => {
-                if (!input.startsWith('http')) {
-                    animateLines([
-                        { html: '<div class="output-line error-msg">✗ Error: URL must start with http:// or https://</div>', delay: 0 }
-                    ], container, onDone);
-                    return;
-                }
-                const domain = input.replace(/https?:\/\//, '').split('/')[0];
-                const rows = Math.floor(Math.random() * 400) + 50;
+                if (!input) input = 'EC2';
                 animateLines([
-                    { html: '<div class="output-line system-msg">[scraper] Launching headless Chromium (Playwright)...</div>', delay: 700 },
-                    { html: `<div class="output-line system-msg">[scraper] Navigating to ${input}</div>`, delay: 600 },
-                    { html: `<div class="output-line system-msg">[scraper] Waiting for page load on ${domain}...</div>`, delay: 500 },
-                    { html: '<div class="output-line system-msg">[scraper] Page loaded — status 200 OK</div>', delay: 300 },
-                    { html: '<div class="output-line system-msg">[scraper] Detecting page structure...</div>', delay: 400 },
-                    { html: '<div class="output-line system-msg">[scraper] Found: 3 tables, 12 lists, 47 links</div>', delay: 350 },
-                    { html: '<div class="output-line system-msg">[scraper] Extracting tabular data...</div>', delay: 500 },
-                    { html: `<div class="output-line system-msg">[scraper] Rows collected: ${progressBar(0)}</div>`, delay: 250 },
-                    { html: `<div class="output-line system-msg">[scraper] Rows collected: ${progressBar(40)}</div>`, delay: 300 },
-                    { html: `<div class="output-line system-msg">[scraper] Rows collected: ${progressBar(80)}</div>`, delay: 250 },
-                    { html: `<div class="output-line system-msg">[scraper] Rows collected: ${progressBar(100)}</div>`, delay: 350 },
-                    { html: '<div class="output-line system-msg">[scraper] Cleaning duplicates and normalizing columns...</div>', delay: 400 },
-                    { html: `<div class="output-line success-msg">[✓] Saved: scraped_data.csv (${rows} rows × 8 columns)</div>`, delay: 0 }
+                    { html: `<div class="output-line system-msg">[aws] Authenticating via IAM Roles...</div>`, delay: 500 },
+                    { html: `<div class="output-line system-msg">[aws] Fetching CloudWatch metrics for ${input}...</div>`, delay: 600 },
+                    { html: '<div class="output-line system-msg">[aws] Analyzing CPU Utilization, Memory, and Network I/O...</div>', delay: 400 },
+                    { html: '<div class="output-line system-msg">----------------------------------------</div>', delay: 200 },
+                    { html: '<div class="output-line system-msg">Instance ID       CPU%    MEM%    STATUS</div>', delay: 200 },
+                    { html: '<div class="output-line system-msg">i-0a1b2c3d4e5f    12.4    45.2    <span style="color:#27c93f">HEALTHY</span></div>', delay: 150 },
+                    { html: '<div class="output-line system-msg">i-0f9e8d7c6b5a    89.1    92.0    <span style="color:#ffbd2e">WARNING</span></div>', delay: 150 },
+                    { html: '<div class="output-line system-msg">i-1a2b3c4d5e6f     2.1    15.0    <span style="color:#27c93f">HEALTHY</span></div>', delay: 150 },
+                    { html: '<div class="output-line system-msg">----------------------------------------</div>', delay: 200 },
+                    { html: '<div class="output-line system-msg">[aws] Alert: High CPU on i-0f9e8d7c6b5a, triggering auto-scaling policy...</div>', delay: 600 },
+                    { html: `<div class="output-line success-msg">[✓] Monitoring check complete. Auto-scaling action initiated.</div>`, delay: 0 }
                 ], container, onDone);
             }
         },
-        'monkeytype': {
-            cmd: 'python3 monkytype.py',
-            promptReq: 'Press Enter to start the typing bot:',
-            placeholder: '(press Enter or type "start")',
+        'log-analyzer': {
+            cmd: './log-analyzer.sh',
+            promptReq: 'Enter environment to analyze:',
+            placeholder: 'production / staging / dev',
             simulate: (input, container, onDone) => {
-                const wpm = Math.floor(Math.random() * 40) + 120;
-                const acc = (Math.random() * 2 + 97.5).toFixed(1);
-                const words = ['the', 'quick', 'brown', 'fox', 'jumps', 'over', 'a', 'lazy', 'dog', 'near', 'the', 'river', 'bank', 'while', 'birds', 'fly'];
-                let wordStr = '';
-                words.forEach((w, i) => {
-                    wordStr += `<span style="color: #27c93f">${w}</span> `;
-                });
+                if (!input) input = 'production';
                 animateLines([
-                    { html: '<div class="output-line system-msg">[bot] Initializing Playwright...</div>', delay: 500 },
-                    { html: '<div class="output-line system-msg">[bot] Launching chromium (headless=false)...</div>', delay: 600 },
-                    { html: '<div class="output-line system-msg">[bot] Navigating to https://monkeytype.com/...</div>', delay: 700 },
-                    { html: '<div class="output-line system-msg">[bot] Accepting cookies...</div>', delay: 400 },
-                    { html: '<div class="output-line system-msg">[bot] Waiting for DOM ready...</div>', delay: 500 },
-                    { html: '<div class="output-line system-msg">[bot] Test mode: 30 seconds</div>', delay: 300 },
-                    { html: '<div class="output-line system-msg">[bot] Starting typing automation ▊</div>', delay: 400 },
-                    { html: `<div class="output-line system-msg" style="word-break:break-word">[bot] Typing: ${wordStr}</div>`, delay: 800 },
-                    { html: `<div class="output-line system-msg">[bot] Progress: ${progressBar(30)}</div>`, delay: 500 },
-                    { html: `<div class="output-line system-msg">[bot] Progress: ${progressBar(65)}</div>`, delay: 500 },
-                    { html: `<div class="output-line system-msg">[bot] Progress: ${progressBar(100)}</div>`, delay: 400 },
-                    { html: '<div class="output-line system-msg">[bot] Test complete! Extracting results...</div>', delay: 500 },
-                    { html: `<div class="output-line success-msg" style="font-size:1em">[✓] Results → WPM: ${wpm} │ Accuracy: ${acc}% │ Raw: ${wpm + 8}</div>`, delay: 0 }
+                    { html: `<div class="output-line system-msg">[logs] Connecting to Elasticsearch cluster (${input})...</div>`, delay: 400 },
+                    { html: `<div class="output-line system-msg">[logs] Querying last 24 hours of application logs...</div>`, delay: 600 },
+                    { html: `<div class="output-line system-msg">[logs] Filtering for ERROR and FATAL severity levels...</div>`, delay: 500 },
+                    { html: `<div class="output-line system-msg">[logs] Analyzing ${progressBar(30)}</div>`, delay: 400 },
+                    { html: `<div class="output-line system-msg">[logs] Analyzing ${progressBar(70)}</div>`, delay: 400 },
+                    { html: `<div class="output-line system-msg">[logs] Analyzing ${progressBar(100)}</div>`, delay: 300 },
+                    { html: '<div class="output-line system-msg">[logs] Generating summary report...</div>', delay: 500 },
+                    { html: '<div class="output-line system-msg">Top Error Frequencies:</div>', delay: 200 },
+                    { html: '<div class="output-line system-msg">  1. ConnectionTimeout: DB cluster (142 occurrences)</div>', delay: 150 },
+                    { html: '<div class="output-line system-msg">  2. NullReferenceException: PaymentService (89 occurrences)</div>', delay: 150 },
+                    { html: '<div class="output-line system-msg">  3. 502 Bad Gateway: AuthProxy (23 occurrences)</div>', delay: 150 },
+                    { html: `<div class="output-line success-msg">[✓] Report generated and sent to Slack #alerts channel.</div>`, delay: 0 }
                 ], container, onDone);
             }
         }
@@ -249,9 +361,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const executeSim = () => {
             let val = inputField.value.trim();
-            // For monkeytype, allow empty input
-            if (!val && scriptKey !== 'monkeytype') return;
-            if (scriptKey === 'monkeytype' && !val) val = 'start';
             
             // Disable input while running
             inputField.disabled = true;
@@ -295,7 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 terminalOutput.style.display = 'block';
                 guiOutput.style.display = 'none';
-                document.querySelector('.terminal-title').innerText = 'user@dsb-macbook: ~/automation-scripts';
+                document.querySelector('.terminal-title').innerText = 'user@dsb-macbook: ~/devops-tools';
                 // Render corresponding terminal UI
                 renderTerminal(scriptKey);
             }
@@ -303,7 +412,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Initialize first script
-    renderTerminal('yt-downloader');
+    renderTerminal('k8s-deploy');
 
     // ==========================================
     // Password Generator GUI Logic
