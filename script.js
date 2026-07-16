@@ -17,31 +17,42 @@ document.addEventListener('DOMContentLoaded', () => {
     const navbar = document.getElementById('navbar');
 
     // Change navbar style on scroll
+    let isScrolling = false;
+
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            navbar.style.boxShadow = '0 10px 30px -10px rgba(2, 12, 27, 0.7)';
-            navbar.style.height = '70px';
-        } else {
-            navbar.style.boxShadow = 'none';
-            navbar.style.height = '80px';
+        if (!isScrolling) {
+            window.requestAnimationFrame(() => {
+                const scrollY = window.scrollY;
+
+                if (scrollY > 50) {
+                    navbar.style.boxShadow = '0 10px 30px -10px rgba(2, 12, 27, 0.7)';
+                    navbar.style.height = '70px';
+                } else {
+                    navbar.style.boxShadow = 'none';
+                    navbar.style.height = '80px';
+                }
+
+                // Scroll spy logic
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (scrollY >= (sectionTop - sectionHeight / 3)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+
+                isScrolling = false;
+            });
+            isScrolling = true;
         }
-
-        // Scroll spy logic
-        let current = '';
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.clientHeight;
-            if (scrollY >= (sectionTop - sectionHeight / 3)) {
-                current = section.getAttribute('id');
-            }
-        });
-
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href').includes(current)) {
-                link.classList.add('active');
-            }
-        });
     });
 
     // Fade-in Animation on Scroll
