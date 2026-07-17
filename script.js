@@ -521,6 +521,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return randomBuffer[0] / (0xFFFFFFFF + 1);
     }
 
+    function getRandomChar(str) {
+        return str[Math.floor(getSecureRandom() * str.length)];
+    }
+
     function generatePassword() {
         const length = parseInt(pgLength.value);
         const useUpper = pgUpper.checked;
@@ -558,19 +562,19 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (useNums && minNums > 0) {
             for (let i = 0; i < Math.min(minNums, length); i++) {
-                passwordChars.push(numChars[Math.floor(getSecureRandom() * numChars.length)]);
+                passwordChars.push(getRandomChar(numChars));
             }
         }
         
         if (useSyms && minSyms > 0) {
             for (let i = 0; i < Math.min(minSyms, length - passwordChars.length); i++) {
-                passwordChars.push(symChars[Math.floor(getSecureRandom() * symChars.length)]);
+                passwordChars.push(getRandomChar(symChars));
             }
         }
 
         const remainingLength = length - passwordChars.length;
         for (let i = 0; i < remainingLength; i++) {
-            passwordChars.push(pool[Math.floor(getSecureRandom() * pool.length)]);
+            passwordChars.push(getRandomChar(pool));
         }
 
         // Shuffle
