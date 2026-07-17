@@ -1,14 +1,29 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+    // Utility to throttle high-frequency events using requestAnimationFrame
+    function throttle(callback) {
+        let isWaiting = false;
+        return function(...args) {
+            if (!isWaiting) {
+                isWaiting = true;
+                window.requestAnimationFrame(() => {
+                    callback.apply(this, args);
+                    isWaiting = false;
+                });
+            }
+        };
+    }
+
     // Spotlight Effect
     const spotlight = document.getElementById('spotlight');
     
     // Only apply on non-touch devices
     if (window.matchMedia('(pointer: fine)').matches) {
-        document.addEventListener('mousemove', (e) => {
+        document.addEventListener('mousemove', throttle((e) => {
             const x = e.clientX;
             const y = e.clientY;
             spotlight.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(29, 78, 216, 0.15), transparent 80%)`;
-        });
+        }));
     }
 
     // Scroll Spy for Top Navigation
@@ -17,43 +32,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const navbar = document.getElementById('navbar');
 
     // Change navbar style on scroll
-    let isScrolling = false;
+    window.addEventListener('scroll', throttle(() => {
+        const scrollY = window.scrollY;
 
-    window.addEventListener('scroll', () => {
-        if (!isScrolling) {
-            window.requestAnimationFrame(() => {
-                const scrollY = window.scrollY;
-
-                if (scrollY > 50) {
-                    navbar.style.boxShadow = '0 10px 30px -10px rgba(2, 12, 27, 0.7)';
-                    navbar.style.height = '70px';
-                } else {
-                    navbar.style.boxShadow = 'none';
-                    navbar.style.height = '80px';
-                }
-
-                // Scroll spy logic
-                let current = '';
-                sections.forEach(section => {
-                    const sectionTop = section.offsetTop;
-                    const sectionHeight = section.clientHeight;
-                    if (scrollY >= (sectionTop - sectionHeight / 3)) {
-                        current = section.getAttribute('id');
-                    }
-                });
-
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href').includes(current)) {
-                        link.classList.add('active');
-                    }
-                });
-
-                isScrolling = false;
-            });
-            isScrolling = true;
+        if (scrollY > 50) {
+            navbar.style.boxShadow = '0 10px 30px -10px rgba(2, 12, 27, 0.7)';
+            navbar.style.height = '70px';
+        } else {
+            navbar.style.boxShadow = 'none';
+            navbar.style.height = '80px';
         }
-    });
+
+        // Scroll spy logic
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (scrollY >= (sectionTop - sectionHeight / 3)) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href').includes(current)) {
+                link.classList.add('active');
+            }
+        });
+    }));
 
     // Fade-in Animation on Scroll
     const revealElements = document.querySelectorAll('.reveal');
@@ -200,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const projectCards = document.querySelectorAll('.project-card');
 
     projectCards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
+        card.addEventListener('mousemove', throttle((e) => {
             const rect = card.getBoundingClientRect();
             const x = e.clientX - rect.left; // x position within the element
             const y = e.clientY - rect.top;  // y position within the element
@@ -212,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const rotateY = ((x - centerX) / centerX) * 10;
 
             card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-        });
+        }));
 
         card.addEventListener('mouseleave', () => {
             card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
