@@ -215,7 +215,7 @@
                         <div class="output-line system-msg">Loading Kubernetes Context...</div>
                         <div class="output-line prompt-req">Enter Deployment Name:</div>
                         <div class="interactive-input">
-                            <span class="prompt">></span> <input type="text" id="tool-input" placeholder="frontend-app" autocomplete="off">
+                            <span class="prompt">></span> <input type="text" id="tool-input" placeholder="frontend-app" autocomplete="off" aria-label="Terminal input">
                             <button id="run-btn">Run Script</button>
                         </div>
                         <div id="dynamic-output"></div>
@@ -229,7 +229,7 @@
                         
                         <div class="gui-tab-content active" id="password-tab">
                             <div class="result-area">
-                                <input type="text" id="pg-result" class="gui-input read-only" readonly>
+                                <input type="text" id="pg-result" class="gui-input read-only" readonly aria-label="Generated password">
                                 <button class="gui-btn primary" id="pg-refresh">Refresh</button>
                                 <button class="gui-btn" id="pg-copy">Copy</button>
                             </div>
@@ -238,8 +238,8 @@
                                 <h4 class="options-title">Options</h4>
                                 
                                 <div class="option-row">
-                                    <label id="pg-length-label">Length: 14</label>
-                                    <input type="range" id="pg-length" min="5" max="128" value="14" class="gui-slider">
+                                    <label id="pg-length-label" for="pg-length">Length: 14</label>
+                                    <input type="range" id="pg-length" min="5" max="128" value="14" class="gui-slider" aria-label="Password length">
                                 </div>
                                 
                                 <div class="option-group">
@@ -254,11 +254,11 @@
                                 
                                 <div class="option-row dual">
                                     <div class="dual-item">
-                                        <label>Min numbers:</label>
+                                        <label for="pg-min-nums">Min numbers:</label>
                                         <input type="number" id="pg-min-nums" class="gui-input small" value="1" min="0">
                                     </div>
                                     <div class="dual-item">
-                                        <label>Min special:</label>
+                                        <label for="pg-min-syms">Min special:</label>
                                         <input type="number" id="pg-min-syms" class="gui-input small" value="0" min="0">
                                     </div>
                                 </div>
@@ -271,7 +271,7 @@
 
                         <div class="gui-tab-content" id="passphrase-tab">
                             <div class="result-area">
-                                <input type="text" id="pp-result" class="gui-input read-only" readonly>
+                                <input type="text" id="pp-result" class="gui-input read-only" readonly aria-label="Generated passphrase">
                                 <button class="gui-btn primary" id="pp-refresh">Refresh</button>
                                 <button class="gui-btn" id="pp-copy">Copy</button>
                             </div>
@@ -280,12 +280,12 @@
                                 <h4 class="options-title">Options</h4>
                                 
                                 <div class="option-row">
-                                    <label id="pp-words-label">Number of words: 4</label>
-                                    <input type="range" id="pp-words" min="3" max="12" value="4" class="gui-slider">
+                                    <label id="pp-words-label" for="pp-words">Number of words: 4</label>
+                                    <input type="range" id="pp-words" min="3" max="12" value="4" class="gui-slider" aria-label="Number of words">
                                 </div>
                                 
                                 <div class="option-row split">
-                                    <label>Separator:</label>
+                                    <label for="pp-sep">Separator:</label>
                                     <input type="text" id="pp-sep" class="gui-input small" value="-">
                                 </div>
                                 
