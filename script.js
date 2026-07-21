@@ -380,7 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="output-line system-msg">Loading dependencies...</div>
             <div class="output-line prompt-req">${script.promptReq}</div>
             <div class="interactive-input">
-                <span class="prompt">></span> <input type="text" id="tool-input" placeholder="${script.placeholder}" autocomplete="off">
+                <span class="prompt">></span> <input type="text" id="tool-input" placeholder="${script.placeholder}" autocomplete="off" aria-label="Terminal command input">
                 <button id="run-btn">Run Script</button>
             </div>
             <div id="dynamic-output"></div>
