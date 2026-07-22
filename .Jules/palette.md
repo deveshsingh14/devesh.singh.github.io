@@ -8,3 +8,6 @@
 ## 2024-11-20 - Custom GUI Elements Missing Focus States
 **Learning:** Interactive UI components that are custom-built (like the custom tabs and buttons in the DevOps Tools section) often miss default browser focus outlines because developers explicitly set `border: none` or override them for aesthetics. Screen reader and keyboard users can't visually determine which element has focus.
 **Action:** When building or auditing custom interactive components (like `.gui-tab` or custom tools buttons), always verify that they have an explicit `:focus-visible` state defined that provides clear visual feedback (using `outline` or `box-shadow`) inheriting the site's primary interactive color.
+## 2026-07-22 - Custom Tab Interfaces Need Dynamic ARIA States
+**Learning:** When implementing custom tab interfaces (like the password generator tabs), static HTML attributes aren't enough. Screen readers need to know which tab is currently active. The `aria-selected` attribute must be dynamically toggled via JavaScript to accurately reflect the interface state to assistive technologies.
+**Action:** Ensure any custom tab or toggle component includes JavaScript logic to explicitly manage `aria-selected` attributes, alongside CSS class changes.
