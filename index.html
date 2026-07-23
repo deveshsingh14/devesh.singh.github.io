@@ -223,12 +223,12 @@
                     </div>
                     
                     <div class="gui-body" id="gui-output" style="display: none;">
-                        <div class="gui-tabs">
-                            <button class="gui-tab active" data-tab="password-tab">Password</button>
-                            <button class="gui-tab" data-tab="passphrase-tab">Passphrase</button>
+                        <div class="gui-tabs" role="tablist" aria-label="Generator Types">
+                            <button class="gui-tab active" role="tab" aria-selected="true" aria-controls="password-tab" id="tab-password" data-tab="password-tab">Password</button>
+                            <button class="gui-tab" role="tab" aria-selected="false" aria-controls="passphrase-tab" id="tab-passphrase" data-tab="passphrase-tab">Passphrase</button>
                         </div>
                         
-                        <div class="gui-tab-content active" id="password-tab">
+                        <div class="gui-tab-content active" id="password-tab" role="tabpanel" aria-labelledby="tab-password" tabindex="0">
                             <div class="result-area">
                                 <input type="text" id="pg-result" class="gui-input read-only" readonly aria-label="Generated password">
                                 <button class="gui-btn primary" id="pg-refresh">Refresh</button>
@@ -270,7 +270,7 @@
                             </div>
                         </div>
 
-                        <div class="gui-tab-content" id="passphrase-tab">
+                        <div class="gui-tab-content" id="passphrase-tab" role="tabpanel" aria-labelledby="tab-passphrase" tabindex="0">
                             <div class="result-area">
                                 <input type="text" id="pp-result" class="gui-input read-only" readonly aria-label="Generated passphrase">
                                 <button class="gui-btn primary" id="pp-refresh">Refresh</button>

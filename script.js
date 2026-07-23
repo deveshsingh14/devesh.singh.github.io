@@ -474,10 +474,14 @@ document.addEventListener('DOMContentLoaded', () => {
     
     guiTabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            guiTabs.forEach(t => t.classList.remove('active'));
+            guiTabs.forEach(t => {
+                t.classList.remove('active');
+                t.setAttribute('aria-selected', 'false');
+            });
             guiTabContents.forEach(c => c.classList.remove('active'));
             
             tab.classList.add('active');
+            tab.setAttribute('aria-selected', 'true');
             document.getElementById(tab.getAttribute('data-tab')).classList.add('active');
         });
     });
