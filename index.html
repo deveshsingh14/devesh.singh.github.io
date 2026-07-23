@@ -33,7 +33,7 @@
         <div class="container reveal active hero-content-wrapper">
             <p class="hero-intro">Hi, my name is</p>
             <h1 class="hero-title">Devesh Singh Baish.</h1>
-            <h2 class="hero-subtitle">I build <span id="typewriter"></span><span class="cursor">|</span></h2>
+            <h2 class="hero-subtitle">I build <span id="typewriter"></span><span class="cursor" aria-hidden="true">|</span></h2>
             <p class="hero-desc">
                 I'm a DevOps Engineer at HotelKey, specializing in building scalable cloud infrastructure, resilient CI/CD pipelines, and automated deployments.
             </p>
@@ -219,7 +219,7 @@
                             <span class="prompt">></span> <input type="text" id="tool-input" placeholder="frontend-app" autocomplete="off" aria-label="Terminal command input">
                             <button id="run-btn">Run Script</button>
                         </div>
-                        <div id="dynamic-output"></div>
+                        <div id="dynamic-output" aria-live="polite"></div>
                     </div>
                     
                     <div class="gui-body" id="gui-output" style="display: none;">
