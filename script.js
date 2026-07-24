@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // Typewriter Effect
     // ==========================================
-    const phrases = ["resilient cloud ecosystems.", "automated deployment pipelines.", "scalable infrastructure.", "reliable CI/CD processes."];
+    const phrases = ["cloud-native architectures.", "AI/ML infrastructure.", "scalable platform engineering.", "GitOps-driven deployments."];
     let currentPhraseIndex = 0;
     let isDeleting = false;
     let txt = '';
@@ -262,6 +262,133 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Interactive Terminal UI Logic — enhanced simulations
     const scripts = {
+        'fix-pipeline': {
+            cmd: './fix-pipeline.sh',
+            promptReq: 'Pipeline failed! Prod is down. Enter command (logs / patch / restart):',
+            placeholder: 'logs',
+            simulate: (input, container, onDone) => {
+                input = (input || '').toLowerCase().trim();
+                let lines = [];
+
+                if (input === 'logs') {
+                    lines = [
+                        { html: `<div class="output-line system-msg">[jenkins] Fetching logs for failed pod payment-service-xyz...</div>`, delay: 400 },
+                        { html: `<div class="output-line error-msg">FATAL: Exception in thread "main" java.lang.OutOfMemoryError: Java heap space</div>`, delay: 600 },
+                        { html: `<div class="output-line system-msg">Hint: The pod needs more memory. Try 'patch' to update resources.</div>`, delay: 300 }
+                    ];
+                } else if (input === 'patch') {
+                    lines = [
+                        { html: `<div class="output-line system-msg">[kubectl] Patching deployment payment-service...</div>`, delay: 400 },
+                        { html: `<div class="output-line system-msg">Setting resources.requests.memory="1Gi" and limits.memory="2Gi"...</div>`, delay: 500 },
+                        { html: `<div class="output-line system-msg">deployment.apps/payment-service patched</div>`, delay: 300 },
+                        { html: `<div class="output-line system-msg">Hint: Deployment updated. Try 'restart' to apply changes immediately.</div>`, delay: 300 }
+                    ];
+                } else if (input === 'restart') {
+                    lines = [
+                        { html: `<div class="output-line system-msg">[kubectl] Rolling restart deployment payment-service...</div>`, delay: 500 },
+                        { html: `<div class="output-line system-msg">Waiting for rollout to finish: 0 of 3 updated replicas are available...</div>`, delay: 600 },
+                        { html: `<div class="output-line system-msg">Waiting for rollout to finish: 1 of 3 updated replicas are available...</div>`, delay: 600 },
+                        { html: `<div class="output-line system-msg">Waiting for rollout to finish: 2 of 3 updated replicas are available...</div>`, delay: 600 },
+                        { html: `<div class="output-line success-msg">[✓] deployment "payment-service" successfully rolled out. Pipeline FIXED!</div>`, delay: 200 }
+                    ];
+                } else {
+                    lines = [
+                        { html: `<div class="output-line error-msg">Command not recognized.</div>`, delay: 200 },
+                        { html: `<div class="output-line system-msg">Available commands: logs, patch, restart</div>`, delay: 100 }
+                    ];
+                }
+
+                animateLines(lines, container, onDone);
+            }
+        },
+        'cidr-calc': {
+            cmd: 'python3 cidr_calculator.py',
+            promptReq: 'Enter IP and CIDR (e.g., 192.168.1.0/24):',
+            placeholder: '10.0.0.0/24',
+            simulate: (input, container, onDone) => {
+                if (!input) input = '10.0.0.0/24';
+
+                let lines = [
+                    { html: `<div class="output-line system-msg">[calc] Parsing ${input}...</div>`, delay: 300 }
+                ];
+
+                try {
+                    const parts = input.split('/');
+                    if (parts.length !== 2) throw new Error("Invalid format");
+
+                    const ipParts = parts[0].split('.');
+                    if (ipParts.length !== 4) throw new Error("Invalid IP");
+
+                    const cidr = parseInt(parts[1], 10);
+                    if (isNaN(cidr) || cidr < 0 || cidr > 32) throw new Error("Invalid CIDR");
+
+                    const mask = ~((1 << (32 - cidr)) - 1);
+                    const ipNum = ipParts.reduce((acc, octet) => (acc << 8) + parseInt(octet, 10), 0);
+
+                    const networkNum = ipNum & mask;
+                    const broadcastNum = networkNum | ~mask;
+                    const numHosts = cidr === 31 || cidr === 32 ? 0 : Math.pow(2, 32 - cidr) - 2;
+
+                    const numToIp = (num) => [
+                        (num >>> 24) & 255,
+                        (num >>> 16) & 255,
+                        (num >>> 8) & 255,
+                        num & 255
+                    ].join('.');
+
+                    lines.push(
+                        { html: `<div class="output-line system-msg">Network Address: <span style="color:var(--teal)">${numToIp(networkNum)}</span></div>`, delay: 200 },
+                        { html: `<div class="output-line system-msg">Broadcast Address: <span style="color:var(--teal)">${numToIp(broadcastNum)}</span></div>`, delay: 200 },
+                        { html: `<div class="output-line system-msg">Usable Hosts: <span style="color:var(--teal)">${numHosts.toLocaleString()}</span></div>`, delay: 200 },
+                        { html: `<div class="output-line system-msg">Subnet Mask: <span style="color:var(--teal)">${numToIp(mask)}</span></div>`, delay: 200 },
+                        { html: `<div class="output-line success-msg">[✓] Calculation complete.</div>`, delay: 100 }
+                    );
+
+                } catch (e) {
+                    lines.push({ html: `<div class="output-line error-msg">Error: Invalid CIDR format. Please use x.x.x.x/y format.</div>`, delay: 200 });
+                }
+
+                animateLines(lines, container, onDone);
+            }
+        },
+        'cron-gen': {
+            cmd: './cron_generator.sh',
+            promptReq: 'Enter schedule description (e.g., "every day at midnight" or "every 15 minutes"):',
+            placeholder: 'every day at midnight',
+            simulate: (input, container, onDone) => {
+                if (!input) input = 'every day at midnight';
+                input = input.toLowerCase();
+
+                let cron = "* * * * *";
+                let desc = "unknown schedule";
+
+                if (input.includes('15 minutes') || input.includes('15 min')) {
+                    cron = "*/15 * * * *";
+                    desc = "At every 15th minute.";
+                } else if (input.includes('midnight') || (input.includes('day') && input.includes('0:00'))) {
+                    cron = "0 0 * * *";
+                    desc = "At 00:00 every day.";
+                } else if (input.includes('sunday') && input.includes('night')) {
+                    cron = "0 0 * * 0";
+                    desc = "At 00:00 on Sunday.";
+                } else if (input.includes('hour')) {
+                    cron = "0 * * * *";
+                    desc = "At minute 0 past every hour.";
+                } else {
+                    cron = "0 12 * * *"; // default fallback
+                    desc = "At 12:00 every day (fallback interpretation).";
+                }
+
+                animateLines([
+                    { html: `<div class="output-line system-msg">[cron] Analyzing NLP input: "${input}"...</div>`, delay: 500 },
+                    { html: `<div class="output-line system-msg">----------------------------------------</div>`, delay: 200 },
+                    { html: `<div class="output-line system-msg">Generated Cron: <span style="color:var(--teal); font-weight:bold; font-size: 1.1em;">${cron}</span></div>`, delay: 300 },
+                    { html: `<div class="output-line system-msg">Explanation: ${desc}</div>`, delay: 200 },
+                    { html: `<div class="output-line system-msg">----------------------------------------</div>`, delay: 200 },
+                    { html: `<div class="output-line success-msg">[✓] Ready for crontab insertion.</div>`, delay: 100 }
+                ], container, onDone);
+            }
+        },
         'k8s-deploy': {
             cmd: './k8s-deploy.sh',
             promptReq: 'Enter Deployment Name:',
@@ -305,66 +432,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 ], container, onDone);
             }
         },
-        'aws-monitor': {
-            cmd: 'python3 aws-monitor.py',
-            promptReq: 'Enter AWS Service to monitor:',
-            placeholder: 'EC2 / RDS / Lambda',
-            simulate: (input, container, onDone) => {
-                if (!input) input = 'EC2';
-                animateLines([
-                    { html: `<div class="output-line system-msg">[aws] Authenticating via IAM Roles...</div>`, delay: 500 },
-                    { html: `<div class="output-line system-msg">[aws] Fetching CloudWatch metrics for ${input}...</div>`, delay: 600 },
-                    { html: '<div class="output-line system-msg">[aws] Analyzing CPU Utilization, Memory, and Network I/O...</div>', delay: 400 },
-                    { html: '<div class="output-line system-msg">----------------------------------------</div>', delay: 200 },
-                    { html: '<div class="output-line system-msg">Instance ID       CPU%    MEM%    STATUS</div>', delay: 200 },
-                    { html: '<div class="output-line system-msg">i-0a1b2c3d4e5f    12.4    45.2    <span style="color:#27c93f">HEALTHY</span></div>', delay: 150 },
-                    { html: '<div class="output-line system-msg">i-0f9e8d7c6b5a    89.1    92.0    <span style="color:#ffbd2e">WARNING</span></div>', delay: 150 },
-                    { html: '<div class="output-line system-msg">i-1a2b3c4d5e6f     2.1    15.0    <span style="color:#27c93f">HEALTHY</span></div>', delay: 150 },
-                    { html: '<div class="output-line system-msg">----------------------------------------</div>', delay: 200 },
-                    { html: '<div class="output-line system-msg">[aws] Alert: High CPU on i-0f9e8d7c6b5a, triggering auto-scaling policy...</div>', delay: 600 },
-                    { html: `<div class="output-line success-msg">[✓] Monitoring check complete. Auto-scaling action initiated.</div>`, delay: 0 }
-                ], container, onDone);
-            }
-        },
-        'playwright-test': {
-            cmd: 'npx playwright test',
-            promptReq: 'Enter Test Suite Name:',
-            placeholder: 'e2e-checkout',
-            simulate: (input, container, onDone) => {
-                if (!input) input = 'e2e-checkout';
-                const words = ['the', 'quick', 'brown', 'fox', 'jumps', 'over', 'a', 'lazy', 'dog', 'near', 'the', 'river', 'bank', 'while', 'birds', 'fly'];
-                const wordStr = words.map(w => `<span style="color: #27c93f">${w}</span> `).join('');
-                animateLines([
-                    { html: '<div class="output-line system-msg">[bot] Initializing Playwright...</div>', delay: 500 },
-                    { html: `<div class="output-line system-msg">[bot] Testing phrase mapping: ${wordStr}</div>`, delay: 400 },
-                    { html: `<div class="output-line system-msg">[playwright] Running 1 test in suite ${input}...</div>`, delay: 600 },
-                    { html: `<div class="output-line system-msg">[playwright] ✅ Test passed.</div>`, delay: 400 },
-                    { html: `<div class="output-line success-msg">[✓] Playwright suite ${input} successfully executed.</div>`, delay: 0 }
-                ], container, onDone);
-            }
-        },
-        'log-analyzer': {
-            cmd: './log-analyzer.sh',
-            promptReq: 'Enter environment to analyze:',
-            placeholder: 'production / staging / dev',
-            simulate: (input, container, onDone) => {
-                if (!input) input = 'production';
-                animateLines([
-                    { html: `<div class="output-line system-msg">[logs] Connecting to Elasticsearch cluster (${input})...</div>`, delay: 400 },
-                    { html: `<div class="output-line system-msg">[logs] Querying last 24 hours of application logs...</div>`, delay: 600 },
-                    { html: `<div class="output-line system-msg">[logs] Filtering for ERROR and FATAL severity levels...</div>`, delay: 500 },
-                    { html: `<div class="output-line system-msg">[logs] Analyzing ${progressBar(30)}</div>`, delay: 400 },
-                    { html: `<div class="output-line system-msg">[logs] Analyzing ${progressBar(70)}</div>`, delay: 400 },
-                    { html: `<div class="output-line system-msg">[logs] Analyzing ${progressBar(100)}</div>`, delay: 300 },
-                    { html: '<div class="output-line system-msg">[logs] Generating summary report...</div>', delay: 500 },
-                    { html: '<div class="output-line system-msg">Top Error Frequencies:</div>', delay: 200 },
-                    { html: '<div class="output-line system-msg">  1. ConnectionTimeout: DB cluster (142 occurrences)</div>', delay: 150 },
-                    { html: '<div class="output-line system-msg">  2. NullReferenceException: PaymentService (89 occurrences)</div>', delay: 150 },
-                    { html: '<div class="output-line system-msg">  3. 502 Bad Gateway: AuthProxy (23 occurrences)</div>', delay: 150 },
-                    { html: `<div class="output-line success-msg">[✓] Report generated and sent to Slack #alerts channel.</div>`, delay: 0 }
-                ], container, onDone);
-            }
-        }
     };
 
     const scriptItems = document.querySelectorAll('.script-item');

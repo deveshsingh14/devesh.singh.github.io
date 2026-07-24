@@ -626,6 +626,77 @@ ul, ol {
 }
 
 /* =========================================
+   Contact Form
+========================================= */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: left;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.form-input {
+  width: 100%;
+  background-color: var(--light-navy);
+  border: 1px solid var(--lightest-navy);
+  border-radius: 4px;
+  color: var(--lightest-slate);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  transition: var(--transition);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--teal);
+  background-color: rgba(10, 25, 47, 0.8);
+}
+
+.form-input::placeholder {
+  color: var(--slate);
+}
+
+select.form-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238892b0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1em;
+}
+
+.submit-btn {
+  background-color: transparent;
+  color: var(--teal);
+  border: 1px solid var(--teal);
+  border-radius: 4px;
+  padding: 1rem 1.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: var(--transition);
+  align-self: center;
+  margin-top: 1rem;
+}
+
+.submit-btn:hover, .submit-btn:focus {
+  background-color: var(--teal-tint);
+  outline: none;
+}
+
+/* =========================================
    Footer
 ========================================= */
 .footer {
