@@ -55,8 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         navLinks.forEach(link => {
             link.classList.remove('active');
+            link.removeAttribute('aria-current');
             if (link.getAttribute('href').includes(current)) {
                 link.classList.add('active');
+                link.setAttribute('aria-current', 'true');
             }
         });
     }));
@@ -383,7 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span class="prompt">></span> <input type="text" id="tool-input" placeholder="${script.placeholder}" autocomplete="off" aria-label="Terminal command input">
                 <button id="run-btn">Run Script</button>
             </div>
-            <div id="dynamic-output"></div>
+            <div id="dynamic-output" aria-live="polite"></div>
         `;
         attachRunEvent(scriptKey);
     };
