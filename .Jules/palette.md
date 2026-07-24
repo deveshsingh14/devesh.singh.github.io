@@ -14,3 +14,7 @@
 ## 2024-05-15 - Dynamic Terminal Accessibility
 **Learning:** Simulated terminal outputs that dynamically write lines to the DOM must use `aria-live` (e.g., `aria-live="polite"`) to ensure screen readers announce the incoming text. Without this, visually impaired users miss crucial real-time feedback from the simulated tools.
 **Action:** Always verify that elements acting as live console/terminal logs have appropriate `aria-live` attributes added to their parent containers.
+
+## 2024-07-24 - Accessible Typewriter Pattern
+**Learning:** Dynamic text effects like character-by-character typewriters cause chaotic, broken readouts for screen readers as they announce every DOM mutation.
+**Action:** Hide the dynamic visual element with `aria-hidden="true"` and provide a static, comprehensive alternative text block using a `.sr-only` (visually hidden) wrapper.
