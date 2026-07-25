@@ -197,16 +197,16 @@
             <form id="contact-form" class="contact-form" action="https://formspree.io/f/xbjnzqko" method="POST">
                 <div class="form-group">
                     <label for="name" class="sr-only">Name</label>
-                    <input type="text" id="name" name="name" placeholder="Name" required class="form-input">
+                    <input type="text" id="name" name="name" placeholder="Name *" required class="form-input">
                 </div>
                 <div class="form-group">
                     <label for="email" class="sr-only">Email</label>
-                    <input type="email" id="email" name="email" placeholder="Email" required class="form-input">
+                    <input type="email" id="email" name="email" placeholder="Email *" required class="form-input">
                 </div>
                 <div class="form-group">
                     <label for="inquiry-type" class="sr-only">Inquiry Type</label>
                     <select id="inquiry-type" name="inquiry_type" required class="form-input">
-                        <option value="" disabled selected>Select Inquiry Type</option>
+                        <option value="" disabled selected>Select Inquiry Type *</option>
                         <option value="freelance">Freelance/Contract Work</option>
                         <option value="hiring">Full-Time Opportunity</option>
                         <option value="collaboration">Project Collaboration</option>
@@ -215,7 +215,7 @@
                 </div>
                 <div class="form-group">
                     <label for="message" class="sr-only">Message</label>
-                    <textarea id="message" name="message" placeholder="Message" rows="5" required class="form-input"></textarea>
+                    <textarea id="message" name="message" placeholder="Message *" rows="5" required class="form-input"></textarea>
                 </div>
                 <button type="submit" class="submit-btn">Send Message</button>
             </form>
