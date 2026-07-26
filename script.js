@@ -718,4 +718,62 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial Generation
     generatePassword();
     generatePassphrase();
+
+    // ==========================================
+    // Contact Form AJAX Submission & Feedback
+    // ==========================================
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = contactForm.querySelector('.submit-btn');
+            const originalBtnText = submitBtn.innerText;
+
+            // Loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner"></span> Sending...';
+            submitBtn.style.opacity = '0.8';
+            submitBtn.style.cursor = 'not-allowed';
+
+            const formData = new FormData(contactForm);
+
+            try {
+                const response = await fetch(contactForm.action, {
+                    method: contactForm.method,
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    // Success state
+                    submitBtn.innerHTML = 'Message Sent!';
+                    submitBtn.style.backgroundColor = 'var(--teal-tint)';
+                    contactForm.reset();
+                } else {
+                    // Error state
+                    submitBtn.innerHTML = 'Oops! Error sending.';
+                    submitBtn.style.color = '#ff5f56';
+                    submitBtn.style.borderColor = '#ff5f56';
+                }
+            } catch (error) {
+                // Network error state
+                submitBtn.innerHTML = 'Network error. Try again.';
+                submitBtn.style.color = '#ff5f56';
+                submitBtn.style.borderColor = '#ff5f56';
+            }
+
+            // Restore button after 3 seconds
+            setTimeout(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerText = originalBtnText;
+                submitBtn.style.opacity = '';
+                submitBtn.style.cursor = '';
+                submitBtn.style.color = '';
+                submitBtn.style.borderColor = '';
+                submitBtn.style.backgroundColor = '';
+            }, 3000);
+        });
+    }
 });
