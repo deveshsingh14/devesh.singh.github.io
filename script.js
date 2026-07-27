@@ -718,4 +718,60 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial Generation
     generatePassword();
     generatePassphrase();
+
+    // ==========================================
+    // Contact Form AJAX Submission
+    // ==========================================
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitBtn = contactForm.querySelector('.submit-btn');
+            const originalBtnText = submitBtn.innerText;
+            const originalBtnWidth = submitBtn.offsetWidth;
+
+            // Set loading state
+            submitBtn.style.width = `${originalBtnWidth}px`; // prevent jitter
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner"></span> Sending...';
+
+            try {
+                const response = await fetch(contactForm.action, {
+                    method: contactForm.method,
+                    body: new FormData(contactForm),
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    // Success state
+                    contactForm.reset();
+                    submitBtn.innerText = 'Message Sent!';
+                    submitBtn.style.backgroundColor = '#27c93f';
+                    submitBtn.style.color = '#fff';
+                } else {
+                    // Error state
+                    submitBtn.innerText = 'Oops! Error sending.';
+                    submitBtn.style.backgroundColor = '#ff5f56';
+                    submitBtn.style.color = '#fff';
+                }
+            } catch (error) {
+                // Network error state
+                submitBtn.innerText = 'Oops! Network Error.';
+                submitBtn.style.backgroundColor = '#ff5f56';
+                submitBtn.style.color = '#fff';
+            } finally {
+                // Revert after 3 seconds
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = originalBtnText;
+                    submitBtn.style.width = '';
+                    submitBtn.style.backgroundColor = '';
+                    submitBtn.style.color = '';
+                }, 3000);
+            }
+        });
+    }
 });
