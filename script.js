@@ -718,4 +718,54 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial Generation
     generatePassword();
     generatePassphrase();
+
+    // ==========================================
+    // Contact Form Logic
+    // ==========================================
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = contactForm.querySelector('.submit-btn');
+            const originalText = submitBtn.innerText;
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner"></span> Sending...';
+            submitBtn.style.opacity = '0.7';
+            submitBtn.style.cursor = 'not-allowed';
+
+            const formData = new FormData(contactForm);
+
+            try {
+                const response = await fetch(contactForm.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    submitBtn.innerText = 'Message Sent!';
+                    contactForm.reset();
+                    setTimeout(() => {
+                        submitBtn.disabled = false;
+                        submitBtn.innerText = originalText;
+                        submitBtn.style.opacity = '1';
+                        submitBtn.style.cursor = 'pointer';
+                    }, 3000);
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            } catch (error) {
+                submitBtn.innerText = 'Error. Try again.';
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = originalText;
+                    submitBtn.style.opacity = '1';
+                    submitBtn.style.cursor = 'pointer';
+                }, 3000);
+            }
+        });
+    }
 });

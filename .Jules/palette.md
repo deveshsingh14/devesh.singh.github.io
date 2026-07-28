@@ -14,3 +14,7 @@
 ## 2024-05-15 - Dynamic Terminal Accessibility
 **Learning:** Simulated terminal outputs that dynamically write lines to the DOM must use `aria-live` (e.g., `aria-live="polite"`) to ensure screen readers announce the incoming text. Without this, visually impaired users miss crucial real-time feedback from the simulated tools.
 **Action:** Always verify that elements acting as live console/terminal logs have appropriate `aria-live` attributes added to their parent containers.
+
+## 2026-07-28 - Asynchronous Form Submissions UX
+**Learning:** Default synchronous form submissions on static sites cause abrupt page reloads or redirects to third-party services (like Formspree), which disrupts the user experience.
+**Action:** Always intercept form submissions using JavaScript to provide an async `fetch` request, paired with a visual loading state (disabled button, spinner) and clear success/error feedback.
