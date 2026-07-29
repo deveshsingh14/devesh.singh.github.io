@@ -718,4 +718,48 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial Generation
     generatePassword();
     generatePassphrase();
+
+    // ==========================================
+    // Contact Form Async Submission
+    // ==========================================
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitBtn = contactForm.querySelector('.submit-btn');
+            const originalText = submitBtn.innerText;
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner"></span> Sending...';
+            submitBtn.style.opacity = '0.7';
+            submitBtn.style.cursor = 'not-allowed';
+
+            try {
+                const response = await fetch(contactForm.action, {
+                    method: 'POST',
+                    body: new FormData(contactForm),
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    submitBtn.innerText = 'Message Sent!';
+                    contactForm.reset();
+                } else {
+                    submitBtn.innerText = 'Error. Try Again.';
+                }
+            } catch (error) {
+                submitBtn.innerText = 'Error. Try Again.';
+            }
+
+            setTimeout(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerText = originalText;
+            submitBtn.style.opacity = '';
+            submitBtn.style.cursor = '';
+            }, 3000);
+        });
+    }
 });
