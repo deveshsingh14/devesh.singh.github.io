@@ -14,6 +14,11 @@
 ## 2024-05-15 - Dynamic Terminal Accessibility
 **Learning:** Simulated terminal outputs that dynamically write lines to the DOM must use `aria-live` (e.g., `aria-live="polite"`) to ensure screen readers announce the incoming text. Without this, visually impaired users miss crucial real-time feedback from the simulated tools.
 **Action:** Always verify that elements acting as live console/terminal logs have appropriate `aria-live` attributes added to their parent containers.
+
+## 2024-12-05 - Enhance required field indicators when using sr-only labels
+**Learning:** When form fields use `sr-only` classes on their `<label>` elements to hide them visually in favor of a cleaner design, relying on the `required` attribute is insufficient for sighted users. The browser's native required popups only appear *after* a failed submission attempt.
+**Action:** When visual labels are hidden and placeholders are used as the primary visual label, explicitly add a required indicator (e.g., ` *`) to the placeholder text itself so users know which fields are mandatory before interacting with the form.
+
 ## 2024-05-18 - Async Contact Form Submission
 **Learning:** Form submissions without async interception redirect the page to a third-party success page (e.g., Formspree), which jarringly breaks the user out of the single-page experience.
 **Action:** Implement `fetch` interceptors for third-party form integrations to keep users in-context, while providing immediate disabled/loading states to prevent duplicate submissions during the async delay.

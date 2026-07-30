@@ -757,8 +757,8 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 submitBtn.disabled = false;
                 submitBtn.innerText = originalText;
-            submitBtn.style.opacity = '';
-            submitBtn.style.cursor = '';
+                submitBtn.style.opacity = '';
+                submitBtn.style.cursor = '';
             }, 3000);
         });
     }
