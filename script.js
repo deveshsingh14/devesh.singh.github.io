@@ -718,4 +718,59 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial Generation
     generatePassword();
     generatePassphrase();
+
+    // ==========================================
+    // Contact Form Asynchronous Submission
+    // ==========================================
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitBtn = contactForm.querySelector('.submit-btn');
+            const originalHTML = submitBtn.innerHTML;
+
+            // Set loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner"></span> Sending...';
+            submitBtn.style.opacity = '0.7';
+            submitBtn.style.cursor = 'not-allowed';
+
+            try {
+                const formData = new FormData(contactForm);
+                const response = await fetch(contactForm.action, {
+                    method: contactForm.method,
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    submitBtn.innerText = 'Message Sent!';
+                    submitBtn.style.backgroundColor = 'rgba(100, 255, 218, 0.1)';
+                    contactForm.reset();
+                } else {
+                    submitBtn.innerText = 'Error: Please try again.';
+                    submitBtn.style.color = '#ff5f56';
+                    submitBtn.style.borderColor = '#ff5f56';
+                }
+            } catch (error) {
+                submitBtn.innerText = 'Error: Network issue.';
+                submitBtn.style.color = '#ff5f56';
+                submitBtn.style.borderColor = '#ff5f56';
+            } finally {
+                // Revert after 3 seconds
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalHTML;
+                    submitBtn.style.opacity = '';
+                    submitBtn.style.cursor = '';
+                    submitBtn.style.backgroundColor = '';
+                    submitBtn.style.color = '';
+                    submitBtn.style.borderColor = '';
+                }, 3000);
+            }
+        });
+    }
 });
