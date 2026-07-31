@@ -18,3 +18,6 @@
 ## 2024-12-05 - Enhance required field indicators when using sr-only labels
 **Learning:** When form fields use `sr-only` classes on their `<label>` elements to hide them visually in favor of a cleaner design, relying on the `required` attribute is insufficient for sighted users. The browser's native required popups only appear *after* a failed submission attempt.
 **Action:** When visual labels are hidden and placeholders are used as the primary visual label, explicitly add a required indicator (e.g., ` *`) to the placeholder text itself so users know which fields are mandatory before interacting with the form.
+## 2024-07-30 - Prevent native form redirects for asynchronous submissions
+**Learning:** Native HTML form submissions default to a page redirect, which interrupts the user's flow and can feel abrupt or disjointed, especially for simple contact forms. A seamless experience requires keeping the user on the same page.
+**Action:** When implementing contact or data-entry forms, always intercept the native `submit` event using `e.preventDefault()`, submit the data asynchronously using `fetch`, and provide immediate in-page UI feedback (like loading states and success/error messages).
