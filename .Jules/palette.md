@@ -21,3 +21,6 @@
 ## 2024-07-30 - Prevent native form redirects for asynchronous submissions
 **Learning:** Native HTML form submissions default to a page redirect, which interrupts the user's flow and can feel abrupt or disjointed, especially for simple contact forms. A seamless experience requires keeping the user on the same page.
 **Action:** When implementing contact or data-entry forms, always intercept the native `submit` event using `e.preventDefault()`, submit the data asynchronously using `fetch`, and provide immediate in-page UI feedback (like loading states and success/error messages).
+## 2026-08-01 - Dynamic Text Accessibility
+**Learning:** Dynamic text effects like typewriters are extremely confusing for screen readers due to the character-by-character updates. A common pattern is to hide the animation with `aria-hidden` and provide the static, complete text in an `.sr-only` class block alongside it.
+**Action:** When implementing visual text animations, always duplicate the final meaning in a visually hidden block for screen readers.
