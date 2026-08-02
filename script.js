@@ -501,9 +501,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle clicking different scripts in sidebar
     scriptItems.forEach(item => {
         const selectScript = () => {
-            // Update active class
-            scriptItems.forEach(i => i.classList.remove('active'));
+            // Update active class and aria-pressed
+            scriptItems.forEach(i => {
+                i.classList.remove('active');
+                i.setAttribute('aria-pressed', 'false');
+            });
             item.classList.add('active');
+            item.setAttribute('aria-pressed', 'true');
             
             const scriptKey = item.getAttribute('data-script');
             

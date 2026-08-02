@@ -21,3 +21,6 @@
 ## 2024-07-30 - Prevent native form redirects for asynchronous submissions
 **Learning:** Native HTML form submissions default to a page redirect, which interrupts the user's flow and can feel abrupt or disjointed, especially for simple contact forms. A seamless experience requires keeping the user on the same page.
 **Action:** When implementing contact or data-entry forms, always intercept the native `submit` event using `e.preventDefault()`, submit the data asynchronously using `fetch`, and provide immediate in-page UI feedback (like loading states and success/error messages).
+## 2024-08-02 - Custom Tab Interfaces Need Dynamic ARIA States
+**Learning:** When implementing custom toggle button interfaces (like the sidebar terminal tool selector buttons), static HTML attributes aren't enough. Screen readers need to know which button is currently active. The `aria-pressed` attribute must be dynamically toggled via JavaScript to accurately reflect the interface state to assistive technologies, alongside visual class changes.
+**Action:** Ensure any custom toggle button component includes JavaScript logic to explicitly manage `aria-pressed` attributes.
