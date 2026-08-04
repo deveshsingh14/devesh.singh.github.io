@@ -715,6 +715,13 @@ document.addEventListener('DOMContentLoaded', () => {
     ppRefresh.addEventListener('click', generatePassphrase);
     ppCopy.addEventListener('click', () => copyToClipboard(ppResult.value, ppCopy));
 
+    // Auto-select text on click/focus for easier copying
+    const autoSelectText = (e) => e.target.select();
+    [pgResult, ppResult].forEach(el => {
+        el.addEventListener('click', autoSelectText);
+        el.addEventListener('focus', autoSelectText);
+    });
+
     // Initial Generation
     generatePassword();
     generatePassphrase();

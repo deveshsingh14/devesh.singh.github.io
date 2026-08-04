@@ -68,4 +68,21 @@ describe('generatePassphrase', () => {
             expect(word[0]).toMatch(/[a-z]/);
         });
     });
+
+    it('auto-selects text in read-only inputs on click', () => {
+        const selectMock = jest.fn();
+        HTMLInputElement.prototype.select = selectMock;
+
+        const pgResult = document.getElementById('pg-result');
+        const ppResult = document.getElementById('pp-result');
+
+        pgResult.click();
+        expect(selectMock).toHaveBeenCalled();
+        selectMock.mockClear();
+
+        ppResult.click();
+        expect(selectMock).toHaveBeenCalled();
+
+        delete HTMLInputElement.prototype.select; // Cleanup mock
+    });
 });
