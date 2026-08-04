@@ -24,3 +24,7 @@
 ## 2026-08-01 - Dynamic Text Accessibility
 **Learning:** Dynamic text effects like typewriters are extremely confusing for screen readers due to the character-by-character updates. A common pattern is to hide the animation with `aria-hidden` and provide the static, complete text in an `.sr-only` class block alongside it.
 **Action:** When implementing visual text animations, always duplicate the final meaning in a visually hidden block for screen readers.
+
+## 2024-08-05 - Enhance dynamic inline text announcements for screen readers
+**Learning:** Buttons that execute an action and immediately provide inline text feedback (e.g., changing from "Send" to "Sending..." or "Copy" to "Copied!") are not announced by screen readers if their text is updated dynamically via JavaScript. This leaves visually impaired users unaware of the state change or successful action completion.
+**Action:** When a button's text is modified dynamically for inline user feedback, always ensure the button (or its parent text container) has `aria-live="polite"` applied so screen readers announce the state change correctly without interrupting the user.
