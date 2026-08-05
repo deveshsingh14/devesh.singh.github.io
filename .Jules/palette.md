@@ -28,3 +28,7 @@
 ## 2024-08-05 - Enhance dynamic inline text announcements for screen readers
 **Learning:** Buttons that execute an action and immediately provide inline text feedback (e.g., changing from "Send" to "Sending..." or "Copy" to "Copied!") are not announced by screen readers if their text is updated dynamically via JavaScript. This leaves visually impaired users unaware of the state change or successful action completion.
 **Action:** When a button's text is modified dynamically for inline user feedback, always ensure the button (or its parent text container) has `aria-live="polite"` applied so screen readers announce the state change correctly without interrupting the user.
+
+## 2024-05-20 - Auto-select Text in Read-Only Fields
+**Learning:** Users often click read-only output fields (like generated passwords) with the intention of copying them. Providing a one-click auto-select using `HTMLInputElement.select()` significantly reduces friction and delights users.
+**Action:** Apply this pattern to any read-only text output fields where the primary user intent is to copy the data.
