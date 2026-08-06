@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // Typewriter Effect
     // ==========================================
-    const phrases = ["cloud-native architectures.", "AI/ML infrastructure.", "scalable platform engineering.", "GitOps-driven deployments."];
+    const phrases = ["AWS infrastructure.", "CI/CD pipelines.", "LLM-Agent integrations.", "automated deployments."];
     let currentPhraseIndex = 0;
     let isDeleting = false;
     let txt = '';
