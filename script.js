@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // Typewriter Effect
     // ==========================================
-    const phrases = ["cloud-native architectures.", "AI/ML infrastructure.", "scalable platform engineering.", "GitOps-driven deployments."];
+    const phrases = ["AWS infrastructure.", "CI/CD pipelines.", "LLM-Agent integrations.", "automated deployments."];
     let currentPhraseIndex = 0;
     let isDeleting = false;
     let txt = '';
@@ -436,7 +436,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const scriptItems = document.querySelectorAll('.script-item');
     const terminalOutput = document.getElementById('terminal-output');
-    const guiOutput = document.getElementById('gui-output');
     
     // Function to render the initial state of a script
     const renderTerminal = (scriptKey) => {
@@ -510,11 +509,18 @@ document.addEventListener('DOMContentLoaded', () => {
             if (scriptKey === 'password-gen') {
                 if (currentAnimation) { clearTimeout(currentAnimation); currentAnimation = null; }
                 terminalOutput.style.display = 'none';
-                guiOutput.style.display = 'flex';
+                document.querySelectorAll('.gui-body').forEach(el => el.style.display = 'none');
+                document.getElementById('gui-output-password').style.display = 'flex';
                 document.querySelector('.terminal-title').innerText = 'Password Generator App';
+            } else if (scriptKey === 'docx-to-pdf') {
+                if (currentAnimation) { clearTimeout(currentAnimation); currentAnimation = null; }
+                terminalOutput.style.display = 'none';
+                document.querySelectorAll('.gui-body').forEach(el => el.style.display = 'none');
+                document.getElementById('gui-output-docx').style.display = 'flex';
+                document.querySelector('.terminal-title').innerText = 'DOCX to PDF Converter';
             } else {
+                document.querySelectorAll('.gui-body').forEach(el => el.style.display = 'none');
                 terminalOutput.style.display = 'block';
-                guiOutput.style.display = 'none';
                 document.querySelector('.terminal-title').innerText = 'user@dsb-macbook: ~/devops-tools';
                 // Render corresponding terminal UI
                 renderTerminal(scriptKey);
@@ -725,6 +731,101 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial Generation
     generatePassword();
     generatePassphrase();
+
+    // ==========================================
+    // DOCX to PDF Logic
+    // ==========================================
+    const docxUploadArea = document.getElementById('docx-upload-area');
+    const docxFileInput = document.getElementById('docx-file-input');
+    const docxStatus = document.getElementById('docx-status');
+    const btnConvertDocx = document.getElementById('btn-convert-docx');
+    const docxPreview = document.getElementById('docx-preview');
+    let selectedDocxFile = null;
+
+    if (docxUploadArea) {
+        docxUploadArea.addEventListener('click', () => docxFileInput.click());
+        
+        docxUploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            docxUploadArea.style.borderColor = 'var(--teal)';
+            docxUploadArea.style.backgroundColor = 'var(--teal-tint)';
+        });
+        
+        docxUploadArea.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            docxUploadArea.style.borderColor = 'var(--slate)';
+            docxUploadArea.style.backgroundColor = 'transparent';
+        });
+        
+        docxUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            docxUploadArea.style.borderColor = 'var(--slate)';
+            docxUploadArea.style.backgroundColor = 'transparent';
+            if (e.dataTransfer.files.length) {
+                handleDocxSelection(e.dataTransfer.files[0]);
+            }
+        });
+        
+        docxFileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) {
+                handleDocxSelection(e.target.files[0]);
+            }
+        });
+        
+        function handleDocxSelection(file) {
+            if (file.name.endsWith('.docx')) {
+                selectedDocxFile = file;
+                docxStatus.innerText = `Selected: ${file.name}`;
+                docxStatus.style.color = 'var(--teal)';
+                btnConvertDocx.style.display = 'block';
+            } else {
+                selectedDocxFile = null;
+                docxStatus.innerText = 'Error: Please select a valid .docx file.';
+                docxStatus.style.color = '#ff5f56';
+                btnConvertDocx.style.display = 'none';
+            }
+        }
+        
+        btnConvertDocx.addEventListener('click', async () => {
+            if (!selectedDocxFile) return;
+            
+            btnConvertDocx.disabled = true;
+            btnConvertDocx.innerHTML = '<span class="spinner"></span> Converting...';
+            docxStatus.innerText = 'Extracting content from DOCX...';
+            docxStatus.style.color = 'var(--teal)';
+            
+            try {
+                if (typeof mammoth === 'undefined' || typeof html2pdf === 'undefined') {
+                    throw new Error("Conversion libraries failed to load. Please check your internet connection.");
+                }
+
+                const arrayBuffer = await selectedDocxFile.arrayBuffer();
+                const result = await mammoth.convertToHtml({ arrayBuffer: arrayBuffer });
+                docxPreview.innerHTML = `<div style="padding: 40px; color: #000; background: #fff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: 1.6;">${result.value}</div>`;
+                
+                docxStatus.innerText = 'Generating PDF file...';
+                
+                const opt = {
+                    margin:       0.5,
+                    filename:     selectedDocxFile.name.replace('.docx', '.pdf'),
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { scale: 2 },
+                    jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+                };
+                
+                await html2pdf().set(opt).from(docxPreview.firstElementChild).save();
+                
+                docxStatus.innerText = 'Conversion Complete! Your PDF has been downloaded.';
+            } catch (err) {
+                console.error(err);
+                docxStatus.innerText = err.message || 'Error during conversion. Check console for details.';
+                docxStatus.style.color = '#ff5f56';
+            } finally {
+                btnConvertDocx.disabled = false;
+                btnConvertDocx.innerText = 'Convert to PDF';
+            }
+        });
+    }
 
     // ==========================================
     // Contact Form Asynchronous Submission
