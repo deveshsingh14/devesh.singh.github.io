@@ -32,3 +32,11 @@
 ## 2024-05-20 - Auto-select Text in Read-Only Fields
 **Learning:** Users often click read-only output fields (like generated passwords) with the intention of copying them. Providing a one-click auto-select using `HTMLInputElement.select()` significantly reduces friction and delights users.
 **Action:** Apply this pattern to any read-only text output fields where the primary user intent is to copy the data.
+
+## 2026-08-05 - Focus States for Custom GUI Elements
+**Learning:** Custom styled form elements (like sliders and inputs) often lose default browser focus outlines, significantly harming keyboard navigation and accessibility if not explicitly restored.
+**Action:** Ensure all interactive elements, particularly custom , , and checkboxes, have explicit `:focus-visible` styles that maintain sufficient contrast.
+
+## 2026-08-05 - Focus States for Custom GUI Elements
+**Learning:** Custom styled form elements (like sliders and inputs) often lose default browser focus outlines, significantly harming keyboard navigation and accessibility if not explicitly restored.
+**Action:** Ensure all interactive elements, particularly custom `.gui-input`, `.gui-slider`, and checkboxes, have explicit `:focus-visible` styles that maintain sufficient contrast.
