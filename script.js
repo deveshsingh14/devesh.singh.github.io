@@ -745,6 +745,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (docxUploadArea) {
         docxUploadArea.addEventListener('click', () => docxFileInput.click());
         
+        docxUploadArea.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                docxFileInput.click();
+            }
+        });
+
         docxUploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
             docxUploadArea.style.borderColor = 'var(--teal)';
