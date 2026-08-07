@@ -40,3 +40,6 @@
 ## 2026-08-05 - Focus States for Custom GUI Elements
 **Learning:** Custom styled form elements (like sliders and inputs) often lose default browser focus outlines, significantly harming keyboard navigation and accessibility if not explicitly restored.
 **Action:** Ensure all interactive elements, particularly custom `.gui-input`, `.gui-slider`, and checkboxes, have explicit `:focus-visible` styles that maintain sufficient contrast.
+## 2024-10-25 - Custom upload areas need to be accessible
+**Learning:** Custom drop zones for file uploads that use `div` elements instead of actual `<input type="file">` controls (often hidden for styling) are inaccessible to keyboard users unless explicitly made focusable. Keyboard users cannot tab to them or trigger the file dialog.
+**Action:** Always add `tabindex="0"`, `role="button"` (or appropriate role), attach keydown event listeners for `Enter` and `Space` to trigger the hidden file input, and ensure visible `:focus-visible` styles on the drop zone container.
