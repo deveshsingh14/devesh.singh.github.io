@@ -76,6 +76,15 @@ a {
   transition: var(--transition);
 }
 
+a:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+
+section:focus, header:focus {
+  outline: none;
+}
+
 ul, ol {
   list-style: none;
 }

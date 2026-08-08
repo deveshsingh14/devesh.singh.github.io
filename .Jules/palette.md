@@ -44,3 +44,7 @@
 ## $(date +%Y-%m-%d) - Interactive custom upload areas
 **Learning:** Custom 'drag and drop' or 'click to select' file upload zones built out of `div` elements are entirely inaccessible to keyboard users unless explicitly configured. They must be operable via `Enter` or `Space` keys to replicate native button behavior.
 **Action:** When a div acts as an interactive trigger (like an upload area), assign it `role="button"`, `tabindex="0"`, a descriptive `aria-label`, visible `:focus-visible` styles, and JavaScript keydown listeners for `Enter` and `Space`.
+
+## 2024-05-10 - In-page anchor link target focus
+**Learning:** When using in-page anchor links (like `#about` or a skip-to-content link), navigating to them visually scrolls the page, but many browsers fail to move keyboard focus to the target element unless the element is explicitly focusable. This traps screen reader and keyboard users at the top of the page.
+**Action:** Always add `tabindex="-1"` to destination containers (like `<section id="...">` or `<main id="...">`) to allow them to receive programmatic focus, and use CSS (`:focus { outline: none; }`) to suppress unwanted visible outlines when they do.
