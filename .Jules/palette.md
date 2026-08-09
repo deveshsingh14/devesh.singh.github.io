@@ -44,3 +44,6 @@
 ## $(date +%Y-%m-%d) - Interactive custom upload areas
 **Learning:** Custom 'drag and drop' or 'click to select' file upload zones built out of `div` elements are entirely inaccessible to keyboard users unless explicitly configured. They must be operable via `Enter` or `Space` keys to replicate native button behavior.
 **Action:** When a div acts as an interactive trigger (like an upload area), assign it `role="button"`, `tabindex="0"`, a descriptive `aria-label`, visible `:focus-visible` styles, and JavaScript keydown listeners for `Enter` and `Space`.
+## 2026-08-09 - Accessibility Attributes for Dynamic UI Elements
+**Learning:** Decorative icons (like upload SVGs) and window controls in terminal UIs can clutter the screen reader experience. Dynamic status updates (like file upload and conversion status) need `role="status"` and `aria-live="polite"` to be properly announced when they update asynchronously.
+**Action:** Add `aria-hidden="true"` to purely decorative elements and use `aria-live="polite"` on elements whose text changes dynamically to provide critical feedback to users.

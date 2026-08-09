@@ -298,7 +298,7 @@
                 
                 <div class="terminal-main">
                     <div class="terminal-topbar">
-                        <div class="window-controls">
+                        <div class="window-controls" aria-hidden="true">
                             <span class="control close"></span>
                             <span class="control minimize"></span>
                             <span class="control maximize"></span>
@@ -397,7 +397,7 @@
                         <p style="margin-bottom: 1.5rem; color: var(--light-slate);">Upload a .docx file to convert it to a PDF locally in your browser.</p>
                         
                         <div class="upload-area" id="docx-upload-area" role="button" tabindex="0" aria-label="Upload DOCX file" style="border: 2px dashed var(--slate); border-radius: 8px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.2s;">
-                            <svg style="width: 48px; height: 48px; color: var(--teal); margin-bottom: 1rem;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <svg aria-hidden="true" style="width: 48px; height: 48px; color: var(--teal); margin-bottom: 1rem;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                               <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                             </svg>
                             <h4>Drag & Drop or Click to Select File</h4>
@@ -405,9 +405,9 @@
                             <input type="file" id="docx-file-input" accept=".docx" style="display: none;">
                         </div>
                         
-                        <div id="docx-status" style="margin-top: 1.5rem; text-align: center; color: var(--teal); font-weight: 500;"></div>
+                        <div id="docx-status" role="status" aria-live="polite" style="margin-top: 1.5rem; text-align: center; color: var(--teal); font-weight: 500;"></div>
                         
-                        <button class="gui-btn primary" id="btn-convert-docx" style="margin-top: 1.5rem; align-self: center; display: none;">Convert to PDF</button>
+                        <button class="gui-btn primary" id="btn-convert-docx" aria-live="polite" style="margin-top: 1.5rem; align-self: center; display: none;">Convert to PDF</button>
                         
                         <div id="docx-preview" style="display: none;"></div>
                     </div>
