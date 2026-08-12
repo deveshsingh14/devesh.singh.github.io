@@ -501,8 +501,12 @@ document.addEventListener('DOMContentLoaded', () => {
     scriptItems.forEach(item => {
         const selectScript = () => {
             // Update active class
-            scriptItems.forEach(i => i.classList.remove('active'));
+            scriptItems.forEach(i => {
+                i.classList.remove('active');
+                i.setAttribute('aria-selected', 'false');
+            });
             item.classList.add('active');
+            item.setAttribute('aria-selected', 'true');
             
             const scriptKey = item.getAttribute('data-script');
             
