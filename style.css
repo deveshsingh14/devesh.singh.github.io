@@ -114,6 +114,120 @@ ul, ol {
 }
 
 /* =========================================
+   Persistent Social Sidebars
+========================================= */
+.side-social,
+.side-email {
+  position: fixed;
+  z-index: 10;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.4s ease;
+}
+
+.side-social.visible,
+.side-email.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.side-social {
+  left: 40px;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateY(10px);
+}
+
+.side-social.visible {
+  transform: translateY(0);
+}
+
+.side-social ul {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+}
+
+.side-social a {
+  display: inline-flex;
+  color: var(--light-slate);
+  padding: 7px;
+}
+
+.side-social a:hover,
+.side-social a:focus-visible {
+  color: var(--teal);
+  transform: translateY(-3px);
+}
+
+.side-social a:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.side-social svg {
+  width: 18px;
+  height: 18px;
+}
+
+.side-line {
+  display: block;
+  width: 1px;
+  height: 90px;
+  background-color: var(--lightest-navy);
+  margin-top: 1.25rem;
+}
+
+.side-email {
+  right: 40px;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateY(10px);
+}
+
+.side-email.visible {
+  transform: translateY(0);
+}
+
+.side-email .side-line {
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+}
+
+.side-email a {
+  writing-mode: vertical-rl;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--light-slate);
+  letter-spacing: 0.05em;
+  padding: 10px 0;
+}
+
+.side-email a:hover,
+.side-email a:focus-visible {
+  color: var(--teal);
+  transform: translateY(-3px);
+}
+
+.side-email a:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+
+@media (max-width: 1080px) {
+  .side-social,
+  .side-email {
+    display: none;
+  }
+}
+
+/* =========================================
    Navigation
 ========================================= */
 .top-nav {

@@ -38,6 +38,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const sections = document.querySelectorAll('section, header');
     const navLinks = document.querySelectorAll('.nav-link');
     const navbar = document.getElementById('navbar');
+    const sideSocial = document.getElementById('side-social');
+    const sideEmail = document.getElementById('side-email');
+    const hero = document.getElementById('hero');
 
     // Change navbar style on scroll
     window.addEventListener('scroll', throttle(() => {
@@ -49,6 +52,13 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             navbar.style.boxShadow = 'none';
             navbar.style.height = '80px';
+        }
+
+        // Reveal the persistent social sidebars once the hero has scrolled by
+        if (hero && sideSocial && sideEmail) {
+            const pastHero = scrollY > hero.offsetHeight - 200;
+            sideSocial.classList.toggle('visible', pastHero);
+            sideEmail.classList.toggle('visible', pastHero);
         }
 
         // Scroll spy logic
