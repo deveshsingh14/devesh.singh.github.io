@@ -40,3 +40,17 @@
 ## 2026-08-05 - Focus States for Custom GUI Elements
 **Learning:** Custom styled form elements (like sliders and inputs) often lose default browser focus outlines, significantly harming keyboard navigation and accessibility if not explicitly restored.
 **Action:** Ensure all interactive elements, particularly custom `.gui-input`, `.gui-slider`, and checkboxes, have explicit `:focus-visible` styles that maintain sufficient contrast.
+
+## 2026-08-10 - Interactive custom upload areas
+**Learning:** Custom 'drag and drop' or 'click to select' file upload zones built out of `div` elements are entirely inaccessible to keyboard users unless explicitly configured. They must be operable via `Enter` or `Space` keys to replicate native button behavior.
+**Action:** When a div acts as an interactive trigger (like an upload area), assign it `role="button"`, `tabindex="0"`, a descriptive `aria-label`, visible `:focus-visible` styles, and JavaScript keydown listeners for `Enter` and `Space`.
+
+## 2024-05-10 - In-page anchor link target focus
+**Learning:** When using in-page anchor links (like `#about` or a skip-to-content link), navigating to them visually scrolls the page, but many browsers fail to move keyboard focus to the target element unless the element is explicitly focusable. This traps screen reader and keyboard users at the top of the page.
+**Action:** Always add `tabindex="-1"` to destination containers (like `<section id="...">` or `<main id="...">`) to allow them to receive programmatic focus, and use CSS (`:focus { outline: none; }`) to suppress unwanted visible outlines when they do.
+## 2026-08-10 - Support autofill on forms
+**Learning:** Contact form inputs lacking `autocomplete` attributes require manual entry every time. This creates friction and is bad for UX. It also fails to satisfy WCAG 1.3.5 Identify Input Purpose which benefits users with cognitive disabilities.
+**Action:** Always include the correct `autocomplete` attributes (like `autocomplete="name"` or `autocomplete="email"`) on standard form fields to ensure a frictionless user experience and proper accessibility support.
+## 2025-02-18 - Interactive UI Components and File Status Accessibility
+**Learning:** Terminal-like interfaces or interactive sidebars often use standard list items mapped to functional UI changes. Transforming these components into `tablist` and `tab` ARIA roles significantly improves screen reader navigation and intent comprehension. Furthermore, dynamic text feedback elements, such as file upload statuses ("Converting...", "Extracting..."), must use `aria-live` attributes to alert visually impaired users of non-blocking asynchronous state changes without refocusing.
+**Action:** Always ensure that interactive UI elements functioning as tabs declare `role="tab"` with `aria-selected` tracking active states, grouped under `role="tablist"`. Additionally, proactively apply `aria-live="polite"` or `"assertive"` on status indicator fields that handle async operations (like file conversions) to provide essential auditory feedback.
