@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // Typewriter Effect
     // ==========================================
-    const phrases = ["AWS infrastructure.", "CI/CD pipelines.", "LLM-Agent integrations.", "automated deployments."];
+    const phrases = ["AWS infrastructure.", "full-stack Node.js apps.", "CI/CD pipelines.", "LLM-Agent integrations.", "automated deployments."];
     let currentPhraseIndex = 0;
     let isDeleting = false;
     let txt = '';
@@ -600,7 +600,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const wordlist = [
         "apple", "brave", "crane", "dance", "eagle", "flame", "grape", "house", "image", "juice",
         "knife", "lemon", "mouse", "night", "ocean", "peace", "queen", "river", "snake", "train",
-        "uncle", "voice", "water", "x-ray", "yacht", "zebra", "cloud", "storm", "light", "shadow",
+        "uncle", "voice", "water", "xray", "yacht", "zebra", "cloud", "storm", "light", "shadow",
         "forest", "mountain", "valley", "spring", "summer", "autumn", "winter", "silver", "gold"
     ];
 
