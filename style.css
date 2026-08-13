@@ -2,32 +2,36 @@
    CSS Custom Properties (Variables)
 ========================================= */
 :root {
-  --navy: #0a192f;
-  --light-navy: #112240;
-  --lightest-navy: #233554;
-  --slate: #8892b0;
-  --light-slate: #a8b2d1;
-  --lightest-slate: #ccd6f6;
-  --white: #e6f1ff;
-  --teal: #64ffda;
-  --teal-tint: rgba(100, 255, 218, 0.1);
-  --navy-shadow: rgba(2, 12, 27, 0.7);
+  /* Higher-contrast, near-black palette (inspired by withhoney.com) — variable
+     names below are historical (from the original navy/teal theme) but now
+     hold warm near-black/off-white/orange values so every existing rule that
+     references them picks up the new theme automatically. */
+  --navy: #0a0a0a;
+  --light-navy: #151515;
+  --lightest-navy: #2e2e2e;
+  --slate: #a8a8a8;
+  --light-slate: #c9c4bd;
+  --lightest-slate: #f4f1ee;
+  --white: #ffffff;
+  --teal: #ff5731;
+  --teal-tint: rgba(255, 87, 49, 0.12);
+  --navy-shadow: rgba(0, 0, 0, 0.7);
 
-  /* Obsidian/neon surfaces used by the hero terminal, ops dashboard, and stack map */
-  --obsidian: #05070d;
-  --obsidian-panel: #0b0f17;
-  --obsidian-border: #1b2333;
+  /* Deepest surfaces used by the hero terminal, ops dashboard, and stack map */
+  --obsidian: #050505;
+  --obsidian-panel: #151515;
+  --obsidian-border: #2e2e2e;
   --amber: #ffb454;
   --amber-tint: rgba(255, 180, 84, 0.12);
   --success: #27c93f;
   --success-tint: rgba(39, 201, 63, 0.12);
-  --danger: #ff5f56;
-  --danger-tint: rgba(255, 95, 86, 0.12);
+  --danger: #d91c1c;
+  --danger-tint: rgba(217, 28, 28, 0.12);
 
-  --glow-teal: 0 0 14px rgba(100, 255, 218, 0.45);
+  --glow-teal: 0 0 14px rgba(255, 87, 49, 0.45);
   --glow-amber: 0 0 14px rgba(255, 180, 84, 0.5);
   --glow-success: 0 0 14px rgba(39, 201, 63, 0.5);
-  --glow-danger: 0 0 14px rgba(255, 95, 86, 0.5);
+  --glow-danger: 0 0 14px rgba(217, 28, 28, 0.5);
 
   --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -120,7 +124,7 @@ ul, ol {
   inset: 0;
   z-index: 30;
   transition: background 0.3s ease;
-  background: radial-gradient(600px circle at 0px 0px, rgba(29, 78, 216, 0.15), transparent 80%);
+  background: radial-gradient(600px circle at 0px 0px, rgba(255, 87, 49, 0.12), transparent 80%);
 }
 
 /* =========================================
@@ -130,7 +134,7 @@ ul, ol {
   position: fixed;
   top: 0;
   width: 100%;
-  background-color: rgba(10, 25, 47, 0.85);
+  background-color: rgba(10, 10, 10, 0.85);
   backdrop-filter: blur(10px);
   z-index: 50;
   transition: var(--transition);
@@ -391,7 +395,7 @@ ul, ol {
 .hero-term-output a {
   color: var(--teal);
   text-decoration: underline;
-  text-decoration-color: rgba(100, 255, 218, 0.4);
+  text-decoration-color: rgba(255, 87, 49, 0.4);
 }
 
 .hero-term-output a:hover,
@@ -651,7 +655,7 @@ ul, ol {
 }
 
 .script-item.active {
-  background-color: rgba(100, 255, 218, 0.1);
+  background-color: var(--teal-tint);
   color: var(--teal);
   border-left: 3px solid var(--teal);
 }
@@ -717,8 +721,8 @@ ul, ol {
 .prompt { color: var(--teal); margin-right: 0.5rem; }
 .command { color: var(--white); }
 .system-msg { color: var(--slate); }
-.success-msg { color: #27c93f; }
-.error-msg { color: #ff5f56; }
+.success-msg { color: var(--success); }
+.error-msg { color: var(--danger); }
 
 .interactive-input {
   display: flex;
@@ -790,7 +794,7 @@ ul, ol {
 
 .prompt-req {
   color: var(--teal);
-  text-shadow: 0 0 8px rgba(100, 255, 218, 0.3);
+  text-shadow: 0 0 8px rgba(255, 87, 49, 0.3);
 }
 
 /* =========================================
@@ -1182,8 +1186,8 @@ ul, ol {
 }
 
 @keyframes topo-pulse {
-  0%, 100% { box-shadow: 0 0 0 rgba(100, 255, 218, 0); }
-  50% { box-shadow: 0 0 10px rgba(100, 255, 218, 0.35); }
+  0%, 100% { box-shadow: 0 0 0 rgba(255, 87, 49, 0); }
+  50% { box-shadow: 0 0 10px rgba(255, 87, 49, 0.35); }
 }
 
 @media (max-width: 700px) {
@@ -1218,7 +1222,7 @@ ul, ol {
 .topo-drawer-backdrop {
   position: fixed;
   inset: 0;
-  background-color: rgba(2, 12, 27, 0.7);
+  background-color: rgba(0, 0, 0, 0.7);
   z-index: 90;
 }
 
@@ -1407,7 +1411,7 @@ ul, ol {
 .form-input:focus {
   outline: none;
   border-color: var(--teal);
-  background-color: rgba(10, 25, 47, 0.8);
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 .form-input::placeholder {
@@ -1416,7 +1420,7 @@ ul, ol {
 
 select.form-input {
   appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238892b0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a8a8a8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right 1rem center;
   background-size: 1em;

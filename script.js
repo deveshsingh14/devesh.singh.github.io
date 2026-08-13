@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('mousemove', throttle((e) => {
             const x = e.clientX;
             const y = e.clientY;
-            spotlight.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(29, 78, 216, 0.15), transparent 80%)`;
+            spotlight.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(255, 87, 49, 0.12), transparent 80%)`;
         }));
     }
 
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const scrollY = window.scrollY;
 
         if (scrollY > 50) {
-            navbar.style.boxShadow = '0 10px 30px -10px rgba(2, 12, 27, 0.7)';
+            navbar.style.boxShadow = '0 10px 30px -10px rgba(0, 0, 0, 0.7)';
             navbar.style.height = '70px';
         } else {
             navbar.style.boxShadow = 'none';
@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
             draw() {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(100, 255, 218, 0.3)';
+                ctx.fillStyle = 'rgba(255, 87, 49, 0.35)';
                 ctx.fill();
             }
         }
@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         ctx.beginPath();
                         ctx.moveTo(particles[i].x, particles[i].y);
                         ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.strokeStyle = `rgba(100, 255, 218, ${0.15 - dist/1000})`;
+                        ctx.strokeStyle = `rgba(255, 87, 49, ${0.15 - dist/1000})`;
                         ctx.lineWidth = 0.5;
                         ctx.stroke();
                     }
@@ -796,7 +796,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 selectedDocxFile = null;
                 docxStatus.innerText = 'Error: Please select a valid .docx file.';
-                docxStatus.style.color = '#ff5f56';
+                docxStatus.style.color = 'var(--danger)';
                 btnConvertDocx.style.display = 'none';
             }
         }
@@ -834,7 +834,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (err) {
                 console.error(err);
                 docxStatus.innerText = err.message || 'Error during conversion. Check console for details.';
-                docxStatus.style.color = '#ff5f56';
+                docxStatus.style.color = 'var(--danger)';
             } finally {
                 btnConvertDocx.disabled = false;
                 btnConvertDocx.innerText = 'Convert to PDF';
@@ -871,17 +871,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (response.ok) {
                     submitBtn.innerText = 'Message Sent!';
-                    submitBtn.style.backgroundColor = 'rgba(100, 255, 218, 0.1)';
+                    submitBtn.style.backgroundColor = 'var(--teal-tint)';
                     contactForm.reset();
                 } else {
                     submitBtn.innerText = 'Error: Please try again.';
-                    submitBtn.style.color = '#ff5f56';
-                    submitBtn.style.borderColor = '#ff5f56';
+                    submitBtn.style.color = 'var(--danger)';
+                    submitBtn.style.borderColor = 'var(--danger)';
                 }
             } catch (error) {
                 submitBtn.innerText = 'Error: Network issue.';
-                submitBtn.style.color = '#ff5f56';
-                submitBtn.style.borderColor = '#ff5f56';
+                submitBtn.style.color = 'var(--danger)';
+                submitBtn.style.borderColor = 'var(--danger)';
             } finally {
                 // Revert after 3 seconds
                 setTimeout(() => {
