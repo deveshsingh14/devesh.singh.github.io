@@ -12,7 +12,6 @@
   --slate: #a8a8a8;
   --light-slate: #c9c4bd;
   --lightest-slate: #f4f1ee;
-  --white: #ffffff;
   --teal: #ff5731;
   --teal-tint: rgba(255, 87, 49, 0.12);
   --navy-shadow: rgba(0, 0, 0, 0.7);
@@ -33,10 +32,51 @@
   --glow-success: 0 0 14px rgba(39, 201, 63, 0.5);
   --glow-danger: 0 0 14px rgba(217, 28, 28, 0.5);
 
+  --nav-bg: rgba(10, 10, 10, 0.85);
+  --form-focus-bg: rgba(0, 0, 0, 0.8);
+
+  /* Text/accent colors for use ONLY inside the always-dark "console" surfaces
+     (hero terminal, Tools terminal, pipeline/metrics/topology panels). Those
+     surfaces keep an obsidian background in both themes, so their text must
+     NOT follow --slate/--teal into the light theme's on-light-background
+     values, or it goes dark-on-dark / low-contrast-on-dark. Intentionally
+     absent from the [data-theme="light"] block below — these stay constant. */
+  --console-text: #f4f1ee;
+  --console-text-mid: #c9c4bd;
+  --console-text-dim: #a8a8a8;
+  --console-white: #ffffff;
+  --console-accent: #ff5731;
+  --console-accent-tint: rgba(255, 87, 49, 0.12);
+  --console-glow: 0 0 14px rgba(255, 87, 49, 0.45);
+  --console-border: #2e2e2e;
+
   --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
   --transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+/* Light theme, toggled via [data-theme="light"] on <html>. Deliberately
+   leaves the --obsidian, --amber, --success, --danger, --glow, and
+   --console tokens alone: the terminal/pipeline/metrics/topology surfaces
+   are meant to always read as dark "console" UI, the same way code blocks
+   stay dark in most editors regardless of the app's own light/dark
+   setting. --teal gets darkened here (not just reused) because the vivid
+   dark-mode orange doesn't clear WCAG AA contrast against a light
+   background. */
+:root[data-theme="light"] {
+  --navy: #f7f5f2;
+  --light-navy: #efebe6;
+  --lightest-navy: #dcd6cd;
+  --slate: #5b5650;
+  --light-slate: #4a4540;
+  --lightest-slate: #1c1a17;
+  --teal: #c2410c;
+  --teal-tint: rgba(194, 65, 12, 0.1);
+  --navy-shadow: rgba(28, 26, 23, 0.15);
+  --glow-teal: 0 0 14px rgba(194, 65, 12, 0.35);
+  --nav-bg: rgba(247, 245, 242, 0.85);
+  --form-focus-bg: rgba(255, 255, 255, 0.9);
 }
 
 /* =========================================
@@ -234,7 +274,7 @@ ul, ol {
   position: fixed;
   top: 0;
   width: 100%;
-  background-color: rgba(10, 10, 10, 0.85);
+  background-color: var(--nav-bg);
   backdrop-filter: blur(10px);
   z-index: 50;
   transition: var(--transition);
@@ -261,6 +301,12 @@ ul, ol {
   letter-spacing: 1px;
 }
 
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+}
+
 .nav-links {
   display: flex;
   gap: 2rem;
@@ -280,6 +326,48 @@ ul, ol {
   .nav-links {
     display: none;
   }
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid var(--lightest-navy);
+  color: var(--lightest-slate);
+  cursor: pointer;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+
+.theme-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
+.theme-toggle .icon-sun {
+  display: none;
+}
+
+:root[data-theme="light"] .theme-toggle .icon-moon {
+  display: none;
+}
+
+:root[data-theme="light"] .theme-toggle .icon-sun {
+  display: block;
 }
 
 /* =========================================
@@ -447,8 +535,8 @@ ul, ol {
 }
 
 .hero-terminal:focus-within {
-  box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.7), var(--glow-teal);
-  border-color: var(--teal);
+  box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.7), var(--console-glow);
+  border-color: var(--console-accent);
 }
 
 .hero-terminal.shake {
@@ -483,7 +571,7 @@ ul, ol {
 .hero-term-output {
   flex-grow: 1;
   overflow-y: auto;
-  color: var(--lightest-slate);
+  color: var(--console-text);
   line-height: 1.7;
 }
 
@@ -493,14 +581,14 @@ ul, ol {
 }
 
 .hero-term-output a {
-  color: var(--teal);
+  color: var(--console-accent);
   text-decoration: underline;
   text-decoration-color: rgba(255, 87, 49, 0.4);
 }
 
 .hero-term-output a:hover,
 .hero-term-output a:focus-visible {
-  text-decoration-color: var(--teal);
+  text-decoration-color: var(--console-accent);
 }
 
 .hero-term-inputline {
@@ -512,7 +600,7 @@ ul, ol {
 }
 
 .hero-term-inputline .prompt {
-  color: var(--teal);
+  color: var(--console-accent);
   white-space: nowrap;
 }
 
@@ -526,10 +614,10 @@ ul, ol {
   background: transparent;
   border: none;
   outline: none;
-  color: var(--white);
+  color: var(--console-white);
   font-family: var(--font-mono);
   font-size: 0.85rem;
-  caret-color: var(--teal);
+  caret-color: var(--console-accent);
   position: relative;
   z-index: 1;
 }
@@ -540,7 +628,7 @@ ul, ol {
   top: 0;
   font-family: var(--font-mono);
   font-size: 0.85rem;
-  color: var(--slate);
+  color: var(--console-text-dim);
   opacity: 0.55;
   white-space: pre;
   pointer-events: none;
@@ -687,7 +775,7 @@ ul, ol {
   display: flex;
   background-color: #0d1117;
   border-radius: 8px;
-  border: 1px solid var(--lightest-navy);
+  border: 1px solid var(--console-border);
   overflow: hidden;
   box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
   min-height: 400px;
@@ -702,7 +790,7 @@ ul, ol {
 .terminal-sidebar {
   width: 200px;
   background-color: #161b22;
-  border-right: 1px solid var(--lightest-navy);
+  border-right: 1px solid var(--console-border);
   padding: 1rem 0;
 }
 
@@ -710,7 +798,7 @@ ul, ol {
   .terminal-sidebar {
     width: 100%;
     border-right: none;
-    border-bottom: 1px solid var(--lightest-navy);
+    border-bottom: 1px solid var(--console-border);
   }
 }
 
@@ -718,7 +806,7 @@ ul, ol {
   padding: 0 1rem;
   font-family: var(--font-mono);
   font-size: 0.8rem;
-  color: var(--slate);
+  color: var(--console-text-dim);
   text-transform: uppercase;
   margin-bottom: 0.5rem;
 }
@@ -739,31 +827,31 @@ ul, ol {
   padding: 0.5rem 1rem;
   font-family: var(--font-mono);
   font-size: 0.85rem;
-  color: var(--light-slate);
+  color: var(--console-text-mid);
   cursor: pointer;
   transition: var(--transition);
 }
 
 .script-item:hover {
-  background-color: var(--lightest-navy);
+  background-color: var(--console-border);
 }
 
 .script-item:focus-visible {
-  outline: 2px solid var(--teal);
+  outline: 2px solid var(--console-accent);
   outline-offset: -2px;
-  background-color: var(--lightest-navy);
+  background-color: var(--console-border);
 }
 
 .script-item.active {
-  background-color: var(--teal-tint);
-  color: var(--teal);
-  border-left: 3px solid var(--teal);
+  background-color: var(--console-accent-tint);
+  color: var(--console-accent);
+  border-left: 3px solid var(--console-accent);
 }
 
 @media (max-width: 768px) {
   .script-item.active {
     border-left: none;
-    border-bottom: 3px solid var(--teal);
+    border-bottom: 3px solid var(--console-accent);
   }
 }
 
@@ -778,7 +866,7 @@ ul, ol {
   align-items: center;
   padding: 0.75rem 1rem;
   background-color: #161b22;
-  border-bottom: 1px solid var(--lightest-navy);
+  border-bottom: 1px solid var(--console-border);
 }
 
 .window-controls {
@@ -800,7 +888,7 @@ ul, ol {
 .terminal-title {
   font-family: var(--font-mono);
   font-size: 0.8rem;
-  color: var(--slate);
+  color: var(--console-text-dim);
   flex-grow: 1;
   text-align: center;
 }
@@ -809,7 +897,7 @@ ul, ol {
   padding: 1.5rem;
   font-family: var(--font-mono);
   font-size: 0.9rem;
-  color: var(--lightest-slate);
+  color: var(--console-text);
   flex-grow: 1;
   overflow-y: auto;
 }
@@ -818,9 +906,9 @@ ul, ol {
   margin-bottom: 0.5rem;
 }
 
-.prompt { color: var(--teal); margin-right: 0.5rem; }
-.command { color: var(--white); }
-.system-msg { color: var(--slate); }
+.prompt { color: var(--console-accent); margin-right: 0.5rem; }
+.command { color: var(--console-white); }
+.system-msg { color: var(--console-text-dim); }
 .success-msg { color: var(--success); }
 .error-msg { color: var(--danger); }
 
@@ -834,8 +922,8 @@ ul, ol {
 #tool-input {
   background: transparent;
   border: none;
-  border-bottom: 1px solid var(--slate);
-  color: var(--white);
+  border-bottom: 1px solid var(--console-text-dim);
+  color: var(--console-white);
   font-family: var(--font-mono);
   font-size: 0.9rem;
   padding: 0.25rem;
@@ -846,13 +934,13 @@ ul, ol {
 
 #tool-input:focus {
   outline: none;
-  border-bottom-color: var(--teal);
+  border-bottom-color: var(--console-accent);
 }
 
 #run-btn {
-  background-color: var(--teal-tint);
-  color: var(--teal);
-  border: 1px solid var(--teal);
+  background-color: var(--console-accent-tint);
+  color: var(--console-accent);
+  border: 1px solid var(--console-accent);
   padding: 0.25rem 0.75rem;
   border-radius: 4px;
   cursor: pointer;
@@ -862,12 +950,12 @@ ul, ol {
 }
 
 #run-btn:hover {
-  background-color: var(--teal);
-  color: var(--navy);
+  background-color: var(--console-accent);
+  color: var(--obsidian);
 }
 
 #run-btn:focus-visible {
-  outline: 2px solid var(--teal);
+  outline: 2px solid var(--console-accent);
   outline-offset: 2px;
 }
 
@@ -893,7 +981,7 @@ ul, ol {
 }
 
 .prompt-req {
-  color: var(--teal);
+  color: var(--console-accent);
   text-shadow: 0 0 8px rgba(255, 87, 49, 0.3);
 }
 
@@ -925,7 +1013,7 @@ ul, ol {
 .panel-heading {
   font-family: var(--font-mono);
   font-size: 1rem;
-  color: var(--lightest-slate);
+  color: var(--console-text);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -950,9 +1038,9 @@ ul, ol {
 }
 
 .run-pipeline-btn {
-  background-color: var(--teal-tint);
-  color: var(--teal);
-  border: 1px solid var(--teal);
+  background-color: var(--console-accent-tint);
+  color: var(--console-accent);
+  border: 1px solid var(--console-accent);
   padding: 0.5rem 1rem;
   border-radius: 4px;
   cursor: pointer;
@@ -963,12 +1051,12 @@ ul, ol {
 }
 
 .run-pipeline-btn:hover {
-  background-color: var(--teal);
-  color: var(--navy);
+  background-color: var(--console-accent);
+  color: var(--obsidian);
 }
 
 .run-pipeline-btn:focus-visible {
-  outline: 2px solid var(--teal);
+  outline: 2px solid var(--console-accent);
   outline-offset: 2px;
 }
 
@@ -980,7 +1068,7 @@ ul, ol {
 .pipeline-status-live {
   font-family: var(--font-mono);
   font-size: 0.85rem;
-  color: var(--slate);
+  color: var(--console-text-dim);
   margin-bottom: 1.5rem;
   min-height: 1.3em;
 }
@@ -1003,7 +1091,7 @@ ul, ol {
 .stage-label {
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  color: var(--light-slate);
+  color: var(--console-text-mid);
   text-align: center;
 }
 
@@ -1011,8 +1099,8 @@ ul, ol {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background-color: var(--lightest-navy);
-  border: 2px solid var(--slate);
+  background-color: var(--console-border);
+  border: 2px solid var(--console-text-dim);
   transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -1037,7 +1125,7 @@ ul, ol {
 
 .pipeline-stage[data-status="running"] .stage-label,
 .pipeline-stage[data-status="success"] .stage-label {
-  color: var(--lightest-slate);
+  color: var(--console-text);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1054,7 +1142,7 @@ ul, ol {
 .pipeline-connector {
   flex: 1 1 auto;
   height: 2px;
-  background-color: var(--lightest-navy);
+  background-color: var(--console-border);
   position: relative;
   margin: 0 -4px;
   top: -14px;
@@ -1065,10 +1153,10 @@ ul, ol {
   content: "";
   position: absolute;
   inset: 0;
-  background-color: var(--teal);
+  background-color: var(--console-accent);
   width: 0%;
   transition: width 0.5s ease;
-  box-shadow: var(--glow-teal);
+  box-shadow: var(--console-glow);
 }
 
 .pipeline-connector.filled::after {
@@ -1084,7 +1172,7 @@ ul, ol {
   padding: 1rem;
   height: 160px;
   overflow-y: auto;
-  color: var(--slate);
+  color: var(--console-text-dim);
 }
 
 .pipeline-log .log-line {
@@ -1118,8 +1206,8 @@ ul, ol {
 }
 
 .metric-tile:hover {
-  border-color: var(--teal);
-  box-shadow: var(--glow-teal);
+  border-color: var(--console-accent);
+  box-shadow: var(--console-glow);
 }
 
 .metric-tile-wide {
@@ -1142,7 +1230,7 @@ ul, ol {
 .metric-label {
   font-family: var(--font-mono);
   font-size: 0.7rem;
-  color: var(--slate);
+  color: var(--console-text-dim);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -1150,7 +1238,7 @@ ul, ol {
 .metric-value {
   font-family: var(--font-mono);
   font-size: 1.1rem;
-  color: var(--lightest-slate);
+  color: var(--console-text);
   font-weight: 600;
 }
 
@@ -1161,7 +1249,7 @@ ul, ol {
 .metric-bar {
   height: 6px;
   border-radius: 3px;
-  background-color: var(--lightest-navy);
+  background-color: var(--console-border);
   overflow: hidden;
 }
 
@@ -1214,7 +1302,7 @@ ul, ol {
 }
 
 .topo-lines line {
-  stroke: var(--lightest-navy);
+  stroke: var(--console-border);
   stroke-width: 0.3;
 }
 
@@ -1237,11 +1325,11 @@ ul, ol {
   height: 44px;
   border-radius: 50%;
   background-color: var(--obsidian-panel);
-  border: 2px solid var(--teal);
+  border: 2px solid var(--console-accent);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--teal);
+  color: var(--console-accent);
   font-size: 0.65rem;
   font-weight: 700;
   animation: topo-pulse 2.4s ease-in-out infinite;
@@ -1259,7 +1347,7 @@ ul, ol {
 .topo-node:hover .topo-node-dot,
 .topo-node:focus-visible .topo-node-dot {
   transform: scale(1.1);
-  box-shadow: var(--glow-teal);
+  box-shadow: var(--console-glow);
 }
 
 .topo-node.category-hub:hover .topo-node-dot,
@@ -1268,14 +1356,14 @@ ul, ol {
 }
 
 .topo-node:focus-visible {
-  outline: 2px solid var(--teal);
+  outline: 2px solid var(--console-accent);
   outline-offset: 2px;
   border-radius: 50%;
 }
 
 .topo-node-label {
   font-size: 0.7rem;
-  color: var(--light-slate);
+  color: var(--console-text-mid);
   white-space: nowrap;
 }
 
@@ -1360,8 +1448,8 @@ ul, ol {
   height: 32px;
   border-radius: 50%;
   background: transparent;
-  border: 1px solid var(--lightest-navy);
-  color: var(--light-slate);
+  border: 1px solid var(--console-border);
+  color: var(--console-text-mid);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -1374,19 +1462,19 @@ ul, ol {
 }
 
 .topo-drawer-close:hover {
-  border-color: var(--teal);
-  color: var(--teal);
+  border-color: var(--console-accent);
+  color: var(--console-accent);
 }
 
 .topo-drawer-close:focus-visible {
-  outline: 2px solid var(--teal);
+  outline: 2px solid var(--console-accent);
   outline-offset: 2px;
 }
 
 .topo-drawer-category {
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  color: var(--teal);
+  color: var(--console-accent);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.5rem;
@@ -1394,7 +1482,7 @@ ul, ol {
 
 .topo-drawer-title {
   font-size: 1.5rem;
-  color: var(--lightest-slate);
+  color: var(--console-text);
   margin-bottom: 0.25rem;
   padding-right: 2rem;
 }
@@ -1402,7 +1490,7 @@ ul, ol {
 .topo-drawer-years {
   font-family: var(--font-mono);
   font-size: 0.85rem;
-  color: var(--slate);
+  color: var(--console-text-dim);
   margin-bottom: 1.5rem;
 }
 
@@ -1410,7 +1498,7 @@ ul, ol {
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--slate);
+  color: var(--console-text-dim);
   margin-bottom: 0.75rem;
   margin-top: 1.5rem;
 }
@@ -1425,14 +1513,14 @@ ul, ol {
   position: relative;
   padding-left: 1.1rem;
   font-size: 0.9rem;
-  color: var(--light-slate);
+  color: var(--console-text-mid);
 }
 
 .topo-drawer-achievements li::before {
   content: "▹";
   position: absolute;
   left: 0;
-  color: var(--teal);
+  color: var(--console-accent);
 }
 
 .topo-drawer-projects {
@@ -1444,8 +1532,8 @@ ul, ol {
 .topo-drawer-projects a {
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  color: var(--teal);
-  background-color: var(--teal-tint);
+  color: var(--console-accent);
+  background-color: var(--console-accent-tint);
   padding: 0.35rem 0.75rem;
   border-radius: 15px;
   display: inline-block;
@@ -1453,8 +1541,8 @@ ul, ol {
 
 .topo-drawer-projects a:hover,
 .topo-drawer-projects a:focus-visible {
-  background-color: var(--teal);
-  color: var(--navy);
+  background-color: var(--console-accent);
+  color: var(--obsidian);
   outline: none;
 }
 
@@ -1511,7 +1599,7 @@ ul, ol {
 .form-input:focus {
   outline: none;
   border-color: var(--teal);
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: var(--form-focus-bg);
 }
 
 .form-input::placeholder {

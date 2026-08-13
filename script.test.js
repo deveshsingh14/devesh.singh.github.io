@@ -204,3 +204,45 @@ describe('Tech Stack Topology Map', () => {
         expect(document.activeElement).toBe(dockerNode);
     });
 });
+
+describe('Theme Toggle', () => {
+    beforeEach(() => {
+        // documentElement itself (not just its children) persists across tests
+        // in this file, so a data-theme/localStorage value set by one test
+        // would otherwise leak into the next.
+        localStorage.clear();
+        document.documentElement.removeAttribute('data-theme');
+        document.documentElement.innerHTML = html.toString();
+        document.dispatchEvent(new Event('DOMContentLoaded'));
+    });
+
+    afterEach(() => {
+        localStorage.clear();
+        document.documentElement.removeAttribute('data-theme');
+        jest.restoreAllMocks();
+    });
+
+    it('defaults to dark theme when no preference is stored', () => {
+        expect(document.documentElement.getAttribute('data-theme')).toBeNull();
+        expect(document.getElementById('theme-toggle').getAttribute('aria-pressed')).toBe('false');
+    });
+
+    it('switches to light theme on click and persists the choice', () => {
+        const toggle = document.getElementById('theme-toggle');
+        toggle.click();
+
+        expect(document.documentElement.getAttribute('data-theme')).toBe('light');
+        expect(toggle.getAttribute('aria-pressed')).toBe('true');
+        expect(toggle.getAttribute('aria-label')).toBe('Switch to dark theme');
+        expect(localStorage.getItem('theme')).toBe('light');
+    });
+
+    it('switches back to dark on a second click', () => {
+        const toggle = document.getElementById('theme-toggle');
+        toggle.click();
+        toggle.click();
+
+        expect(document.documentElement.getAttribute('data-theme')).toBeNull();
+        expect(localStorage.getItem('theme')).toBe('dark');
+    });
+});

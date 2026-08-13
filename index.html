@@ -3,6 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Applied before first paint so a stored light-theme preference doesn't flash dark first -->
+    <script>
+        (function () {
+            try {
+                if (localStorage.getItem('theme') === 'light') {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                }
+            } catch (e) { /* localStorage unavailable (e.g. private mode) — default to dark */ }
+        })();
+    </script>
     <title>Devesh Singh Baish | DevOps Engineer</title>
     <meta name="description" content="Devesh Singh Baish is a DevOps & Platform Engineer who builds resilient, cloud-native infrastructures, AI/ML pipelines, and highly scalable ecosystems bridging the gap between development and operations.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,15 +59,21 @@
     <nav class="top-nav" id="navbar">
         <div class="nav-content">
             <div class="logo"><a href="#">DSB.</a></div>
-            <ul class="nav-links" aria-label="In-page jump links">
-                <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#experience" class="nav-link">Experience</a></li>
-                <li><a href="#projects" class="nav-link">Projects</a></li>
-                <li><a href="#ops" class="nav-link">Ops</a></li>
-                <li><a href="#stack" class="nav-link">Stack</a></li>
-                <li><a href="#contact" class="nav-link">Contact</a></li>
-                <li><a href="#tools" class="nav-link">Tools</a></li>
-            </ul>
+            <div class="nav-right">
+                <ul class="nav-links" aria-label="In-page jump links">
+                    <li><a href="#about" class="nav-link">About</a></li>
+                    <li><a href="#experience" class="nav-link">Experience</a></li>
+                    <li><a href="#projects" class="nav-link">Projects</a></li>
+                    <li><a href="#ops" class="nav-link">Ops</a></li>
+                    <li><a href="#stack" class="nav-link">Stack</a></li>
+                    <li><a href="#contact" class="nav-link">Contact</a></li>
+                    <li><a href="#tools" class="nav-link">Tools</a></li>
+                </ul>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Switch to light theme" aria-pressed="false">
+                    <svg class="icon-moon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+                    <svg class="icon-sun" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+                </button>
+            </div>
         </div>
     </nav>
 
