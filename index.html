@@ -26,6 +26,8 @@
                 <li><a href="#about" class="nav-link">About</a></li>
                 <li><a href="#experience" class="nav-link">Experience</a></li>
                 <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#ops" class="nav-link">Ops</a></li>
+                <li><a href="#stack" class="nav-link">Stack</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
                 <li><a href="#tools" class="nav-link">Tools</a></li>
             </ul>
@@ -36,30 +38,55 @@
     <header id="hero" class="hero section-dark">
         <canvas id="hero-canvas"></canvas>
         <div class="container reveal active hero-content-wrapper">
-            <p class="hero-intro">Hi, my name is</p>
-            <h1 class="hero-title">Devesh Singh Baish.</h1>
-            <h2 class="hero-subtitle">I build <span id="typewriter" aria-hidden="true"></span><span class="cursor" aria-hidden="true">|</span><span class="sr-only">AWS infrastructure, CI/CD pipelines, LLM-Agent integrations, and automated deployments.</span></h2>
-            <p class="hero-desc">
-                I'm a DevOps Engineer with hands-on experience across AWS infrastructure management, CI/CD pipeline engineering, and automation.
-            </p>
-            
-            <ul class="social-links hero-socials" aria-label="Social media">
-                <li>
-                    <a href="https://github.com/deveshsingh14" target="_blank" rel="noreferrer" aria-label="GitHub" title="GitHub">
-                        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" /></svg>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://www.linkedin.com/in/devesh-s-4ab189263" target="_blank" rel="noreferrer" aria-label="LinkedIn" title="LinkedIn">
-                        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clip-rule="evenodd" /></svg>
-                    </a>
-                </li>
-                <li>
-                    <a href="mailto:devesh141singh@gmail.com" aria-label="Email" title="Email">
-                        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z" /><path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z" /></svg>
-                    </a>
-                </li>
-            </ul>
+            <div class="hero-grid">
+                <div class="hero-identity">
+                    <p class="hero-intro">Hi, my name is</p>
+                    <h1 class="hero-title">Devesh Singh Baish.</h1>
+                    <h2 class="hero-subtitle">I build <span id="typewriter" aria-hidden="true"></span><span class="cursor" aria-hidden="true">|</span><span class="sr-only">AWS infrastructure, CI/CD pipelines, LLM-Agent integrations, and automated deployments.</span></h2>
+                    <p class="hero-desc">
+                        I'm a DevOps Engineer with hands-on experience across AWS infrastructure management, CI/CD pipeline engineering, and automation.
+                    </p>
+
+                    <ul class="social-links hero-socials" aria-label="Social media">
+                        <li>
+                            <a href="https://github.com/deveshsingh14" target="_blank" rel="noreferrer" aria-label="GitHub" title="GitHub">
+                                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" /></svg>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.linkedin.com/in/devesh-s-4ab189263" target="_blank" rel="noreferrer" aria-label="LinkedIn" title="LinkedIn">
+                                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clip-rule="evenodd" /></svg>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="mailto:devesh141singh@gmail.com" aria-label="Email" title="Email">
+                                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z" /><path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z" /></svg>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="hero-terminal" role="region" aria-label="Interactive portfolio terminal">
+                    <div class="terminal-topbar">
+                        <div class="window-controls">
+                            <span class="control close"></span>
+                            <span class="control minimize"></span>
+                            <span class="control maximize"></span>
+                        </div>
+                        <div class="terminal-title">guest@devesh-portfolio: ~</div>
+                    </div>
+                    <div class="hero-term-body" id="hero-term-body">
+                        <div class="hero-term-output" id="hero-term-output" role="log" aria-live="polite"></div>
+                        <div class="hero-term-inputline">
+                            <span class="prompt" aria-hidden="true">guest@devesh:~$</span>
+                            <span class="hero-term-input-wrap">
+                                <input type="text" id="hero-term-input" aria-label="Portfolio terminal command input" autocomplete="off" autocapitalize="off" spellcheck="false">
+                                <span id="hero-term-ghost" class="hero-term-ghost" aria-hidden="true"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -140,7 +167,7 @@
             <h2 class="section-title">Some Things I've Built</h2>
             
             <div class="projects-grid">
-                <div class="project-card">
+                <div class="project-card" id="project-rajeshwari">
                     <div class="project-top">
                         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--teal)" class="folder-icon">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
@@ -157,7 +184,7 @@
                     </ul>
                 </div>
 
-                <div class="project-card">
+                <div class="project-card" id="project-mcp-jenkins">
                     <div class="project-top">
                         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--teal)" class="folder-icon">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
@@ -173,7 +200,7 @@
                     </ul>
                 </div>
 
-                <div class="project-card">
+                <div class="project-card" id="project-self-healing-ui">
                     <div class="project-top">
                         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--teal)" class="folder-icon">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
@@ -189,7 +216,7 @@
                     </ul>
                 </div>
 
-                <div class="project-card">
+                <div class="project-card" id="project-stock-lstm">
                     <div class="project-top">
                         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--teal)" class="folder-icon">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
@@ -205,7 +232,7 @@
                     </ul>
                 </div>
 
-                <div class="project-card">
+                <div class="project-card" id="project-gitops-k8s">
                     <div class="project-top">
                         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--teal)" class="folder-icon">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
@@ -221,7 +248,7 @@
                     </ul>
                 </div>
 
-                <div class="project-card">
+                <div class="project-card" id="project-mlops-serving">
                     <div class="project-top">
                         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--teal)" class="folder-icon">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
@@ -237,7 +264,7 @@
                     </ul>
                 </div>
 
-                <div class="project-card">
+                <div class="project-card" id="project-devsecops-observability">
                     <div class="project-top">
                         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--teal)" class="folder-icon">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
@@ -255,6 +282,107 @@
             </div>
         </div>
     </section>
+
+    <!-- Ops Dashboard Section -->
+    <section id="ops" class="section section-light reveal" aria-label="Live operations dashboard">
+        <div class="container">
+            <h2 class="section-title">Live Ops Dashboard</h2>
+            <p class="section-lead">A simulated CI/CD run and a Grafana-style read of the "system" behind this site. Nothing here touches real infra — but the mechanics are the real thing.</p>
+
+            <div class="ops-grid">
+                <div class="pipeline-panel">
+                    <div class="pipeline-panel-header">
+                        <h3 class="panel-heading">CI/CD Pipeline</h3>
+                        <button id="run-pipeline" class="run-pipeline-btn" aria-live="polite">Run Pipeline</button>
+                    </div>
+                    <p id="pipeline-status" class="pipeline-status-live" role="status" aria-live="polite">Idle. Press "Run Pipeline" to simulate a deployment.</p>
+
+                    <div class="pipeline-stages" role="list" aria-label="Pipeline stages">
+                        <div class="pipeline-stage" data-stage="build" role="listitem">
+                            <span class="stage-dot" aria-hidden="true"></span>
+                            <span class="stage-label">Build</span>
+                        </div>
+                        <div class="pipeline-connector" data-connector="0" aria-hidden="true"></div>
+                        <div class="pipeline-stage" data-stage="test" role="listitem">
+                            <span class="stage-dot" aria-hidden="true"></span>
+                            <span class="stage-label">Test</span>
+                        </div>
+                        <div class="pipeline-connector" data-connector="1" aria-hidden="true"></div>
+                        <div class="pipeline-stage" data-stage="scan" role="listitem">
+                            <span class="stage-dot" aria-hidden="true"></span>
+                            <span class="stage-label">Scan</span>
+                        </div>
+                        <div class="pipeline-connector" data-connector="2" aria-hidden="true"></div>
+                        <div class="pipeline-stage" data-stage="deploy" role="listitem">
+                            <span class="stage-dot" aria-hidden="true"></span>
+                            <span class="stage-label">Deploy</span>
+                        </div>
+                    </div>
+
+                    <div class="pipeline-log" id="pipeline-log" role="log" aria-label="Pipeline execution log"></div>
+                </div>
+
+                <div class="metrics-panel">
+                    <h3 class="panel-heading">System Metrics</h3>
+                    <div class="metrics-grid">
+                        <div class="metric-tile" data-metric="cpu">
+                            <div class="metric-tile-top">
+                                <span class="metric-label">CPU</span>
+                                <span class="metric-value" id="metric-cpu-value">—</span>
+                            </div>
+                            <div class="metric-bar"><div class="metric-bar-fill" id="metric-cpu-fill"></div></div>
+                        </div>
+                        <div class="metric-tile" data-metric="memory">
+                            <div class="metric-tile-top">
+                                <span class="metric-label">Memory</span>
+                                <span class="metric-value" id="metric-mem-value">—</span>
+                            </div>
+                            <div class="metric-bar"><div class="metric-bar-fill" id="metric-mem-fill"></div></div>
+                        </div>
+                        <div class="metric-tile metric-tile-static">
+                            <span class="metric-label">Uptime</span>
+                            <span class="metric-value mono" id="metric-uptime">00d 00:00:00</span>
+                        </div>
+                        <div class="metric-tile metric-tile-static">
+                            <span class="metric-label">Total Deployments</span>
+                            <span class="metric-value mono" id="metric-deployments">—</span>
+                        </div>
+                        <div class="metric-tile metric-tile-static metric-tile-wide">
+                            <span class="metric-label">Coffee-to-Code Ratio</span>
+                            <span class="metric-value mono" id="metric-coffee">—</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack Topology Map -->
+    <section id="stack" class="section section-dark reveal" aria-label="Infrastructure and tooling map">
+        <div class="container">
+            <h2 class="section-title">Infrastructure &amp; Tooling Map</h2>
+            <p class="section-lead">Click (or tab to, then press Enter on) any node to see hands-on experience, achievements, and related projects.</p>
+            <div class="topo-map" id="topo-map">
+                <svg class="topo-lines" id="topo-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
+            </div>
+        </div>
+    </section>
+
+    <div class="topo-drawer" id="topo-drawer" role="dialog" aria-modal="true" aria-labelledby="topo-drawer-title" hidden>
+        <div class="topo-drawer-backdrop" id="topo-drawer-backdrop"></div>
+        <div class="topo-drawer-panel" tabindex="-1">
+            <button class="topo-drawer-close" id="topo-drawer-close" aria-label="Close details panel">
+                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+            <div class="topo-drawer-category" id="topo-drawer-category"></div>
+            <h3 class="topo-drawer-title" id="topo-drawer-title"></h3>
+            <p class="topo-drawer-years" id="topo-drawer-years"></p>
+            <h4 class="topo-drawer-subheading">Achievements</h4>
+            <ul class="topo-drawer-achievements" id="topo-drawer-achievements"></ul>
+            <h4 class="topo-drawer-subheading">Related Projects</h4>
+            <ul class="topo-drawer-projects" id="topo-drawer-projects"></ul>
+        </div>
+    </div>
 
     <!-- Contact Section -->
     <section id="contact" class="section section-dark reveal" aria-label="Contact">
@@ -296,7 +424,7 @@
     <!-- Tools & Scripts Section -->
     <section id="tools" class="section section-light reveal" aria-label="DevOps Tools">
         <div class="container">
-            <h2 class="section-title">Interactive DevOps Tools</h2>
+            <h2 class="section-title">Automation Scripts &amp; Utilities</h2>
             <p style="margin-bottom: 2rem; max-width: 600px;">Explore some of the DevOps automation tools I've built. Select a tool below to run a live simulation in the terminal.</p>
             
             <div class="terminal-container">
