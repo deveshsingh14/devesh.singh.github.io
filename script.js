@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             themeToggle.setAttribute('aria-pressed', theme === 'light' ? 'true' : 'false');
             themeToggle.setAttribute('aria-label', theme === 'light' ? 'Switch to dark theme' : 'Switch to light theme');
+            themeToggle.setAttribute('title', theme === 'light' ? 'Switch to dark theme' : 'Switch to light theme');
         };
 
         themeToggle.addEventListener('click', () => {
