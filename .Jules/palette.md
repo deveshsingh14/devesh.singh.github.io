@@ -21,3 +21,10 @@
 ## 2024-07-30 - Prevent native form redirects for asynchronous submissions
 **Learning:** Native HTML form submissions default to a page redirect, which interrupts the user's flow and can feel abrupt or disjointed, especially for simple contact forms. A seamless experience requires keeping the user on the same page.
 **Action:** When implementing contact or data-entry forms, always intercept the native `submit` event using `e.preventDefault()`, submit the data asynchronously using `fetch`, and provide immediate in-page UI feedback (like loading states and success/error messages).
+## 2026-07-31 - Decorative SVGs inside Interactive Elements Create Screen Reader Noise
+**Learning:** Putting `<svg>` elements inside links (`<a>`) or buttons without `aria-hidden="true"` often causes screen readers to read out unnecessary or confusing path data, distracting from the actual label of the link.
+**Action:** Always add `aria-hidden="true"` to decorative SVGs, particularly those wrapped inside interactive elements, relying instead on `aria-label` or text inside the parent for screen reader announcements.
+
+## 2026-07-31 - Dynamic Status Button Feedback
+**Learning:** When a button's text dynamically updates to indicate state (like changing from "Copy" to "Copied!"), visually impaired users receive no feedback of this success state unless they manually re-examine the element.
+**Action:** Use `aria-live="polite"` on buttons or small text areas that update dynamically to indicate a brief status change (like copy success), so screen readers announce the change seamlessly.

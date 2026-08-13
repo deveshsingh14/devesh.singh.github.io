@@ -71,6 +71,12 @@ a {
   transition: var(--transition);
 }
 
+a:focus-visible {
+  outline: 2px dashed var(--teal);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
 ul, ol {
   list-style: none;
 }
@@ -694,6 +700,11 @@ select.form-input {
 .submit-btn:hover, .submit-btn:focus {
   background-color: var(--teal-tint);
   outline: none;
+}
+
+.submit-btn:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
 }
 
 /* =========================================
