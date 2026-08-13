@@ -13,9 +13,25 @@
   --teal-tint: rgba(100, 255, 218, 0.1);
   --navy-shadow: rgba(2, 12, 27, 0.7);
 
+  /* Obsidian/neon surfaces used by the hero terminal, ops dashboard, and stack map */
+  --obsidian: #05070d;
+  --obsidian-panel: #0b0f17;
+  --obsidian-border: #1b2333;
+  --amber: #ffb454;
+  --amber-tint: rgba(255, 180, 84, 0.12);
+  --success: #27c93f;
+  --success-tint: rgba(39, 201, 63, 0.12);
+  --danger: #ff5f56;
+  --danger-tint: rgba(255, 95, 86, 0.12);
+
+  --glow-teal: 0 0 14px rgba(100, 255, 218, 0.45);
+  --glow-amber: 0 0 14px rgba(255, 180, 84, 0.5);
+  --glow-success: 0 0 14px rgba(39, 201, 63, 0.5);
+  --glow-danger: 0 0 14px rgba(255, 95, 86, 0.5);
+
   --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  
+
   --transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
@@ -214,6 +230,17 @@ ul, ol {
   overflow: hidden;
 }
 
+@media (max-width: 900px) {
+  .hero {
+    /* The hero-grid stacks identity + terminal on narrow screens, which can
+       make the hero taller than 100vh. Centering would then push the top of
+       the content above the viewport, behind the fixed nav. Flow from the
+       top instead, with enough padding to clear the fixed nav. */
+    justify-content: flex-start;
+    padding: 110px 0 60px;
+  }
+}
+
 #hero-canvas {
   position: absolute;
   top: 0;
@@ -287,6 +314,133 @@ ul, ol {
 .hero-socials svg {
   width: 24px;
   height: 24px;
+}
+
+/* =========================================
+   Hero Terminal Panel
+========================================= */
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+.hero-terminal {
+  background-color: var(--obsidian);
+  border: 1px solid var(--obsidian-border);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.7);
+  transition: box-shadow 0.3s ease;
+}
+
+.hero-terminal:focus-within {
+  box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.7), var(--glow-teal);
+  border-color: var(--teal);
+}
+
+.hero-terminal.shake {
+  animation: hero-terminal-shake 0.4s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-terminal.shake {
+    animation: none;
+  }
+}
+
+@keyframes hero-terminal-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(3px); }
+}
+
+.hero-term-body {
+  padding: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  min-height: 320px;
+  max-height: 420px;
+  display: flex;
+  flex-direction: column;
+  cursor: text;
+}
+
+.hero-term-output {
+  flex-grow: 1;
+  overflow-y: auto;
+  color: var(--lightest-slate);
+  line-height: 1.7;
+}
+
+.hero-term-output .term-line {
+  margin-bottom: 0.35rem;
+  word-break: break-word;
+}
+
+.hero-term-output a {
+  color: var(--teal);
+  text-decoration: underline;
+  text-decoration-color: rgba(100, 255, 218, 0.4);
+}
+
+.hero-term-output a:hover,
+.hero-term-output a:focus-visible {
+  text-decoration-color: var(--teal);
+}
+
+.hero-term-inputline {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+  flex-shrink: 0;
+}
+
+.hero-term-inputline .prompt {
+  color: var(--teal);
+  white-space: nowrap;
+}
+
+.hero-term-input-wrap {
+  position: relative;
+  flex-grow: 1;
+}
+
+#hero-term-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--white);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  caret-color: var(--teal);
+  position: relative;
+  z-index: 1;
+}
+
+.hero-term-ghost {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--slate);
+  opacity: 0.55;
+  white-space: pre;
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* =========================================
@@ -637,6 +791,583 @@ ul, ol {
 .prompt-req {
   color: var(--teal);
   text-shadow: 0 0 8px rgba(100, 255, 218, 0.3);
+}
+
+/* =========================================
+   Shared: section lead paragraph
+========================================= */
+.section-lead {
+  max-width: 640px;
+  margin-bottom: 2.5rem;
+  font-size: 1rem;
+}
+
+/* =========================================
+   Ops Dashboard: layout
+========================================= */
+.ops-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .ops-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.panel-heading {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--lightest-slate);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* =========================================
+   Ops Dashboard: Pipeline Visualizer
+========================================= */
+.pipeline-panel {
+  background-color: var(--obsidian);
+  border: 1px solid var(--obsidian-border);
+  border-radius: 8px;
+  padding: 1.75rem;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+}
+
+.pipeline-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.run-pipeline-btn {
+  background-color: var(--teal-tint);
+  color: var(--teal);
+  border: 1px solid var(--teal);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.run-pipeline-btn:hover {
+  background-color: var(--teal);
+  color: var(--navy);
+}
+
+.run-pipeline-btn:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+
+.run-pipeline-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.pipeline-status-live {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--slate);
+  margin-bottom: 1.5rem;
+  min-height: 1.3em;
+}
+
+.pipeline-stages {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.pipeline-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 0 0 auto;
+  width: 90px;
+}
+
+.stage-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--light-slate);
+  text-align: center;
+}
+
+.stage-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--lightest-navy);
+  border: 2px solid var(--slate);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pipeline-stage[data-status="running"] .stage-dot {
+  background-color: var(--amber);
+  border-color: var(--amber);
+  box-shadow: var(--glow-amber);
+  animation: pulse-dot 1s ease-in-out infinite;
+}
+
+.pipeline-stage[data-status="success"] .stage-dot {
+  background-color: var(--success);
+  border-color: var(--success);
+  box-shadow: var(--glow-success);
+}
+
+.pipeline-stage[data-status="fail"] .stage-dot {
+  background-color: var(--danger);
+  border-color: var(--danger);
+  box-shadow: var(--glow-danger);
+}
+
+.pipeline-stage[data-status="running"] .stage-label,
+.pipeline-stage[data-status="success"] .stage-label {
+  color: var(--lightest-slate);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pipeline-stage[data-status="running"] .stage-dot {
+    animation: none;
+  }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.85); }
+}
+
+.pipeline-connector {
+  flex: 1 1 auto;
+  height: 2px;
+  background-color: var(--lightest-navy);
+  position: relative;
+  margin: 0 -4px;
+  top: -14px;
+  overflow: hidden;
+}
+
+.pipeline-connector::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--teal);
+  width: 0%;
+  transition: width 0.5s ease;
+  box-shadow: var(--glow-teal);
+}
+
+.pipeline-connector.filled::after {
+  width: 100%;
+}
+
+.pipeline-log {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  background-color: #0d1117;
+  border: 1px solid var(--obsidian-border);
+  border-radius: 6px;
+  padding: 1rem;
+  height: 160px;
+  overflow-y: auto;
+  color: var(--slate);
+}
+
+.pipeline-log .log-line {
+  margin-bottom: 0.3rem;
+}
+
+/* =========================================
+   Ops Dashboard: System Metrics
+========================================= */
+.metrics-panel {
+  background-color: var(--obsidian);
+  border: 1px solid var(--obsidian-border);
+  border-radius: 8px;
+  padding: 1.75rem;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.metric-tile {
+  background-color: var(--obsidian-panel);
+  border: 1px solid var(--obsidian-border);
+  border-radius: 6px;
+  padding: 0.9rem 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.metric-tile:hover {
+  border-color: var(--teal);
+  box-shadow: var(--glow-teal);
+}
+
+.metric-tile-wide {
+  grid-column: 1 / -1;
+}
+
+.metric-tile-static {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.metric-tile-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.5rem;
+}
+
+.metric-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--slate);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.metric-value {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  color: var(--lightest-slate);
+  font-weight: 600;
+}
+
+.metric-value.mono {
+  font-size: 1rem;
+}
+
+.metric-bar {
+  height: 6px;
+  border-radius: 3px;
+  background-color: var(--lightest-navy);
+  overflow: hidden;
+}
+
+.metric-bar-fill {
+  height: 100%;
+  width: 0%;
+  background-color: var(--success);
+  box-shadow: var(--glow-success);
+  transition: width 0.6s ease, background-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.metric-bar-fill.level-warn {
+  background-color: var(--amber);
+  box-shadow: var(--glow-amber);
+}
+
+.metric-bar-fill.level-danger {
+  background-color: var(--danger);
+  box-shadow: var(--glow-danger);
+}
+
+@media (max-width: 500px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+  .metric-tile-wide {
+    grid-column: auto;
+  }
+}
+
+/* =========================================
+   Tech Stack Topology Map
+========================================= */
+.topo-map {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  max-height: 520px;
+  background-color: var(--obsidian);
+  border: 1px solid var(--obsidian-border);
+  border-radius: 8px;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+}
+
+.topo-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.topo-lines line {
+  stroke: var(--lightest-navy);
+  stroke-width: 0.3;
+}
+
+.topo-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  font-family: var(--font-mono);
+}
+
+.topo-node-dot {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--obsidian-panel);
+  border: 2px solid var(--teal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--teal);
+  font-size: 0.65rem;
+  font-weight: 700;
+  animation: topo-pulse 2.4s ease-in-out infinite;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.topo-node.category-hub .topo-node-dot {
+  border-color: var(--amber);
+  color: var(--amber);
+  width: 56px;
+  height: 56px;
+  font-size: 0.75rem;
+}
+
+.topo-node:hover .topo-node-dot,
+.topo-node:focus-visible .topo-node-dot {
+  transform: scale(1.1);
+  box-shadow: var(--glow-teal);
+}
+
+.topo-node.category-hub:hover .topo-node-dot,
+.topo-node.category-hub:focus-visible .topo-node-dot {
+  box-shadow: var(--glow-amber);
+}
+
+.topo-node:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+  border-radius: 50%;
+}
+
+.topo-node-label {
+  font-size: 0.7rem;
+  color: var(--light-slate);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .topo-node-dot {
+    animation: none;
+  }
+}
+
+@keyframes topo-pulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(100, 255, 218, 0); }
+  50% { box-shadow: 0 0 10px rgba(100, 255, 218, 0.35); }
+}
+
+@media (max-width: 700px) {
+  .topo-map {
+    aspect-ratio: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 1rem;
+    padding: 1.5rem;
+  }
+
+  .topo-lines {
+    display: none;
+  }
+
+  .topo-node {
+    position: static;
+    transform: none;
+    left: auto !important;
+    top: auto !important;
+  }
+}
+
+/* =========================================
+   Topology Drawer
+========================================= */
+.topo-drawer[hidden] {
+  display: none;
+}
+
+.topo-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(2, 12, 27, 0.7);
+  z-index: 90;
+}
+
+.topo-drawer-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: min(420px, 100%);
+  background-color: var(--obsidian-panel);
+  border-left: 1px solid var(--obsidian-border);
+  box-shadow: -20px 0 50px -15px rgba(0, 0, 0, 0.7);
+  z-index: 91;
+  padding: 2rem 1.75rem;
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+}
+
+.topo-drawer:not([hidden]) .topo-drawer-panel {
+  transform: translateX(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .topo-drawer-panel {
+    transition: none;
+  }
+}
+
+.topo-drawer-close {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid var(--lightest-navy);
+  color: var(--light-slate);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.topo-drawer-close svg {
+  width: 16px;
+  height: 16px;
+}
+
+.topo-drawer-close:hover {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.topo-drawer-close:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+
+.topo-drawer-category {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--teal);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.topo-drawer-title {
+  font-size: 1.5rem;
+  color: var(--lightest-slate);
+  margin-bottom: 0.25rem;
+  padding-right: 2rem;
+}
+
+.topo-drawer-years {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--slate);
+  margin-bottom: 1.5rem;
+}
+
+.topo-drawer-subheading {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--slate);
+  margin-bottom: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.topo-drawer-achievements {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.topo-drawer-achievements li {
+  position: relative;
+  padding-left: 1.1rem;
+  font-size: 0.9rem;
+  color: var(--light-slate);
+}
+
+.topo-drawer-achievements li::before {
+  content: "▹";
+  position: absolute;
+  left: 0;
+  color: var(--teal);
+}
+
+.topo-drawer-projects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.topo-drawer-projects a {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--teal);
+  background-color: var(--teal-tint);
+  padding: 0.35rem 0.75rem;
+  border-radius: 15px;
+  display: inline-block;
+}
+
+.topo-drawer-projects a:hover,
+.topo-drawer-projects a:focus-visible {
+  background-color: var(--teal);
+  color: var(--navy);
+  outline: none;
+}
+
+.project-card.highlight-flash {
+  animation: project-highlight-flash 1.6s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-card.highlight-flash {
+    animation: none;
+    box-shadow: var(--glow-teal);
+  }
+}
+
+@keyframes project-highlight-flash {
+  0% { box-shadow: var(--glow-teal); }
+  100% { box-shadow: 0 10px 30px -15px var(--navy-shadow); }
 }
 
 /* =========================================

@@ -3,17 +3,20 @@ const path = require('path');
 
 const html = fs.readFileSync(path.resolve(__dirname, './index.html'), 'utf8');
 
+// script.js attaches its setup logic to a single `document`-level
+// 'DOMContentLoaded' listener. jsdom keeps one `document` per test *file*
+// (not per test), so requiring the script again in every test would stack
+// up duplicate listeners that all fire on the next dispatch. Load it once
+// here; each test below only needs to reset the markup and re-dispatch.
+require('./script.js');
+
 describe('generatePassphrase', () => {
     beforeEach(() => {
         document.documentElement.innerHTML = html.toString();
-        // Load the script
-        require('./script.js');
-        // Trigger DOMContentLoaded
         document.dispatchEvent(new Event('DOMContentLoaded'));
     });
 
     afterEach(() => {
-        jest.resetModules();
         jest.restoreAllMocks();
     });
 
@@ -84,5 +87,120 @@ describe('generatePassphrase', () => {
         expect(selectMock).toHaveBeenCalled();
 
         delete HTMLInputElement.prototype.select; // Cleanup mock
+    });
+});
+
+describe('formatUptime', () => {
+    beforeEach(() => {
+        document.documentElement.innerHTML = html.toString();
+        document.dispatchEvent(new Event('DOMContentLoaded'));
+    });
+
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    it('formats zero ms as 00d 00:00:00', () => {
+        expect(window.formatUptime(0)).toBe('00d 00:00:00');
+    });
+
+    it('formats a mixed duration as DDd HH:MM:SS', () => {
+        const oneDayOneHourOneMinuteOneSecond = 86400000 + 3600000 + 60000 + 1000;
+        expect(window.formatUptime(oneDayOneHourOneMinuteOneSecond)).toBe('01d 01:01:01');
+    });
+});
+
+describe('Hero Terminal', () => {
+    beforeEach(() => {
+        document.documentElement.innerHTML = html.toString();
+        document.dispatchEvent(new Event('DOMContentLoaded'));
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
+        jest.restoreAllMocks();
+    });
+
+    const runCommand = (value) => {
+        const input = document.getElementById('hero-term-input');
+        input.value = value;
+        input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+    };
+
+    it('runs the whoami command and prints role info', () => {
+        jest.useFakeTimers();
+        runCommand('whoami');
+        jest.advanceTimersByTime(3000);
+        expect(document.getElementById('hero-term-output').textContent).toContain('DevOps Engineer');
+    });
+
+    it('clears the terminal output on the clear command', () => {
+        jest.useFakeTimers();
+        runCommand('whoami');
+        jest.advanceTimersByTime(3000);
+        runCommand('clear');
+        expect(document.getElementById('hero-term-output').textContent.trim()).toBe('');
+    });
+
+    it('reports unrecognized commands', () => {
+        jest.useFakeTimers();
+        runCommand('foobar');
+        jest.advanceTimersByTime(3000);
+        expect(document.getElementById('hero-term-output').textContent).toContain('command not found');
+    });
+
+    it('tab-completes a partial command name', () => {
+        const input = document.getElementById('hero-term-input');
+        input.value = 'hel';
+        input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }));
+        expect(input.value).toBe('help');
+    });
+});
+
+describe('Pipeline Visualizer', () => {
+    beforeEach(() => {
+        document.documentElement.innerHTML = html.toString();
+        document.dispatchEvent(new Event('DOMContentLoaded'));
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
+        jest.restoreAllMocks();
+    });
+
+    it('runs every stage to success when triggered', () => {
+        jest.useFakeTimers();
+        jest.spyOn(Math, 'random').mockReturnValue(0.9); // keep the scan-retry branch out of the way
+
+        document.getElementById('run-pipeline').click();
+        jest.advanceTimersByTime(10000);
+
+        document.querySelectorAll('.pipeline-stage').forEach(stage => {
+            expect(stage.getAttribute('data-status')).toBe('success');
+        });
+    });
+});
+
+describe('Tech Stack Topology Map', () => {
+    beforeEach(() => {
+        document.documentElement.innerHTML = html.toString();
+        document.dispatchEvent(new Event('DOMContentLoaded'));
+    });
+
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    it('opens the drawer with the clicked node\'s details and closes on Escape', () => {
+        const dockerNode = document.querySelector('.topo-node[data-node-id="docker"]');
+        dockerNode.click();
+
+        const drawer = document.getElementById('topo-drawer');
+        expect(drawer.hidden).toBe(false);
+        expect(document.getElementById('topo-drawer-title').textContent).toBe('Docker');
+
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+        expect(drawer.hidden).toBe(true);
+        expect(document.activeElement).toBe(dockerNode);
     });
 });

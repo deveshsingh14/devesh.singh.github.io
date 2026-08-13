@@ -1,5 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    // Utility to escape user-supplied text before it is inserted as HTML
+    const escapeHtml = (str) => str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+
     // Utility to throttle high-frequency events using requestAnimationFrame
     function throttle(callback) {
         let isWaiting = false;
@@ -464,13 +472,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const executeSim = () => {
             let val = inputField.value.trim();
-            
+
             // Sanitize user input to prevent DOM XSS
-            val = val.replace(/&/g, '&amp;')
-                     .replace(/</g, '&lt;')
-                     .replace(/>/g, '&gt;')
-                     .replace(/"/g, '&quot;')
-                     .replace(/'/g, '&#39;');
+            val = escapeHtml(val);
 
             // Disable input while running
             inputField.disabled = true;
@@ -889,6 +893,635 @@ document.addEventListener('DOMContentLoaded', () => {
                     submitBtn.style.color = '';
                     submitBtn.style.borderColor = '';
                 }, 3000);
+            }
+        });
+    }
+
+    // ==========================================
+    // Shared: line-by-line typing effect (used by the hero terminal
+    // and the pipeline log — kept independent of the Tools section's
+    // `animateLines`/`currentAnimation` so the features never cancel
+    // each other's in-flight animations).
+    // ==========================================
+    const typeLines = (lines, container, onDone) => {
+        let i = 0;
+        const next = () => {
+            if (i >= lines.length) { if (onDone) onDone(); return; }
+            const { html, delay } = lines[i];
+            const div = document.createElement('div');
+            div.innerHTML = html;
+            div.style.opacity = '0';
+            div.style.transform = 'translateY(4px)';
+            div.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+            container.appendChild(div);
+            requestAnimationFrame(() => { div.style.opacity = '1'; div.style.transform = 'translateY(0)'; });
+            container.scrollTop = container.scrollHeight;
+            i++;
+            setTimeout(next, delay);
+        };
+        next();
+    };
+
+    const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // ==========================================
+    // Hero Terminal
+    // ==========================================
+    const heroTermOutput = document.getElementById('hero-term-output');
+    const heroTermInput = document.getElementById('hero-term-input');
+    const heroTermGhost = document.getElementById('hero-term-ghost');
+    const heroTermBody = document.getElementById('hero-term-body');
+    const heroTerminalEl = document.querySelector('.hero-terminal');
+
+    if (heroTermOutput && heroTermInput) {
+        const PORTFOLIO_DATA = {
+            skills: {
+                'Languages': ['Python', 'JavaScript/Node.js', 'SQL', 'Bash'],
+                'IaC & Containers': ['Docker', 'Kubernetes', 'Terraform', 'Helm'],
+                'CI/CD': ['Jenkins', 'ArgoCD', 'GitOps', 'Bitbucket Pipelines'],
+                'Cloud': ['AWS (EC2, EKS, S3, IAM)'],
+                'Observability': ['Prometheus', 'Grafana', 'OpenTelemetry', 'SonarQube']
+            },
+            experience: [
+                { dates: 'Jun 2025 – Present', title: 'DevOps Engineer', company: 'HotelKey India Pvt Ltd' },
+                { dates: 'Jun 2024 – Dec 2024', title: 'Research Intern', company: 'ISRO' },
+                { dates: 'May 2024 – Jun 2024', title: 'DL/NLP Intern', company: 'Codemate IT Services' }
+            ],
+            projects: [
+                { name: 'Rajeshwari B2B E-Commerce & Management Portal', stack: 'Node.js, PostgreSQL, Prisma' },
+                { name: 'MCP-Based AI Agent for Jenkins', stack: 'Python, MCP, Claude API' },
+                { name: 'Self-Healing UI Test Framework', stack: 'Playwright, LLM' },
+                { name: 'GitOps-Driven Kubernetes Platform', stack: 'Kubernetes, ArgoCD, Terraform' },
+                { name: 'AI/ML Model Serving Infrastructure', stack: 'AWS EKS, KServe, MLOps' },
+                { name: 'DevSecOps Pipeline & Observability Stack', stack: 'Prometheus, Grafana, SonarQube' }
+            ],
+            contact: {
+                email: 'devesh141singh@gmail.com',
+                github: 'https://github.com/deveshsingh14',
+                linkedin: 'https://www.linkedin.com/in/devesh-s-4ab189263'
+            }
+        };
+
+        const COMMAND_DESCRIPTIONS = {
+            help: 'List available commands',
+            whoami: 'Print current user info',
+            skills: 'List technical skills',
+            experience: 'Show work experience',
+            projects: 'Show featured projects',
+            contact: 'Show contact info',
+            clear: 'Clear the terminal'
+        };
+        const TERMINAL_COMMANDS = Object.keys(COMMAND_DESCRIPTIONS);
+        const COMPLETION_CANDIDATES = [...TERMINAL_COMMANDS, 'sudo'];
+
+        let history = [];
+        let historyIndex = -1;
+        let tabMatches = [];
+        let tabMatchIndex = 0;
+        let lastTabValue = '';
+
+        const echoCommand = (raw) => {
+            const div = document.createElement('div');
+            div.className = 'term-line';
+            div.innerHTML = `<span style="color:var(--teal)">guest@devesh:~$</span> ${escapeHtml(raw)}`;
+            heroTermOutput.appendChild(div);
+            heroTermOutput.scrollTop = heroTermOutput.scrollHeight;
+        };
+
+        const buildHelpLines = () => {
+            const lines = [{ html: `<div class="term-line">Available commands:</div>`, delay: 120 }];
+            TERMINAL_COMMANDS.forEach(cmd => {
+                lines.push({ html: `<div class="term-line">&nbsp;&nbsp;<span style="color:var(--teal)">${cmd}</span> — ${COMMAND_DESCRIPTIONS[cmd]}</div>`, delay: 70 });
+            });
+            lines.push({ html: `<div class="term-line" style="color:var(--slate)">Tip: Tab to autocomplete, ↑/↓ to browse history.</div>`, delay: 120 });
+            return lines;
+        };
+
+        const buildWhoamiLines = () => [
+            { html: `<div class="term-line">devesh-singh-baish</div>`, delay: 120 },
+            { html: `<div class="term-line">DevOps Engineer @ HotelKey India Pvt Ltd</div>`, delay: 120 },
+            { html: `<div class="term-line">groups: aws, kubernetes, terraform, ci-cd, observability</div>`, delay: 120 }
+        ];
+
+        const buildSkillsLines = () => Object.entries(PORTFOLIO_DATA.skills).map(([category, items]) => ({
+            html: `<div class="term-line"><span style="color:var(--teal)">${category}:</span> ${items.join(', ')}</div>`,
+            delay: 120
+        }));
+
+        const buildExperienceLines = () => {
+            const lines = PORTFOLIO_DATA.experience.map(job => ({
+                html: `<div class="term-line">${job.dates} — <span style="color:var(--teal)">${job.title}</span> @ ${job.company}</div>`,
+                delay: 120
+            }));
+            lines.push({ html: `<div class="term-line">→ <a href="#experience">jump to full experience section</a></div>`, delay: 120 });
+            return lines;
+        };
+
+        const buildProjectsLines = () => {
+            const lines = PORTFOLIO_DATA.projects.map(p => ({
+                html: `<div class="term-line"><span style="color:var(--teal)">${p.name}</span> — ${p.stack}</div>`,
+                delay: 120
+            }));
+            lines.push({ html: `<div class="term-line">→ <a href="#projects">jump to full projects section</a></div>`, delay: 120 });
+            return lines;
+        };
+
+        const buildContactLines = () => {
+            const c = PORTFOLIO_DATA.contact;
+            return [
+                { html: `<div class="term-line">email: <a href="mailto:${c.email}">${c.email}</a></div>`, delay: 120 },
+                { html: `<div class="term-line">github: <a href="${c.github}" target="_blank" rel="noreferrer">${c.github}</a></div>`, delay: 120 },
+                { html: `<div class="term-line">linkedin: <a href="${c.linkedin}" target="_blank" rel="noreferrer">${c.linkedin}</a></div>`, delay: 120 },
+                { html: `<div class="term-line">→ <a href="#contact">jump to contact form</a></div>`, delay: 120 }
+            ];
+        };
+
+        const COMMAND_BUILDERS = {
+            help: buildHelpLines,
+            whoami: buildWhoamiLines,
+            skills: buildSkillsLines,
+            experience: buildExperienceLines,
+            projects: buildProjectsLines,
+            contact: buildContactLines
+        };
+
+        const triggerShake = () => {
+            if (!heroTerminalEl || prefersReducedMotion()) return;
+            heroTerminalEl.classList.add('shake');
+            setTimeout(() => heroTerminalEl.classList.remove('shake'), 450);
+        };
+
+        const updateGhost = () => {
+            const value = heroTermInput.value;
+            if (!value) { heroTermGhost.textContent = ''; return; }
+            const lower = value.toLowerCase();
+            const match = COMPLETION_CANDIDATES.find(c => c !== lower && c.startsWith(lower));
+            heroTermGhost.textContent = match ? value + match.slice(value.length) : '';
+        };
+
+        const runHeroCommand = (raw) => {
+            const trimmed = raw.trim();
+            echoCommand(raw);
+            if (!trimmed) return;
+
+            history.push(trimmed);
+            historyIndex = history.length;
+
+            const lower = trimmed.toLowerCase();
+
+            if (lower === 'clear') { heroTermOutput.innerHTML = ''; return; }
+
+            if (lower.startsWith('sudo rm -rf')) {
+                typeLines([
+                    { html: `<div class="term-line" style="color:var(--danger)">Permission denied: nice try.</div>`, delay: 250 },
+                    { html: `<div class="term-line">This portfolio is protected by immutable infrastructure and a full off-site backup.</div>`, delay: 250 }
+                ], heroTermOutput, null);
+                triggerShake();
+                return;
+            }
+
+            if (COMMAND_BUILDERS[lower]) {
+                typeLines(COMMAND_BUILDERS[lower](), heroTermOutput, null);
+            } else {
+                typeLines([
+                    { html: `<div class="term-line" style="color:var(--danger)">command not found: ${escapeHtml(trimmed)}</div>`, delay: 150 },
+                    { html: `<div class="term-line" style="color:var(--slate)">Type 'help' for a list of commands.</div>`, delay: 120 }
+                ], heroTermOutput, null);
+            }
+        };
+
+        heroTermInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const value = heroTermInput.value;
+                heroTermInput.value = '';
+                heroTermGhost.textContent = '';
+                lastTabValue = '';
+                tabMatches = [];
+                runHeroCommand(value);
+            } else if (e.key === 'Tab') {
+                e.preventDefault();
+                const value = heroTermInput.value.trim().toLowerCase();
+                if (!value) return;
+                if (value !== lastTabValue) {
+                    tabMatches = COMPLETION_CANDIDATES.filter(c => c.startsWith(value));
+                    tabMatchIndex = 0;
+                } else {
+                    tabMatchIndex = tabMatches.length ? (tabMatchIndex + 1) % tabMatches.length : 0;
+                }
+                lastTabValue = value;
+                if (tabMatches.length) {
+                    heroTermInput.value = tabMatches[tabMatchIndex];
+                    updateGhost();
+                }
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (!history.length) return;
+                historyIndex = Math.max(0, historyIndex - 1);
+                heroTermInput.value = history[historyIndex] || '';
+                updateGhost();
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (!history.length) return;
+                historyIndex = Math.min(history.length, historyIndex + 1);
+                heroTermInput.value = history[historyIndex] || '';
+                updateGhost();
+            }
+        });
+
+        heroTermInput.addEventListener('input', () => {
+            lastTabValue = '';
+            updateGhost();
+        });
+
+        if (heroTermBody) {
+            heroTermBody.addEventListener('click', (e) => {
+                if (e.target !== heroTermInput) heroTermInput.focus();
+            });
+        }
+
+        typeLines([
+            { html: `<div class="term-line">Welcome to Devesh's terminal. Booting profile…</div>`, delay: 350 },
+            { html: `<div class="term-line">Connected as <span style="color:var(--teal)">guest</span>. Type <span style="color:var(--teal)">help</span> to see available commands.</div>`, delay: 250 }
+        ], heroTermOutput, null);
+    }
+
+    // ==========================================
+    // Ops Dashboard: Pipeline Visualizer + System Metrics
+    // ==========================================
+    const PIPELINE_STATE = { running: false };
+
+    const runPipelineBtn = document.getElementById('run-pipeline');
+    const pipelineStatusLive = document.getElementById('pipeline-status');
+    const pipelineLog = document.getElementById('pipeline-log');
+    const pipelineStageEls = document.querySelectorAll('.pipeline-stage');
+    const pipelineConnectorEls = document.querySelectorAll('.pipeline-connector');
+
+    if (runPipelineBtn && pipelineStatusLive && pipelineLog && pipelineStageEls.length) {
+        const STAGE_ORDER = ['build', 'test', 'scan', 'deploy'];
+        const stageElByName = {};
+        pipelineStageEls.forEach(el => { stageElByName[el.getAttribute('data-stage')] = el; });
+
+        const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
+        let buildNumber = 127;
+
+        const STAGE_LOGS = {
+            build: () => {
+                buildNumber += 1;
+                return [
+                    { html: `<div class="log-line">[build] Installing dependencies…</div>`, delay: 350 },
+                    { html: `<div class="log-line">[build] Compiling artifacts…</div>`, delay: 450 },
+                    { html: `<div class="log-line success-msg">[build] Artifact created: portfolio-app-v2.4.${buildNumber}.tar.gz</div>`, delay: 250 }
+                ];
+            },
+            test: () => [
+                { html: `<div class="log-line">[test] Running unit test suite…</div>`, delay: 350 },
+                { html: `<div class="log-line">[test] 128 passed, 0 failed</div>`, delay: 400 },
+                { html: `<div class="log-line success-msg">[test] Coverage: 94.2%</div>`, delay: 250 }
+            ],
+            scan: () => [
+                { html: `<div class="log-line">[scan] Running SonarQube static analysis…</div>`, delay: 350 },
+                { html: `<div class="log-line">[scan] Scanning dependencies for CVEs…</div>`, delay: 450 }
+            ],
+            deploy: () => [
+                { html: `<div class="log-line">[deploy] Rolling out via ArgoCD…</div>`, delay: 350 },
+                { html: `<div class="log-line">[deploy] Waiting for readiness probes…</div>`, delay: 450 },
+                { html: `<div class="log-line success-msg">[deploy] Rollout complete. All replicas healthy.</div>`, delay: 250 }
+            ]
+        };
+
+        const SCAN_RETRY_LOGS = [
+            { html: `<div class="log-line error-msg">[scan] Vulnerable dependency detected: lodash@4.17.15 (CVE-2020-8203)</div>`, delay: 300 },
+            { html: `<div class="log-line">[scan] Auto-patching to lodash@4.17.21…</div>`, delay: 400 },
+            { html: `<div class="log-line success-msg">[scan] Re-scan clean. 0 vulnerabilities found.</div>`, delay: 250 }
+        ];
+
+        const shouldScanFailThisRun = () => Math.random() < 0.2;
+
+        const fillConnectorAfter = (stageName) => {
+            const idx = STAGE_ORDER.indexOf(stageName);
+            const connector = pipelineConnectorEls[idx];
+            if (connector) connector.classList.add('filled');
+        };
+
+        const resetPipelineUi = () => {
+            pipelineStageEls.forEach(el => el.removeAttribute('data-status'));
+            pipelineConnectorEls.forEach(el => el.classList.remove('filled'));
+            pipelineLog.innerHTML = '';
+        };
+
+        const runPipeline = () => {
+            if (PIPELINE_STATE.running) return;
+            PIPELINE_STATE.running = true;
+            resetPipelineUi();
+            runPipelineBtn.disabled = true;
+            runPipelineBtn.innerHTML = '<span class="spinner"></span> Running…';
+            pipelineStatusLive.textContent = 'Starting pipeline…';
+
+            let scanRetried = false;
+            let stageIndex = 0;
+
+            const finish = () => {
+                PIPELINE_STATE.running = false;
+                pipelineStatusLive.textContent = 'Deployment complete. All stages green.';
+                runPipelineBtn.disabled = false;
+                runPipelineBtn.textContent = 'Run Pipeline';
+                if (typeof window.__incrementDeploymentCount === 'function') {
+                    window.__incrementDeploymentCount();
+                }
+            };
+
+            const advance = () => {
+                stageIndex += 1;
+                if (stageIndex < STAGE_ORDER.length) {
+                    runStage(STAGE_ORDER[stageIndex]);
+                } else {
+                    finish();
+                }
+            };
+
+            const runStage = (name) => {
+                const el = stageElByName[name];
+                el.setAttribute('data-status', 'running');
+                pipelineStatusLive.textContent = `${capitalize(name)}: running…`;
+
+                typeLines(STAGE_LOGS[name](), pipelineLog, () => {
+                    if (name === 'scan' && !scanRetried && shouldScanFailThisRun()) {
+                        scanRetried = true;
+                        el.setAttribute('data-status', 'fail');
+                        pipelineStatusLive.textContent = 'Scan: vulnerability found — patching and retrying…';
+                        typeLines(SCAN_RETRY_LOGS, pipelineLog, () => {
+                            el.setAttribute('data-status', 'success');
+                            fillConnectorAfter(name);
+                            pipelineStatusLive.textContent = 'Scan: success (after 1 retry).';
+                            advance();
+                        });
+                        return;
+                    }
+                    el.setAttribute('data-status', 'success');
+                    fillConnectorAfter(name);
+                    pipelineStatusLive.textContent = `${capitalize(name)}: success.`;
+                    advance();
+                });
+            };
+
+            runStage(STAGE_ORDER[0]);
+        };
+
+        runPipelineBtn.addEventListener('click', runPipeline);
+
+        const opsSection = document.getElementById('ops');
+        if (opsSection) {
+            const pipelineAutoRunObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        runPipeline();
+                        observer.disconnect();
+                    }
+                });
+            }, { threshold: 0.4 });
+            pipelineAutoRunObserver.observe(opsSection);
+        }
+    }
+
+    // ==========================================
+    // Ops Dashboard: System Metrics
+    // ==========================================
+    const metricCpuValue = document.getElementById('metric-cpu-value');
+    const metricCpuFill = document.getElementById('metric-cpu-fill');
+    const metricMemValue = document.getElementById('metric-mem-value');
+    const metricMemFill = document.getElementById('metric-mem-fill');
+    const metricUptime = document.getElementById('metric-uptime');
+    const metricDeployments = document.getElementById('metric-deployments');
+    const metricCoffee = document.getElementById('metric-coffee');
+
+    /** Formats an elapsed-ms duration as "DDd HH:MM:SS" — pure/testable. */
+    function formatUptime(ms) {
+        const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+        const days = Math.floor(totalSeconds / 86400);
+        const hours = Math.floor((totalSeconds % 86400) / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+        const pad = (n) => String(n).padStart(2, '0');
+        return `${pad(days)}d ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+    }
+    window.formatUptime = formatUptime;
+
+    if (metricCpuValue && metricCpuFill && metricMemValue && metricMemFill && metricUptime && metricDeployments && metricCoffee) {
+        const SITE_EPOCH_MS = new Date('2025-06-01T00:00:00Z').getTime();
+        let deploymentCount = 1842;
+        let cpuVal = 18;
+        let memVal = 34;
+        const motionOk = window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+
+        const renderMetricTile = (valueEl, fillEl, value) => {
+            const rounded = Math.round(value);
+            valueEl.textContent = `${rounded}%`;
+            fillEl.style.width = `${rounded}%`;
+            fillEl.classList.remove('level-warn', 'level-danger');
+            if (rounded > 85) fillEl.classList.add('level-danger');
+            else if (rounded > 60) fillEl.classList.add('level-warn');
+        };
+
+        const stepMetric = (current, baseline) => {
+            const spikeBias = PIPELINE_STATE.running ? 30 : 0;
+            const target = baseline + spikeBias + (Math.random() * 10 - 5);
+            const next = current + (target - current) * 0.3 + (Math.random() * 4 - 2);
+            return Math.max(3, Math.min(97, next));
+        };
+
+        const tickMetrics = () => {
+            cpuVal = stepMetric(cpuVal, 18);
+            memVal = stepMetric(memVal, 34);
+            renderMetricTile(metricCpuValue, metricCpuFill, cpuVal);
+            renderMetricTile(metricMemValue, metricMemFill, memVal);
+        };
+
+        renderMetricTile(metricCpuValue, metricCpuFill, cpuVal);
+        renderMetricTile(metricMemValue, metricMemFill, memVal);
+        if (motionOk) setInterval(tickMetrics, 2000);
+
+        const tickUptime = () => { metricUptime.textContent = formatUptime(Date.now() - SITE_EPOCH_MS); };
+        tickUptime();
+        setInterval(tickUptime, 1000);
+
+        const renderDeployments = () => { metricDeployments.textContent = deploymentCount.toLocaleString(); };
+        renderDeployments();
+
+        window.__incrementDeploymentCount = () => {
+            deploymentCount += 1;
+            renderDeployments();
+        };
+
+        metricCoffee.textContent = `${(4 + Math.random() * 0.6).toFixed(1)} cups / 1k LOC`;
+    }
+
+    // ==========================================
+    // Tech Stack Topology Map
+    // ==========================================
+    const topoMap = document.getElementById('topo-map');
+    const topoLines = document.getElementById('topo-lines');
+    const topoDrawer = document.getElementById('topo-drawer');
+
+    if (topoMap && topoLines && topoDrawer) {
+        const TOPOLOGY_DATA = [
+            { id: 'aws', label: 'AWS', category: 'hub', years: '2+ yrs', achievements: [
+                'Manage EC2/EKS/S3/IAM across HotelKey production infrastructure.',
+                'Automated large-scale data injection with SQL sets on managed databases.',
+                'Deployed KServe/Seldon Core model-serving workloads on an AWS EKS cluster.'
+            ], projects: ['project-mlops-serving', 'project-gitops-k8s'] },
+            { id: 'docker', label: 'Docker', category: 'containers', years: '3+ yrs', achievements: [
+                'Containerized services for consistent builds across every environment.',
+                'Authored multi-stage Dockerfiles to shrink image size and build time.'
+            ], projects: ['project-mlops-serving'] },
+            { id: 'kubernetes', label: 'Kubernetes', category: 'containers', years: '2+ yrs', achievements: [
+                'Ran declarative GitOps deployments across a Kubernetes platform.',
+                'Deployed ML model-serving workloads on AWS EKS.'
+            ], projects: ['project-gitops-k8s', 'project-mlops-serving'] },
+            { id: 'terraform', label: 'Terraform', category: 'iac', years: '2+ yrs', achievements: [
+                'Wrote infrastructure-as-code workflows that cut manual ops overhead.',
+                'Provisioned reproducible environments for the GitOps Kubernetes platform.'
+            ], projects: ['project-gitops-k8s'] },
+            { id: 'jenkins', label: 'Jenkins', category: 'cicd', years: '1+ yr', achievements: [
+                'Converted manual configuration steps into stable Jenkins jobs.',
+                'Designed a regex-based role/group access matrix for Jenkins.',
+                'Built an MCP server exposing Jenkins pipeline operations to an LLM agent.'
+            ], projects: ['project-mcp-jenkins'] },
+            { id: 'argocd', label: 'ArgoCD', category: 'cicd', years: '1+ yr', achievements: [
+                'Ran automated, declarative deployments via ArgoCD.',
+                'Cut deployment inconsistencies through GitOps workflows.'
+            ], projects: ['project-gitops-k8s'] },
+            { id: 'python', label: 'Python', category: 'lang', years: '4+ yrs', achievements: [
+                'Built automation, REST integrations, and Bitbucket diff-analyzers.',
+                'Developed Playwright-based browser automation and self-healing UI tests.',
+                'Trained deep learning models for satellite/radar data at ISRO.'
+            ], projects: ['project-self-healing-ui', 'project-stock-lstm'] },
+            { id: 'node-postgres', label: 'Node.js / PostgreSQL', category: 'app', years: '2+ yrs', achievements: [
+                'Built a full-stack B2B platform with Node.js, Express, and PostgreSQL.',
+                'Engineered a custom ETL pipeline for bulk CSV uploads with strict RBAC.'
+            ], projects: ['project-rajeshwari'] },
+            { id: 'observability', label: 'Prometheus / Grafana', category: 'observability', years: '1+ yr', achievements: [
+                'Stood up full-stack observability with OpenTelemetry, Prometheus, and Grafana.',
+                'Integrated SonarQube for continuous security scanning.'
+            ], projects: ['project-devsecops-observability'] },
+            { id: 'playwright', label: 'Playwright', category: 'testing', years: '1+ yr', achievements: [
+                'Built a self-healing UI test framework with an LLM agent that repairs broken selectors.',
+                'Automated implementation-team QA workflows at HotelKey.'
+            ], projects: ['project-self-healing-ui'] }
+        ];
+
+        const CATEGORY_LABELS = {
+            hub: 'Cloud Platform', containers: 'Containers', iac: 'Infrastructure as Code',
+            cicd: 'CI/CD', lang: 'Language', app: 'Application Stack',
+            observability: 'Observability', testing: 'Testing'
+        };
+
+        const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
+
+        const computeRadialLayout = (nodes) => {
+            const hub = nodes.find(n => n.category === 'hub');
+            const spokes = nodes.filter(n => n.category !== 'hub');
+            const layout = { [hub.id]: { xPct: 50, yPct: 50 } };
+            const radius = 38;
+            const angleStep = (2 * Math.PI) / spokes.length;
+            spokes.forEach((node, i) => {
+                const angle = -Math.PI / 2 + i * angleStep;
+                const x = 50 + radius * Math.cos(angle) * 1.15;
+                const y = 50 + radius * Math.sin(angle);
+                layout[node.id] = { xPct: clamp(x, 8, 92), yPct: clamp(y, 10, 90) };
+            });
+            return layout;
+        };
+
+        const abbreviate = (label) => (label.replace(/[^a-zA-Z]/g, '').slice(0, 3) || label.slice(0, 3)).toUpperCase();
+
+        const layout = computeRadialLayout(TOPOLOGY_DATA);
+        const hubId = TOPOLOGY_DATA.find(n => n.category === 'hub').id;
+
+        TOPOLOGY_DATA.forEach(node => {
+            if (node.id === hubId) return;
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', layout[hubId].xPct);
+            line.setAttribute('y1', layout[hubId].yPct);
+            line.setAttribute('x2', layout[node.id].xPct);
+            line.setAttribute('y2', layout[node.id].yPct);
+            topoLines.appendChild(line);
+        });
+
+        TOPOLOGY_DATA.forEach(node => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = `topo-node category-${node.category}`;
+            btn.style.left = `${layout[node.id].xPct}%`;
+            btn.style.top = `${layout[node.id].yPct}%`;
+            btn.setAttribute('aria-haspopup', 'dialog');
+            btn.dataset.nodeId = node.id;
+            btn.innerHTML = `<span class="topo-node-dot" aria-hidden="true">${abbreviate(node.label)}</span><span class="topo-node-label">${node.label}</span>`;
+            btn.addEventListener('click', () => openTopoDrawer(node.id));
+            topoMap.appendChild(btn);
+        });
+
+        const drawerPanel = topoDrawer.querySelector('.topo-drawer-panel');
+        const drawerBackdrop = document.getElementById('topo-drawer-backdrop');
+        const drawerClose = document.getElementById('topo-drawer-close');
+        const drawerCategory = document.getElementById('topo-drawer-category');
+        const drawerTitle = document.getElementById('topo-drawer-title');
+        const drawerYears = document.getElementById('topo-drawer-years');
+        const drawerAchievements = document.getElementById('topo-drawer-achievements');
+        const drawerProjects = document.getElementById('topo-drawer-projects');
+        let lastFocusedNode = null;
+
+        function onDrawerKeydown(e) {
+            if (e.key === 'Escape') { closeTopoDrawer(); return; }
+            if (e.key === 'Tab') {
+                const focusables = drawerPanel.querySelectorAll('a, button');
+                if (!focusables.length) return;
+                const first = focusables[0];
+                const last = focusables[focusables.length - 1];
+                if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+                else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+            }
+        }
+
+        function openTopoDrawer(nodeId) {
+            const node = TOPOLOGY_DATA.find(n => n.id === nodeId);
+            if (!node) return;
+            lastFocusedNode = topoMap.querySelector(`.topo-node[data-node-id="${nodeId}"]`);
+            drawerCategory.textContent = CATEGORY_LABELS[node.category] || node.category;
+            drawerTitle.textContent = node.label;
+            drawerYears.textContent = `${node.years} hands-on experience`;
+            drawerAchievements.innerHTML = node.achievements.map(a => `<li>${a}</li>`).join('');
+            drawerProjects.innerHTML = node.projects.map(pid => {
+                const titleEl = document.querySelector(`#${pid} .project-title`);
+                const label = titleEl ? titleEl.textContent : pid;
+                return `<li><a href="#${pid}">${label}</a></li>`;
+            }).join('');
+            topoDrawer.hidden = false;
+            drawerPanel.focus();
+            document.addEventListener('keydown', onDrawerKeydown);
+        }
+
+        function closeTopoDrawer() {
+            topoDrawer.hidden = true;
+            document.removeEventListener('keydown', onDrawerKeydown);
+            if (lastFocusedNode) lastFocusedNode.focus();
+        }
+
+        drawerClose.addEventListener('click', closeTopoDrawer);
+        drawerBackdrop.addEventListener('click', closeTopoDrawer);
+
+        drawerProjects.addEventListener('click', (e) => {
+            const link = e.target.closest('a');
+            if (!link) return;
+            const targetId = link.getAttribute('href').slice(1);
+            closeTopoDrawer();
+            const targetEl = document.getElementById(targetId);
+            if (targetEl) {
+                setTimeout(() => {
+                    targetEl.classList.add('highlight-flash');
+                    setTimeout(() => targetEl.classList.remove('highlight-flash'), 1700);
+                }, 350);
             }
         });
     }
