@@ -286,3 +286,41 @@ describe('Project Filters', () => {
         expect(document.getElementById('project-filter-status').textContent).toContain('all 7 projects');
     });
 });
+
+describe('Experience Sidebar', () => {
+    beforeEach(() => {
+        document.documentElement.innerHTML = html.toString();
+        document.dispatchEvent(new Event('DOMContentLoaded'));
+    });
+
+    afterEach(() => {
+        delete HTMLElement.prototype.scrollIntoView;
+        jest.restoreAllMocks();
+    });
+
+    it('scrolls to the matching job card when a sidebar item is clicked', () => {
+        const scrollIntoViewMock = jest.fn();
+        HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
+
+        document.querySelector('.experience-nav-item[data-target="job-isro"]').click();
+
+        expect(scrollIntoViewMock).toHaveBeenCalled();
+    });
+
+    it('dims the other sidebar items and job cards on hover, and clears on mouseleave', () => {
+        const hotelkeyNav = document.querySelector('.experience-nav-item[data-target="job-hotelkey"]');
+        const isroNav = document.querySelector('.experience-nav-item[data-target="job-isro"]');
+        const isroCard = document.getElementById('job-isro');
+
+        hotelkeyNav.dispatchEvent(new MouseEvent('mouseenter'));
+
+        expect(hotelkeyNav.classList.contains('dimmed')).toBe(false);
+        expect(isroNav.classList.contains('dimmed')).toBe(true);
+        expect(isroCard.classList.contains('dimmed')).toBe(true);
+
+        document.querySelector('.experience-layout').dispatchEvent(new MouseEvent('mouseleave'));
+
+        expect(isroNav.classList.contains('dimmed')).toBe(false);
+        expect(isroCard.classList.contains('dimmed')).toBe(false);
+    });
+});

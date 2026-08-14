@@ -686,6 +686,92 @@ ul, ol {
 /* =========================================
    Experience Section
 ========================================= */
+.experience-layout {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.experience-sidebar {
+  position: sticky;
+  top: 100px;
+}
+
+.experience-sidebar ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  border-left: 2px solid var(--lightest-navy);
+}
+
+.experience-nav-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-left: 2px solid transparent;
+  margin-left: -2px;
+  padding: 0.5rem 0 0.5rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--slate);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.experience-nav-item:hover {
+  color: var(--lightest-slate);
+}
+
+.experience-nav-item:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+
+.experience-nav-item.active {
+  color: var(--teal);
+  border-left-color: var(--teal);
+}
+
+.experience-nav-item.dimmed {
+  opacity: 0.5;
+}
+
+@media (max-width: 900px) {
+  .experience-layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .experience-sidebar {
+    position: static;
+  }
+
+  .experience-sidebar ul {
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-left: none;
+    border-bottom: 2px solid var(--lightest-navy);
+    padding-bottom: 0.5rem;
+  }
+
+  .experience-nav-item {
+    width: auto;
+    border-left: none;
+    margin-left: 0;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    padding: 0.4rem 0.75rem;
+  }
+
+  .experience-nav-item.active {
+    border-left-color: transparent;
+    border-bottom-color: var(--teal);
+  }
+}
+
 .experience-timeline {
   display: flex;
   flex-direction: column;
@@ -695,6 +781,12 @@ ul, ol {
 .job-card {
   display: flex;
   gap: 2rem;
+  scroll-margin-top: 100px;
+  transition: opacity 0.25s ease;
+}
+
+.job-card.dimmed {
+  opacity: 0.45;
 }
 
 @media (max-width: 768px) {
