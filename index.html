@@ -208,9 +208,46 @@
     <section id="projects" class="section section-light reveal" aria-label="Selected projects" tabindex="-1">
         <div class="container">
             <h2 class="section-title">Some Things I've Built</h2>
-            
+            <p class="section-lead">A snapshot of where I spend most of my time, plus everything I've shipped — filter the grid below by focus area.</p>
+
+            <div class="skills-bars" aria-label="Core skill proficiency">
+                <div class="skill-bar" data-target="90">
+                    <div class="skill-bar-top"><span class="skill-bar-label">Python</span><span class="skill-bar-percent">90%</span></div>
+                    <div class="skill-bar-track"><div class="skill-bar-fill"></div></div>
+                </div>
+                <div class="skill-bar" data-target="90">
+                    <div class="skill-bar-top"><span class="skill-bar-label">CI/CD &amp; Automation</span><span class="skill-bar-percent">90%</span></div>
+                    <div class="skill-bar-track"><div class="skill-bar-fill"></div></div>
+                </div>
+                <div class="skill-bar" data-target="85">
+                    <div class="skill-bar-top"><span class="skill-bar-label">AWS &amp; Cloud Infra</span><span class="skill-bar-percent">85%</span></div>
+                    <div class="skill-bar-track"><div class="skill-bar-fill"></div></div>
+                </div>
+                <div class="skill-bar" data-target="80">
+                    <div class="skill-bar-top"><span class="skill-bar-label">Kubernetes &amp; Containers</span><span class="skill-bar-percent">80%</span></div>
+                    <div class="skill-bar-track"><div class="skill-bar-fill"></div></div>
+                </div>
+                <div class="skill-bar" data-target="80">
+                    <div class="skill-bar-top"><span class="skill-bar-label">Testing &amp; QA</span><span class="skill-bar-percent">80%</span></div>
+                    <div class="skill-bar-track"><div class="skill-bar-fill"></div></div>
+                </div>
+                <div class="skill-bar" data-target="75">
+                    <div class="skill-bar-top"><span class="skill-bar-label">AI/ML &amp; LLM Tooling</span><span class="skill-bar-percent">75%</span></div>
+                    <div class="skill-bar-track"><div class="skill-bar-fill"></div></div>
+                </div>
+            </div>
+
+            <div class="project-filters" role="group" aria-label="Filter projects by category">
+                <button class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
+                <button class="filter-btn" data-filter="cloud" aria-pressed="false">Cloud</button>
+                <button class="filter-btn" data-filter="ci-cd" aria-pressed="false">CI/CD</button>
+                <button class="filter-btn" data-filter="ai-ml" aria-pressed="false">AI/ML</button>
+                <button class="filter-btn" data-filter="testing" aria-pressed="false">Testing</button>
+            </div>
+            <p id="project-filter-status" class="project-filter-status" role="status" aria-live="polite">Showing all 7 projects.</p>
+
             <div class="projects-grid">
-                <div class="project-card" id="project-rajeshwari">
+                <div class="project-card" id="project-rajeshwari" data-categories="cloud">
                     <div class="project-top">
                         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--teal)" class="folder-icon">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
@@ -227,7 +264,7 @@
                     </ul>
                 </div>
 
-                <div class="project-card" id="project-mcp-jenkins">
+                <div class="project-card" id="project-mcp-jenkins" data-categories="ci-cd ai-ml">
                     <div class="project-top">
                         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--teal)" class="folder-icon">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
@@ -243,7 +280,7 @@
                     </ul>
                 </div>
 
-                <div class="project-card" id="project-self-healing-ui">
+                <div class="project-card" id="project-self-healing-ui" data-categories="testing ai-ml">
                     <div class="project-top">
                         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--teal)" class="folder-icon">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
@@ -259,7 +296,7 @@
                     </ul>
                 </div>
 
-                <div class="project-card" id="project-stock-lstm">
+                <div class="project-card" id="project-stock-lstm" data-categories="ai-ml">
                     <div class="project-top">
                         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--teal)" class="folder-icon">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
@@ -275,7 +312,7 @@
                     </ul>
                 </div>
 
-                <div class="project-card" id="project-gitops-k8s">
+                <div class="project-card" id="project-gitops-k8s" data-categories="cloud ci-cd">
                     <div class="project-top">
                         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--teal)" class="folder-icon">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
@@ -291,7 +328,7 @@
                     </ul>
                 </div>
 
-                <div class="project-card" id="project-mlops-serving">
+                <div class="project-card" id="project-mlops-serving" data-categories="cloud ai-ml">
                     <div class="project-top">
                         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--teal)" class="folder-icon">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
@@ -307,7 +344,7 @@
                     </ul>
                 </div>
 
-                <div class="project-card" id="project-devsecops-observability">
+                <div class="project-card" id="project-devsecops-observability" data-categories="ci-cd">
                     <div class="project-top">
                         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--teal)" class="folder-icon">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />

@@ -246,3 +246,43 @@ describe('Theme Toggle', () => {
         expect(localStorage.getItem('theme')).toBe('dark');
     });
 });
+
+describe('Project Filters', () => {
+    beforeEach(() => {
+        document.documentElement.innerHTML = html.toString();
+        document.dispatchEvent(new Event('DOMContentLoaded'));
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
+        jest.restoreAllMocks();
+    });
+
+    it('filters to only AI/ML-tagged projects and updates the status text', () => {
+        jest.useFakeTimers();
+        const aiMlBtn = document.querySelector('.filter-btn[data-filter="ai-ml"]');
+        aiMlBtn.click();
+        jest.advanceTimersByTime(300);
+
+        const visibleCards = [...document.querySelectorAll('.project-card')].filter(c => c.style.display !== 'none');
+        expect(visibleCards.length).toBeGreaterThan(0);
+        visibleCards.forEach(card => {
+            expect(card.dataset.categories.split(' ')).toContain('ai-ml');
+        });
+        expect(document.getElementById('project-filter-status').textContent).toContain('AI/ML');
+        expect(aiMlBtn.getAttribute('aria-pressed')).toBe('true');
+        expect(document.querySelector('.filter-btn[data-filter="all"]').getAttribute('aria-pressed')).toBe('false');
+    });
+
+    it('shows every project again when "All" is clicked after filtering', () => {
+        jest.useFakeTimers();
+        document.querySelector('.filter-btn[data-filter="testing"]').click();
+        jest.advanceTimersByTime(300);
+        document.querySelector('.filter-btn[data-filter="all"]').click();
+        jest.advanceTimersByTime(300);
+
+        const hiddenCards = [...document.querySelectorAll('.project-card')].filter(c => c.style.display === 'none');
+        expect(hiddenCards.length).toBe(0);
+        expect(document.getElementById('project-filter-status').textContent).toContain('all 7 projects');
+    });
+});
