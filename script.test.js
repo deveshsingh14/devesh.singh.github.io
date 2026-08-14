@@ -470,3 +470,22 @@ describe('Scroll-Linked Reveal Choreography', () => {
         expect(activeScriptItem.classList.contains('revealed')).toBe(false);
     });
 });
+
+describe('About Illustration', () => {
+    beforeEach(() => {
+        document.documentElement.innerHTML = html.toString();
+        document.dispatchEvent(new Event('DOMContentLoaded'));
+    });
+
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    it('renders as a decorative, accessibility-hidden SVG alongside the bio text', () => {
+        const svg = document.querySelector('.about-illustration svg');
+        expect(svg).not.toBeNull();
+        expect(svg.getAttribute('aria-hidden')).toBe('true');
+        expect(document.querySelectorAll('.about-illustration .server-led').length).toBe(1);
+        expect(document.querySelector('#about .text-block')).not.toBeNull();
+    });
+});

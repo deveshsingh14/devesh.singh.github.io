@@ -1001,6 +1001,158 @@ ul, ol {
   }
 }
 
+/* =========================================
+   About: Custom Desk Illustration
+   A hand-drawn inline SVG (no external asset) — deliberately flat/
+   silhouette-styled so it reads cleanly in either theme, using the same
+   fixed --console-* tokens as the terminal/dashboard surfaces for the
+   "always-dark electronics" (monitor screen, code lines, server rack)
+   and theme-following tokens for "furniture" (desk, lamp, mug, pot).
+========================================= */
+.about-illustration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .about-illustration {
+    max-width: 320px;
+    margin: 0 auto;
+  }
+}
+
+.desk-illustration {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.desk-surface {
+  fill: var(--lightest-navy);
+}
+
+.desk-illustration-border-fill {
+  fill: var(--lightest-navy);
+}
+
+.desk-illustration-line-fill {
+  fill: var(--slate);
+}
+
+.desk-illustration-light-fill {
+  fill: var(--lightest-slate);
+}
+
+.mug-handle {
+  fill: none;
+  stroke: var(--lightest-slate);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.monitor-screen {
+  fill: var(--obsidian);
+}
+
+.code-line-teal {
+  fill: var(--console-accent);
+}
+
+.code-line-dim {
+  fill: var(--console-text-dim);
+}
+
+.code-line-amber {
+  fill: var(--amber);
+}
+
+.cursor-blink {
+  fill: var(--console-accent);
+  animation: desk-cursor-blink 1s step-end infinite;
+}
+
+.plant-leaf {
+  fill: #4a8a5c;
+}
+
+.plant-leaf-dark {
+  fill: #35664a;
+}
+
+.server-rack {
+  fill: var(--obsidian-panel);
+  stroke: var(--obsidian-border);
+  stroke-width: 1;
+}
+
+.server-led {
+  fill: var(--success);
+  filter: drop-shadow(0 0 3px var(--success));
+  animation: desk-led-pulse 1.8s ease-in-out infinite;
+}
+
+.lamp-glow {
+  fill: var(--teal);
+  opacity: 0.15;
+  filter: blur(6px);
+  transition: opacity 0.4s ease;
+}
+
+.about-illustration:hover .lamp-glow {
+  opacity: 0.3;
+}
+
+.steam {
+  fill: none;
+  stroke: var(--slate);
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: 0;
+  transform-origin: center;
+  animation: steam-rise 2.4s ease-in infinite;
+}
+
+.steam-2 {
+  animation-delay: 0.6s;
+}
+
+.steam-3 {
+  animation-delay: 1.2s;
+}
+
+@keyframes desk-cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes desk-led-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+@keyframes steam-rise {
+  0% { transform: translateY(0); opacity: 0; }
+  20% { opacity: 0.6; }
+  100% { transform: translateY(-16px); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-blink,
+  .server-led,
+  .steam {
+    animation: none;
+  }
+
+  .steam {
+    opacity: 0;
+  }
+
+  .server-led {
+    opacity: 1;
+  }
+}
+
 .highlight-link {
   color: var(--teal);
   display: inline-block;
