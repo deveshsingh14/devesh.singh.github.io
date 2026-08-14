@@ -158,6 +158,30 @@ ul, ol {
 }
 
 /* =========================================
+   Scroll-Linked Reveal Choreography
+   Placed early (before section-specific rules) so states that layer on
+   top later — .job-card.dimmed, .project-card.project-filtered-out —
+   correctly win the cascade over the plain .active resting state below.
+========================================= */
+.reveal-item {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s cubic-bezier(0.5, 0, 0, 1), transform 0.6s cubic-bezier(0.5, 0, 0, 1);
+}
+
+.reveal-item.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-item {
+    transform: none;
+    transition: opacity 0.4s ease;
+  }
+}
+
+/* =========================================
    Spotlight Effect
 ========================================= */
 #spotlight {

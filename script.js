@@ -310,6 +310,35 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==========================================
+    // Scroll-Linked Reveal Choreography
+    // Direct children of any .stagger-children container cascade in one
+    // after another (rather than the whole container fading in as a single
+    // block) once the container scrolls into view.
+    // ==========================================
+    const staggerContainers = document.querySelectorAll('.stagger-children');
+    if (staggerContainers.length) {
+        const STAGGER_STEP_MS = 90;
+        const staggerObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                [...entry.target.children].forEach((child, index) => {
+                    setTimeout(() => child.classList.add('revealed'), index * STAGGER_STEP_MS);
+                });
+                observer.unobserve(entry.target);
+            });
+        }, {
+            root: null,
+            rootMargin: '0px 0px -10% 0px',
+            threshold: 0.15
+        });
+
+        staggerContainers.forEach(container => {
+            [...container.children].forEach(child => child.classList.add('reveal-item'));
+            staggerObserver.observe(container);
+        });
+    }
+
+    // ==========================================
     // Typewriter Effect
     // ==========================================
     const phrases = ["AWS infrastructure.", "full-stack Node.js apps.", "CI/CD pipelines.", "LLM-Agent integrations.", "automated deployments."];

@@ -439,3 +439,34 @@ describe('Command Palette', () => {
         expect(document.getElementById('cmdk-palette').hidden).toBe(true);
     });
 });
+
+describe('Scroll-Linked Reveal Choreography', () => {
+    beforeEach(() => {
+        document.documentElement.innerHTML = html.toString();
+        document.dispatchEvent(new Event('DOMContentLoaded'));
+    });
+
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    it('marks every direct child of each stagger container as a reveal-item', () => {
+        const containers = document.querySelectorAll('.stagger-children');
+        expect(containers.length).toBeGreaterThan(0);
+        containers.forEach(container => {
+            [...container.children].forEach(child => {
+                expect(child.classList.contains('reveal-item')).toBe(true);
+            });
+        });
+    });
+
+    it('does not collide with the Tools sidebar\'s existing "active" (selected-tool) class', () => {
+        const activeScriptItem = document.querySelector('.script-item.active');
+        expect(activeScriptItem).not.toBeNull();
+        expect(activeScriptItem.classList.contains('reveal-item')).toBe(true);
+        // Still selected, and not yet marked "revealed" (the IntersectionObserver
+        // stub in tests never fires, same as every other scroll-triggered feature).
+        expect(activeScriptItem.classList.contains('active')).toBe(true);
+        expect(activeScriptItem.classList.contains('revealed')).toBe(false);
+    });
+});
