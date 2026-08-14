@@ -282,6 +282,105 @@ ul, ol {
 }
 
 /* =========================================
+   Vertical Scroll-Progress Rail
+========================================= */
+.scroll-rail {
+  position: fixed;
+  left: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.scroll-rail.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.scroll-rail-dot {
+  position: relative;
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: transparent;
+  border: 2px solid var(--lightest-navy);
+  flex-shrink: 0;
+  transition: var(--transition);
+}
+
+.scroll-rail-dot:hover,
+.scroll-rail-dot:focus-visible {
+  border-color: var(--teal);
+  transform: scale(1.3);
+}
+
+.scroll-rail-dot:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
+}
+
+.scroll-rail-dot.visited {
+  background-color: var(--teal);
+  border-color: var(--teal);
+}
+
+.scroll-rail-dot.active {
+  width: 14px;
+  height: 14px;
+  background-color: var(--teal);
+  border-color: var(--teal);
+  box-shadow: var(--glow-teal);
+}
+
+.scroll-rail-connector {
+  width: 2px;
+  height: 20px;
+  background-color: var(--lightest-navy);
+  flex-shrink: 0;
+  transition: background-color 0.3s ease;
+}
+
+.scroll-rail-connector.filled {
+  background-color: var(--teal);
+}
+
+.scroll-rail-tooltip {
+  position: absolute;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--lightest-slate);
+  background-color: var(--light-navy);
+  border: 1px solid var(--lightest-navy);
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.scroll-rail-dot:hover .scroll-rail-tooltip,
+.scroll-rail-dot:focus-visible .scroll-rail-tooltip {
+  opacity: 1;
+}
+
+@media (max-width: 1080px) {
+  .scroll-rail {
+    display: none;
+  }
+}
+
+/* =========================================
    Navigation
 ========================================= */
 .top-nav {

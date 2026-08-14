@@ -70,6 +70,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const sideSocial = document.getElementById('side-social');
     const sideEmail = document.getElementById('side-email');
     const hero = document.getElementById('hero');
+    const scrollRail = document.getElementById('scroll-rail');
+    const railDots = document.querySelectorAll('.scroll-rail-dot');
+    const railConnectors = document.querySelectorAll('.scroll-rail-connector');
+    const RAIL_SECTION_ORDER = [...railDots].map(dot => dot.dataset.target);
 
     // Change navbar style on scroll
     window.addEventListener('scroll', throttle(() => {
@@ -83,11 +87,12 @@ document.addEventListener('DOMContentLoaded', () => {
             navbar.style.height = '80px';
         }
 
-        // Reveal the persistent social sidebars once the hero has scrolled by
+        // Reveal the persistent social sidebars and scroll rail once the hero has scrolled by
         if (hero && sideSocial && sideEmail) {
             const pastHero = scrollY > hero.offsetHeight - 200;
             sideSocial.classList.toggle('visible', pastHero);
             sideEmail.classList.toggle('visible', pastHero);
+            if (scrollRail) scrollRail.classList.toggle('visible', pastHero);
         }
 
         // Scroll spy logic
@@ -107,6 +112,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 link.classList.add('active');
                 link.setAttribute('aria-current', 'true');
             }
+        });
+
+        // Sync the scroll-progress rail's dots/connectors to the same current section
+        const currentRailIndex = RAIL_SECTION_ORDER.indexOf(current);
+        railDots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === currentRailIndex);
+            dot.classList.toggle('visited', i < currentRailIndex);
+        });
+        railConnectors.forEach((connector, i) => {
+            connector.classList.toggle('filled', i < currentRailIndex);
         });
     }));
 

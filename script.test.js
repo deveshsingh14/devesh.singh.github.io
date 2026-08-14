@@ -324,3 +324,31 @@ describe('Experience Sidebar', () => {
         expect(isroCard.classList.contains('dimmed')).toBe(false);
     });
 });
+
+describe('Scroll Progress Rail', () => {
+    beforeEach(() => {
+        document.documentElement.innerHTML = html.toString();
+        document.dispatchEvent(new Event('DOMContentLoaded'));
+    });
+
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    it('has one dot per main section, in document order, each linking to that section', () => {
+        const dots = [...document.querySelectorAll('.scroll-rail-dot')];
+        const expectedOrder = ['about', 'experience', 'projects', 'ops', 'stack', 'contact', 'tools'];
+
+        expect(dots.map(d => d.dataset.target)).toEqual(expectedOrder);
+        dots.forEach(dot => {
+            expect(dot.getAttribute('href')).toBe(`#${dot.dataset.target}`);
+            expect(document.getElementById(dot.dataset.target)).not.toBeNull();
+        });
+    });
+
+    it('has one connector between every pair of dots', () => {
+        const dots = document.querySelectorAll('.scroll-rail-dot').length;
+        const connectors = document.querySelectorAll('.scroll-rail-connector').length;
+        expect(connectors).toBe(dots - 1);
+    });
+});
