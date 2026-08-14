@@ -193,6 +193,27 @@ document.addEventListener('DOMContentLoaded', () => {
         let width, height;
         let particles = [];
 
+        // Cursor position relative to the canvas, or null when the pointer
+        // isn't over the hero. Tracked on `hero` rather than the canvas
+        // itself, since #hero-canvas has pointer-events:none so it never
+        // receives mouse events directly.
+        let mouseX = null;
+        let mouseY = null;
+        const REPEL_RADIUS = 90;
+        const CONNECT_RADIUS = 200;
+
+        if (window.matchMedia('(pointer: fine)').matches && hero) {
+            hero.addEventListener('mousemove', throttle((e) => {
+                const rect = canvas.getBoundingClientRect();
+                mouseX = e.clientX - rect.left;
+                mouseY = e.clientY - rect.top;
+            }));
+            hero.addEventListener('mouseleave', () => {
+                mouseX = null;
+                mouseY = null;
+            });
+        }
+
         function resizeCanvas() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = document.getElementById('hero').offsetHeight;
@@ -216,6 +237,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (this.x < 0 || this.x > width) this.vx *= -1;
                 if (this.y < 0 || this.y > height) this.vy *= -1;
+
+                // Softly push the particle away from the cursor when it's nearby
+                if (mouseX !== null) {
+                    const dx = this.x - mouseX;
+                    const dy = this.y - mouseY;
+                    const distSq = dx * dx + dy * dy;
+                    if (distSq < REPEL_RADIUS * REPEL_RADIUS && distSq > 0.01) {
+                        const dist = Math.sqrt(distSq);
+                        const force = (REPEL_RADIUS - dist) / REPEL_RADIUS;
+                        this.x += (dx / dist) * force * 1.8;
+                        this.y += (dy / dist) * force * 1.8;
+                    }
+                }
             }
 
             draw() {
@@ -241,6 +275,22 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let i = 0; i < particles.length; i++) {
                 particles[i].update();
                 particles[i].draw();
+
+                // Draw a line reaching toward the cursor when a particle is close enough
+                if (mouseX !== null) {
+                    const mdx = particles[i].x - mouseX;
+                    const mdy = particles[i].y - mouseY;
+                    const mDistSq = mdx * mdx + mdy * mdy;
+                    if (mDistSq < CONNECT_RADIUS * CONNECT_RADIUS) {
+                        const mDist = Math.sqrt(mDistSq);
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(mouseX, mouseY);
+                        ctx.strokeStyle = `rgba(255, 87, 49, ${0.35 - mDist / 600})`;
+                        ctx.lineWidth = 0.6;
+                        ctx.stroke();
+                    }
+                }
 
                 // Draw connections
                 for (let j = i + 1; j < particles.length; j++) {
