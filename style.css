@@ -34,6 +34,7 @@
 
   --nav-bg: rgba(10, 10, 10, 0.85);
   --form-focus-bg: rgba(0, 0, 0, 0.8);
+  --hero-vignette: rgba(0, 0, 0, 0.5);
 
   /* Text/accent colors for use ONLY inside the always-dark "console" surfaces
      (hero terminal, Tools terminal, pipeline/metrics/topology panels). Those
@@ -77,6 +78,7 @@
   --glow-teal: 0 0 14px rgba(194, 65, 12, 0.35);
   --nav-bg: rgba(247, 245, 242, 0.85);
   --form-focus-bg: rgba(255, 255, 255, 0.9);
+  --hero-vignette: rgba(28, 26, 23, 0.22);
 }
 
 /* =========================================
@@ -554,6 +556,52 @@ ul, ol {
   height: 100%;
   z-index: 1;
   pointer-events: none;
+}
+
+/* Cinematic hero background: a slow-drifting ambient glow + film grain
+   texture, capped with a vignette — layered above the particle canvas but
+   below the readable content, for a "video background" feel without an
+   actual video asset. */
+.hero-ambient-glow {
+  position: absolute;
+  inset: -20%;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 87, 49, 0.16), transparent 55%);
+  filter: blur(60px);
+  animation: hero-ambient-drift 24s ease-in-out infinite alternate;
+}
+
+@keyframes hero-ambient-drift {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(6%, 8%) scale(1.15); }
+  100% { transform: translate(-8%, -5%) scale(1.05); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-ambient-glow {
+    animation: none;
+  }
+}
+
+.hero-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3e%3cfilter id='grain'%3e%3cfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3e%3cfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.9 0'/%3e%3c/filter%3e%3crect width='100%25' height='100%25' filter='url(%23grain)'/%3e%3c/svg%3e");
+  background-size: 140px 140px;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 45%, transparent 45%, var(--hero-vignette) 100%);
 }
 
 .hero-content-wrapper {
