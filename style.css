@@ -443,6 +443,47 @@ ul, ol {
   }
 }
 
+.cmdk-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 36px;
+  padding: 0 0.7rem;
+  border-radius: 18px;
+  background: transparent;
+  border: 1px solid var(--lightest-navy);
+  color: var(--lightest-slate);
+  cursor: pointer;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.cmdk-trigger:hover {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.cmdk-trigger:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+
+.cmdk-trigger svg {
+  width: 16px;
+  height: 16px;
+}
+
+.cmdk-trigger-kbd {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+}
+
+@media (max-width: 500px) {
+  .cmdk-trigger-kbd {
+    display: none;
+  }
+}
+
 .theme-toggle {
   display: inline-flex;
   align-items: center;
@@ -483,6 +524,131 @@ ul, ol {
 
 :root[data-theme="light"] .theme-toggle .icon-sun {
   display: block;
+}
+
+/* =========================================
+   Command Palette
+   An always-dark "console" surface like the hero terminal/topology
+   drawer, so it uses --console-* tokens rather than the theme-following
+   ones — consistent in both light and dark mode.
+========================================= */
+.cmdk-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 95;
+}
+
+.cmdk-backdrop[hidden],
+.cmdk-palette[hidden] {
+  display: none;
+}
+
+.cmdk-palette {
+  position: fixed;
+  top: 14vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 96;
+  width: min(560px, calc(100vw - 2.5rem));
+  max-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--obsidian-panel);
+  border: 1px solid var(--obsidian-border);
+  border-radius: 10px;
+  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6), var(--console-glow);
+  overflow: hidden;
+}
+
+.cmdk-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--obsidian-border);
+  flex-shrink: 0;
+}
+
+.cmdk-input-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--console-text-dim);
+  flex-shrink: 0;
+}
+
+.cmdk-input {
+  flex-grow: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--console-text);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  caret-color: var(--console-accent);
+}
+
+.cmdk-input::placeholder {
+  color: var(--console-text-dim);
+}
+
+.cmdk-esc-hint {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--console-text-dim);
+  border: 1px solid var(--obsidian-border);
+  border-radius: 4px;
+  padding: 0.15rem 0.4rem;
+  flex-shrink: 0;
+}
+
+.cmdk-results {
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+
+.cmdk-group-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--console-text-dim);
+  padding: 0.6rem 0.75rem 0.35rem;
+}
+
+.cmdk-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  color: var(--console-text-mid);
+  cursor: pointer;
+}
+
+.cmdk-item.selected {
+  background-color: var(--console-accent-tint);
+  color: var(--console-text);
+}
+
+.cmdk-item-hint {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--console-text-dim);
+  flex-shrink: 0;
+}
+
+.cmdk-item.selected .cmdk-item-hint {
+  color: var(--console-accent);
+}
+
+.cmdk-empty {
+  padding: 1.5rem;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--console-text-dim);
 }
 
 /* =========================================

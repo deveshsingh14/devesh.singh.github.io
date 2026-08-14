@@ -352,3 +352,90 @@ describe('Scroll Progress Rail', () => {
         expect(connectors).toBe(dots - 1);
     });
 });
+
+describe('Command Palette', () => {
+    beforeEach(() => {
+        document.documentElement.innerHTML = html.toString();
+        document.dispatchEvent(new Event('DOMContentLoaded'));
+    });
+
+    afterEach(() => {
+        delete HTMLElement.prototype.scrollIntoView;
+        jest.restoreAllMocks();
+    });
+
+    const dispatchKey = (key, opts = {}) =>
+        document.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true, ...opts }));
+
+    it('opens via the trigger button and lists commands grouped by category', () => {
+        document.getElementById('cmdk-trigger').click();
+
+        expect(document.getElementById('cmdk-palette').hidden).toBe(false);
+        expect(document.getElementById('cmdk-backdrop').hidden).toBe(false);
+        expect(document.activeElement).toBe(document.getElementById('cmdk-input'));
+        expect(document.querySelectorAll('.cmdk-item').length).toBeGreaterThan(0);
+        expect(document.querySelectorAll('.cmdk-group-label').length).toBeGreaterThanOrEqual(2);
+    });
+
+    it('opens via Ctrl+K and closes via Escape, restoring focus to the trigger', () => {
+        const trigger = document.getElementById('cmdk-trigger');
+        trigger.focus();
+        trigger.click();
+        expect(document.getElementById('cmdk-palette').hidden).toBe(false);
+
+        dispatchKey('Escape');
+        expect(document.getElementById('cmdk-palette').hidden).toBe(true);
+        expect(document.activeElement).toBe(trigger);
+    });
+
+    it('filters commands as you type', () => {
+        document.getElementById('cmdk-trigger').click();
+        const input = document.getElementById('cmdk-input');
+        input.value = 'theme';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+
+        const items = [...document.querySelectorAll('.cmdk-item')];
+        expect(items.length).toBe(1);
+        expect(items[0].textContent).toContain('Toggle light / dark theme');
+    });
+
+    it('shows an empty state for a query with no matches', () => {
+        document.getElementById('cmdk-trigger').click();
+        const input = document.getElementById('cmdk-input');
+        input.value = 'zzz-nonexistent';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+
+        expect(document.getElementById('cmdk-empty').hidden).toBe(false);
+        expect(document.querySelectorAll('.cmdk-item').length).toBe(0);
+    });
+
+    it('moves the selection with arrow keys', () => {
+        document.getElementById('cmdk-trigger').click();
+        dispatchKey('ArrowDown');
+
+        const selected = document.querySelector('.cmdk-item.selected');
+        const all = [...document.querySelectorAll('.cmdk-item')];
+        expect(all.indexOf(selected)).toBe(1);
+    });
+
+    it('runs the selected command on Enter and closes the palette', () => {
+        const scrollIntoViewMock = jest.fn();
+        HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
+
+        document.getElementById('cmdk-trigger').click();
+        const input = document.getElementById('cmdk-input');
+        input.value = 'Go to Projects';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+
+        dispatchKey('Enter');
+
+        expect(scrollIntoViewMock).toHaveBeenCalled();
+        expect(document.getElementById('cmdk-palette').hidden).toBe(true);
+    });
+
+    it('closes when the backdrop is clicked', () => {
+        document.getElementById('cmdk-trigger').click();
+        document.getElementById('cmdk-backdrop').click();
+        expect(document.getElementById('cmdk-palette').hidden).toBe(true);
+    });
+});
