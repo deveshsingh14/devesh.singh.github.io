@@ -1267,10 +1267,39 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================
-    // Contact Form Asynchronous Submission
+    // Contact Form Asynchronous Submission & Validation
     // ==========================================
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
+        // Character counter for the message textarea
+        const messageInput = document.getElementById('message');
+        const messageCounter = document.getElementById('message-counter');
+
+        if (messageInput && messageCounter) {
+            const MAX_CHARS = 1000;
+            const WARNING_THRESHOLD = 900;
+
+            const updateCounter = () => {
+                const currentLength = messageInput.value.length;
+                messageCounter.textContent = `${currentLength} / ${MAX_CHARS}`;
+
+                if (currentLength >= MAX_CHARS) {
+                    messageCounter.classList.add('at-limit');
+                    messageCounter.classList.remove('near-limit');
+                } else if (currentLength >= WARNING_THRESHOLD) {
+                    messageCounter.classList.add('near-limit');
+                    messageCounter.classList.remove('at-limit');
+                } else {
+                    messageCounter.classList.remove('near-limit', 'at-limit');
+                }
+            };
+
+            // Initialize on load to handle pre-filled values
+            updateCounter();
+
+            messageInput.addEventListener('input', updateCounter);
+        }
+
         contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 

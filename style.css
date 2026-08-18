@@ -2272,6 +2272,22 @@ ul, ol {
   text-align: left;
 }
 
+.char-counter {
+  text-align: right;
+  font-size: 0.8rem;
+  color: var(--slate);
+  margin-top: 0.25rem;
+  transition: color 0.2s;
+}
+
+.char-counter.near-limit {
+  color: var(--amber);
+}
+
+.char-counter.at-limit {
+  color: var(--danger);
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
