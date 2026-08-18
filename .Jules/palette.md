@@ -54,3 +54,7 @@
 ## 2025-02-18 - Interactive UI Components and File Status Accessibility
 **Learning:** Terminal-like interfaces or interactive sidebars often use standard list items mapped to functional UI changes. Transforming these components into `tablist` and `tab` ARIA roles significantly improves screen reader navigation and intent comprehension. Furthermore, dynamic text feedback elements, such as file upload statuses ("Converting...", "Extracting..."), must use `aria-live` attributes to alert visually impaired users of non-blocking asynchronous state changes without refocusing.
 **Action:** Always ensure that interactive UI elements functioning as tabs declare `role="tab"` with `aria-selected` tracking active states, grouped under `role="tablist"`. Additionally, proactively apply `aria-live="polite"` or `"assertive"` on status indicator fields that handle async operations (like file conversions) to provide essential auditory feedback.
+
+## 2026-08-18 - Decorative Elements in Mock Terminals
+**Learning:** Mock terminal interfaces often contain purely decorative elements like 'close, minimize, maximize' window dots. By default, screen readers might stumble over these empty `span` elements if they're not explicitly hidden, creating unnecessary noise for the user.
+**Action:** Always add `aria-hidden="true"` to wrapper containers (like `.window-controls`) that only hold decorative, non-interactive visual flair.
