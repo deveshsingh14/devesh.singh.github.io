@@ -1229,6 +1229,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!selectedDocxFile) return;
             
             btnConvertDocx.disabled = true;
+            btnConvertDocx.setAttribute('aria-disabled', 'true');
             btnConvertDocx.innerHTML = '<span class="spinner"></span> Converting...';
             docxStatus.innerText = 'Extracting content from DOCX...';
             docxStatus.style.color = 'var(--teal)';
@@ -1261,6 +1262,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 docxStatus.style.color = 'var(--danger)';
             } finally {
                 btnConvertDocx.disabled = false;
+                btnConvertDocx.removeAttribute('aria-disabled');
                 btnConvertDocx.innerText = 'Convert to PDF';
             }
         });
@@ -1279,9 +1281,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Set loading state
             submitBtn.disabled = true;
+            submitBtn.setAttribute('aria-disabled', 'true');
             submitBtn.innerHTML = '<span class="spinner"></span> Sending...';
-            submitBtn.style.opacity = '0.7';
-            submitBtn.style.cursor = 'not-allowed';
 
             try {
                 const formData = new FormData(contactForm);
@@ -1310,9 +1311,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Revert after 3 seconds
                 setTimeout(() => {
                     submitBtn.disabled = false;
+                    submitBtn.removeAttribute('aria-disabled');
                     submitBtn.innerHTML = originalHTML;
-                    submitBtn.style.opacity = '';
-                    submitBtn.style.cursor = '';
                     submitBtn.style.backgroundColor = '';
                     submitBtn.style.color = '';
                     submitBtn.style.borderColor = '';
