@@ -58,3 +58,6 @@
 ## 2026-08-18 - Decorative Elements in Mock Terminals
 **Learning:** Mock terminal interfaces often contain purely decorative elements like 'close, minimize, maximize' window dots. By default, screen readers might stumble over these empty `span` elements if they're not explicitly hidden, creating unnecessary noise for the user.
 **Action:** Always add `aria-hidden="true"` to wrapper containers (like `.window-controls`) that only hold decorative, non-interactive visual flair.
+## 2026-08-20 - Native Disabled Attributes
+**Learning:** Adding `aria-disabled="true"` alongside the native HTML `disabled` attribute is technically redundant and discouraged by HTML5/W3C specs, because the native `disabled` attribute inherently conveys the disabled state to screen readers.
+**Action:** In the future, prefer using only the native `disabled` attribute on standard interactive elements (like buttons and inputs) for screen reader communication, rather than adding both.
