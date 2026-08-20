@@ -61,3 +61,6 @@
 ## 2026-08-20 - Native Disabled Attributes
 **Learning:** Adding `aria-disabled="true"` alongside the native HTML `disabled` attribute is technically redundant and discouraged by HTML5/W3C specs, because the native `disabled` attribute inherently conveys the disabled state to screen readers.
 **Action:** In the future, prefer using only the native `disabled` attribute on standard interactive elements (like buttons and inputs) for screen reader communication, rather than adding both.
+## 2026-08-20 - Command Palette programmatic scrolling and focus management
+**Learning:** Programmatic scrolling (e.g. scrollIntoView) to elements must be paired with programmatic focus management to ensure keyboard focus follows the visual scrolling, otherwise the navigation context is lost.
+**Action:** Ensure any scroll to section action always sets focus on the target section.
