@@ -434,10 +434,19 @@ ul, ol {
 }
 
 .logo a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   color: var(--teal);
   font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: 1px;
+}
+
+.logo-mark {
+  height: 22px;
+  width: auto;
+  display: block;
 }
 
 .nav-right {
