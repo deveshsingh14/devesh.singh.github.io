@@ -64,7 +64,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cmdkTrigger && cmdkBackdrop && cmdkPalette && cmdkInput && cmdkResults && cmdkEmpty) {
         const scrollToSection = (id) => {
             const target = document.getElementById(id);
-            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                target.focus({ preventScroll: true });
+            }
         };
 
         const focusHeroTerminal = () => {
