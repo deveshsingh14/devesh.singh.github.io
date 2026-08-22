@@ -524,7 +524,10 @@ document.addEventListener('DOMContentLoaded', () => {
         experienceNavItems.forEach(item => {
             item.addEventListener('click', () => {
                 const target = document.getElementById(item.dataset.target);
-                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    target.focus({ preventScroll: true });
+                }
             });
         });
 

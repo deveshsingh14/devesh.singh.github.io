@@ -64,3 +64,6 @@
 ## 2026-08-20 - Command Palette programmatic scrolling and focus management
 **Learning:** Programmatic scrolling (e.g. scrollIntoView) to elements must be paired with programmatic focus management to ensure keyboard focus follows the visual scrolling, otherwise the navigation context is lost.
 **Action:** Ensure any scroll to section action always sets focus on the target section.
+## 2026-08-22 - [Accessibility] Improve focus management for Experience navigation
+**Learning:** When building scroll-linked navigation items (like the Experience sidebar) that use `scrollIntoView`, keyboard focus remains on the triggering element, leaving screen reader and keyboard users disjointed from the newly displayed content.
+**Action:** Pair `scrollIntoView` with programmatic focus (`target.focus({ preventScroll: true })`), add `tabindex="-1"` to the target to make it focusable without polluting the natural tab flow, and suppress unwanted visual outlines via CSS (`:focus { outline: none; }`).
