@@ -900,6 +900,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const inputField = document.getElementById('tool-input');
         const dynamicOutput = document.getElementById('dynamic-output');
 
+        // Auto-focus the input field when the terminal is rendered
+        if (inputField) {
+            inputField.focus({ preventScroll: true });
+        }
+
         const executeSim = () => {
             let val = inputField.value.trim();
 
