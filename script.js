@@ -876,7 +876,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const terminalOutput = document.getElementById('terminal-output');
     
     // Function to render the initial state of a script
-    const renderTerminal = (scriptKey) => {
+    const renderTerminal = (scriptKey, focusInput = false) => {
         // Cancel any running animation
         if (currentAnimation) { clearTimeout(currentAnimation); currentAnimation = null; }
 
@@ -892,6 +892,11 @@ document.addEventListener('DOMContentLoaded', () => {
             <div id="dynamic-output" aria-live="polite"></div>
         `;
         attachRunEvent(scriptKey);
+
+        if (focusInput) {
+            const toolInput = document.getElementById('tool-input');
+            if (toolInput) toolInput.focus({ preventScroll: true });
+        }
     };
 
     // Attach event listener to the run button dynamically
@@ -955,18 +960,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelectorAll('.gui-body').forEach(el => el.style.display = 'none');
                 document.getElementById('gui-output-password').style.display = 'flex';
                 document.querySelector('.terminal-title').innerText = 'Password Generator App';
+
+                // Focus the active generator input
+                const pgResult = document.getElementById('pg-result');
+                const ppResult = document.getElementById('pp-result');
+                const isPassphraseActive = document.getElementById('tab-passphrase').classList.contains('active');
+                if (isPassphraseActive && ppResult) {
+                    ppResult.focus({ preventScroll: true });
+                } else if (pgResult) {
+                    pgResult.focus({ preventScroll: true });
+                }
             } else if (scriptKey === 'docx-to-pdf') {
                 if (currentAnimation) { clearTimeout(currentAnimation); currentAnimation = null; }
                 terminalOutput.style.display = 'none';
                 document.querySelectorAll('.gui-body').forEach(el => el.style.display = 'none');
                 document.getElementById('gui-output-docx').style.display = 'flex';
                 document.querySelector('.terminal-title').innerText = 'DOCX to PDF Converter';
+
+                // Focus upload area
+                const docxUploadArea = document.getElementById('docx-upload-area');
+                if (docxUploadArea) docxUploadArea.focus({ preventScroll: true });
             } else {
                 document.querySelectorAll('.gui-body').forEach(el => el.style.display = 'none');
                 terminalOutput.style.display = 'block';
                 document.querySelector('.terminal-title').innerText = 'user@dsb-macbook: ~/devops-tools';
-                // Render corresponding terminal UI
-                renderTerminal(scriptKey);
+                // Render corresponding terminal UI and focus its input
+                renderTerminal(scriptKey, true);
             }
         };
 
@@ -1001,6 +1020,15 @@ document.addEventListener('DOMContentLoaded', () => {
             tab.classList.add('active');
             tab.setAttribute('aria-selected', 'true');
             document.getElementById(tab.getAttribute('data-tab')).classList.add('active');
+
+            // Focus primary input of active tab
+            if (tab.id === 'tab-password') {
+                const pgResult = document.getElementById('pg-result');
+                if (pgResult) pgResult.focus({ preventScroll: true });
+            } else if (tab.id === 'tab-passphrase') {
+                const ppResult = document.getElementById('pp-result');
+                if (ppResult) ppResult.focus({ preventScroll: true });
+            }
         });
     });
 
