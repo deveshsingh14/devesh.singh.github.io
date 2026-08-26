@@ -68,3 +68,7 @@
 ## 2024-05-10 - Keyboard context for programmatically scrolled elements
 **Learning:** When using JavaScript `scrollIntoView` to navigate to elements on a page (like the Experience sidebar links), the visual scroll happens but screen readers and keyboard focus often remain at their previous location.
 **Action:** Always pair `scrollIntoView` with programmatic focus management (`element.focus({ preventScroll: true })`). The target element must have `tabindex="-1"` if it isn't naturally focusable, and it should have CSS `.element:focus { outline: none; }` to hide the focus ring if the focus is purely structural.
+
+## 2026-08-25 - Auto-focus primary inputs on tab/tool switch
+**Learning:** When users navigate to a new tool or switch tabs in a custom GUI, they usually want to interact with the primary input element immediately. Without auto-focusing, this requires an extra, tedious mouse click or multiple tab presses, creating friction, especially for keyboard-only users.
+**Action:** When dynamically rendering a tool interface or switching tabs, explicitly place focus on the primary input element (like a terminal input, password output, or upload area) using `element.focus({ preventScroll: true })`. `preventScroll: true` is crucial to avoid jarring page jumps if the element isn't perfectly centered in the viewport.
