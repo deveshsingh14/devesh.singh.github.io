@@ -72,3 +72,6 @@
 ## 2026-08-25 - Auto-focus primary inputs on tab/tool switch
 **Learning:** When users navigate to a new tool or switch tabs in a custom GUI, they usually want to interact with the primary input element immediately. Without auto-focusing, this requires an extra, tedious mouse click or multiple tab presses, creating friction, especially for keyboard-only users.
 **Action:** When dynamically rendering a tool interface or switching tabs, explicitly place focus on the primary input element (like a terminal input, password output, or upload area) using `element.focus({ preventScroll: true })`. `preventScroll: true` is crucial to avoid jarring page jumps if the element isn't perfectly centered in the viewport.
+## 2024-05-30 - Removing `aria-live` anti-patterns on dynamic buttons
+**Learning:** Adding `aria-live` to a button that is disabled dynamically can cause screen readers to skip announcements, creating an unpredictable experience.
+**Action:** Instead, apply `aria-live` to the parent container or a dedicated status text element to ensure updates are reliably read out.

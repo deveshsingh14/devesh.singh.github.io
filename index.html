@@ -469,7 +469,7 @@
                 <div class="pipeline-panel">
                     <div class="pipeline-panel-header">
                         <h3 class="panel-heading">CI/CD Pipeline</h3>
-                        <button id="run-pipeline" class="run-pipeline-btn" aria-live="polite">Run Pipeline</button>
+                        <button id="run-pipeline" class="run-pipeline-btn">Run Pipeline</button>
                     </div>
                     <p id="pipeline-status" class="pipeline-status-live" role="status" aria-live="polite">Idle. Press "Run Pipeline" to simulate a deployment.</p>
 
@@ -592,7 +592,9 @@
                     <label for="message" class="sr-only">Message</label>
                     <textarea id="message" name="message" placeholder="Message *" rows="5" required class="form-input"></textarea>
                 </div>
-                <button type="submit" class="submit-btn" aria-live="polite">Send Message</button>
+                <div aria-live="polite" class="submit-btn-container" style="display: flex; justify-content: center;">
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </div>
             </form>
         </div>
     </section>
@@ -632,7 +634,7 @@
                         <div class="output-line prompt-req">Enter Deployment Name:</div>
                         <div class="interactive-input">
                             <span class="prompt">></span> <input type="text" id="tool-input" placeholder="frontend-app" autocomplete="off" aria-label="Terminal command input">
-                            <button id="run-btn" aria-live="polite">Run Script</button>
+                            <button id="run-btn">Run Script</button>
                         </div>
                         <div id="dynamic-output" aria-live="polite"></div>
                     </div>
@@ -644,10 +646,10 @@
                         </div>
                         
                         <div class="gui-tab-content active" id="password-tab" role="tabpanel" aria-labelledby="tab-password" tabindex="0">
-                            <div class="result-area">
+                            <div class="result-area" aria-live="polite">
                                 <input type="text" id="pg-result" class="gui-input read-only" readonly aria-label="Generated password">
                                 <button class="gui-btn primary" id="pg-refresh">Refresh</button>
-                                <button class="gui-btn" id="pg-copy" aria-live="polite">Copy</button>
+                                <button class="gui-btn" id="pg-copy">Copy</button>
                             </div>
                             
                             <div class="gui-options">
@@ -686,10 +688,10 @@
                         </div>
 
                         <div class="gui-tab-content" id="passphrase-tab" role="tabpanel" aria-labelledby="tab-passphrase" tabindex="0">
-                            <div class="result-area">
+                            <div class="result-area" aria-live="polite">
                                 <input type="text" id="pp-result" class="gui-input read-only" readonly aria-label="Generated passphrase">
                                 <button class="gui-btn primary" id="pp-refresh">Refresh</button>
-                                <button class="gui-btn" id="pp-copy" aria-live="polite">Copy</button>
+                                <button class="gui-btn" id="pp-copy">Copy</button>
                             </div>
                             
                             <div class="gui-options">
