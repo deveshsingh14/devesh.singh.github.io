@@ -467,9 +467,9 @@
 
             <div class="ops-grid stagger-children">
                 <div class="pipeline-panel">
-                    <div class="pipeline-panel-header">
+                    <div class="pipeline-panel-header" aria-live="polite">
                         <h3 class="panel-heading">CI/CD Pipeline</h3>
-                        <button id="run-pipeline" class="run-pipeline-btn" aria-live="polite">Run Pipeline</button>
+                        <button id="run-pipeline" class="run-pipeline-btn">Run Pipeline</button>
                     </div>
                     <p id="pipeline-status" class="pipeline-status-live" role="status" aria-live="polite">Idle. Press "Run Pipeline" to simulate a deployment.</p>
 
@@ -592,7 +592,9 @@
                     <label for="message" class="sr-only">Message</label>
                     <textarea id="message" name="message" placeholder="Message *" rows="5" required class="form-input"></textarea>
                 </div>
-                <button type="submit" class="submit-btn" aria-live="polite">Send Message</button>
+                <div aria-live="polite" style="display: flex; flex-direction: column;">
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </div>
             </form>
         </div>
     </section>
@@ -630,9 +632,9 @@
                         <div class="output-line"><span class="prompt">$</span> <span class="command">./k8s-deploy.sh</span></div>
                         <div class="output-line system-msg">Loading Kubernetes Context...</div>
                         <div class="output-line prompt-req">Enter Deployment Name:</div>
-                        <div class="interactive-input">
+                        <div class="interactive-input" aria-live="polite">
                             <span class="prompt">></span> <input type="text" id="tool-input" placeholder="frontend-app" autocomplete="off" aria-label="Terminal command input">
-                            <button id="run-btn" aria-live="polite">Run Script</button>
+                            <button id="run-btn">Run Script</button>
                         </div>
                         <div id="dynamic-output" aria-live="polite"></div>
                     </div>
@@ -644,10 +646,10 @@
                         </div>
                         
                         <div class="gui-tab-content active" id="password-tab" role="tabpanel" aria-labelledby="tab-password" tabindex="0">
-                            <div class="result-area">
+                            <div class="result-area" aria-live="polite">
                                 <input type="text" id="pg-result" class="gui-input read-only" readonly aria-label="Generated password">
                                 <button class="gui-btn primary" id="pg-refresh">Refresh</button>
-                                <button class="gui-btn" id="pg-copy" aria-live="polite">Copy</button>
+                                <button class="gui-btn" id="pg-copy">Copy</button>
                             </div>
                             
                             <div class="gui-options">
@@ -686,10 +688,10 @@
                         </div>
 
                         <div class="gui-tab-content" id="passphrase-tab" role="tabpanel" aria-labelledby="tab-passphrase" tabindex="0">
-                            <div class="result-area">
+                            <div class="result-area" aria-live="polite">
                                 <input type="text" id="pp-result" class="gui-input read-only" readonly aria-label="Generated passphrase">
                                 <button class="gui-btn primary" id="pp-refresh">Refresh</button>
-                                <button class="gui-btn" id="pp-copy" aria-live="polite">Copy</button>
+                                <button class="gui-btn" id="pp-copy">Copy</button>
                             </div>
                             
                             <div class="gui-options">
@@ -728,7 +730,9 @@
                         
                         <div id="docx-status" aria-live="polite" style="margin-top: 1.5rem; text-align: center; color: var(--teal); font-weight: 500;"></div>
                         
-                        <button class="gui-btn primary" id="btn-convert-docx" aria-live="polite" style="margin-top: 1.5rem; align-self: center; display: none;">Convert to PDF</button>
+                        <div aria-live="polite" style="align-self: center; display: flex;">
+                            <button class="gui-btn primary" id="btn-convert-docx" style="margin-top: 1.5rem; display: none;">Convert to PDF</button>
+                        </div>
                         
                         <div id="docx-preview" style="display: none;"></div>
                     </div>
