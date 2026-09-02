@@ -76,3 +76,7 @@
 ## 2024-05-15 - Dynamic Search Empty States
 **Learning:** When a user filters or searches a list dynamically (like in a command palette or dropdown), an empty state (e.g., "No matching commands") often appears if there are no results. If this element lacks an `aria-live` attribute, screen readers will remain silent, and users may think the component is broken or unresponsive.
 **Action:** Always add `role="status"` and `aria-live="polite"` to dynamically revealed empty state text containers so screen readers announce the lack of results.
+
+## 2024-10-25 - Avoid placing aria-live directly on dynamic buttons
+**Learning:** Do not apply `aria-live` directly to interactive elements like buttons, as it is an accessibility anti-pattern. If the button dynamically changes its text (e.g. from "Send" to "Sending...") and disables simultaneously, screen readers may not reliably announce the update because focus or interaction state changed as the region updated.
+**Action:** Instead, apply `aria-live="polite"` to a dedicated status text container (e.g., a parent or sibling wrapper element) to reliably announce dynamic textual updates without being affected by the button's disabled state transition.
