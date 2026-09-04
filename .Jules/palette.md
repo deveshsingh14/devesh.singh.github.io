@@ -83,3 +83,7 @@
 ## 2026-10-25 - Hide decorative text symbols
 **Learning:** Decorative text and symbols (such as terminal prompts like `$`, `>`, or UI hints like `↵ Jump`) are read aloud by screen readers, which creates unnecessary verbosity and noise for visually impaired users navigating mock terminals or command palettes.
 **Action:** Hide purely decorative text and symbols from screen readers by applying `aria-hidden="true"` to their container elements.
+
+## 2026-09-04 - Hide decorative SVGs from screen readers
+**Learning:** Decorative SVG icons placed inside interactive elements (like the upload icon in the DOCX to PDF converter) add unnecessary verbosity for screen reader users when the parent element already has a clear, descriptive accessible name via `aria-label` or `role`.
+**Action:** Always add `aria-hidden="true"` to SVG icons that are purely decorative or redundant within labeled interactive components.
