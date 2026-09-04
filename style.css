@@ -2565,3 +2565,15 @@ select.form-input {
   outline: 2px solid #0d6efd;
   outline-offset: 2px;
 }
+
+.form-input:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+
+.cmdk-input:focus-visible,
+#hero-term-input:focus-visible,
+#tool-input:focus-visible {
+  outline: 2px solid var(--console-accent);
+  outline-offset: 2px;
+}
