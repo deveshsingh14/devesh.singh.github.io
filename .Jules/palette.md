@@ -80,6 +80,11 @@
 ## 2024-10-25 - Avoid placing aria-live directly on dynamic buttons
 **Learning:** Do not apply `aria-live` directly to interactive elements like buttons, as it is an accessibility anti-pattern. If the button dynamically changes its text (e.g. from "Send" to "Sending...") and disables simultaneously, screen readers may not reliably announce the update because focus or interaction state changed as the region updated.
 **Action:** Instead, apply `aria-live="polite"` to a dedicated status text container (e.g., a parent or sibling wrapper element) to reliably announce dynamic textual updates without being affected by the button's disabled state transition.
+
+## 2026-10-25 - Hide decorative text symbols
+**Learning:** Decorative text and symbols (such as terminal prompts like `$`, `>`, or UI hints like `↵ Jump`) are read aloud by screen readers, which creates unnecessary verbosity and noise for visually impaired users navigating mock terminals or command palettes.
+**Action:** Hide purely decorative text and symbols from screen readers by applying `aria-hidden="true"` to their container elements.
+
 ## 2026-08-30 - Focus-visible for Custom Inputs
 **Learning:** Custom inputs that override browser defaults (by using `outline: none` on `:focus`) often fail to provide a `:focus-visible` state. This makes keyboard navigation (e.g., tabbing through forms or command palettes) extremely difficult for users who rely on visible focus indicators.
 **Action:** Always ensure that custom inputs with `outline: none` on `:focus` have a corresponding `:focus-visible` block that explicitly adds a highly visible outline using theme colors (e.g., `outline: 2px solid var(--theme-color)`).

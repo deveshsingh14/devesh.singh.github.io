@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 item.id = `cmdk-item-${cmd.id}`;
                 item.setAttribute('role', 'option');
                 item.setAttribute('aria-selected', index === selectedIndex ? 'true' : 'false');
-                item.innerHTML = `<span>${cmd.label}</span><span class="cmdk-item-hint">${cmd.group === 'Navigate' ? '↵ Jump' : '↵ Run'}</span>`;
+                item.innerHTML = `<span>${cmd.label}</span><span class="cmdk-item-hint" aria-hidden="true">${cmd.group === 'Navigate' ? '↵ Jump' : '↵ Run'}</span>`;
                 item.addEventListener('mouseenter', () => {
                     selectedIndex = index;
                     renderResults();
@@ -882,11 +882,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const script = scripts[scriptKey];
         terminalOutput.innerHTML = `
-            <div class="output-line"><span class="prompt">$</span> <span class="command">${script.cmd}</span></div>
+            <div class="output-line"><span class="prompt" aria-hidden="true">$</span> <span class="command">${script.cmd}</span></div>
             <div class="output-line system-msg">Loading dependencies...</div>
             <div class="output-line prompt-req">${script.promptReq}</div>
             <div class="interactive-input" aria-live="polite">
-                <span class="prompt">></span> <input type="text" id="tool-input" placeholder="${script.placeholder}" autocomplete="off" aria-label="Terminal command input">
+                <span class="prompt" aria-hidden="true">></span> <input type="text" id="tool-input" placeholder="${script.placeholder}" autocomplete="off" aria-label="Terminal command input">
                 <button id="run-btn">Run Script</button>
             </div>
             <div id="dynamic-output" aria-live="polite"></div>
