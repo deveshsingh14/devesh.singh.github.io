@@ -519,3 +519,41 @@ describe('About Illustration', () => {
         expect(document.querySelector('#about .text-block')).not.toBeNull();
     });
 });
+
+describe('DOCX to PDF Converter', () => {
+    beforeEach(() => {
+        document.documentElement.innerHTML = html.toString();
+        document.dispatchEvent(new Event('DOMContentLoaded'));
+    });
+
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    it('displays an error message and hides the convert button for invalid file types', () => {
+        const fileInput = document.getElementById('docx-file-input');
+        const docxStatus = document.getElementById('docx-status');
+        const btnConvertDocx = document.getElementById('btn-convert-docx');
+
+        // Create a mock file with an invalid extension
+        const invalidFile = new File(['test content'], 'test.txt', { type: 'text/plain' });
+
+        // Overwrite the files property of the input
+        Object.defineProperty(fileInput, 'files', {
+            value: [invalidFile]
+        });
+
+        // Trigger change event
+        fileInput.dispatchEvent(new Event('change'));
+
+        // Verify status text
+        expect(docxStatus.innerText).toBe('Error: Please select a valid .docx file.');
+
+        // JSDOM style.color converts var(--danger) to empty string or throws error depending on implementation
+        // But we can check inline style block
+        expect(docxStatus.style.color).toBe('var(--danger)');
+
+        // Verify button is hidden
+        expect(btnConvertDocx.style.display).toBe('none');
+    });
+});
