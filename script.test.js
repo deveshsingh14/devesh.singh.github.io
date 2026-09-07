@@ -275,6 +275,19 @@ describe('Theme Toggle', () => {
         expect(document.documentElement.getAttribute('data-theme')).toBeNull();
         expect(localStorage.getItem('theme')).toBe('dark');
     });
+
+    it('handles localStorage errors gracefully without failing the toggle', () => {
+        jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+            throw new Error('localStorage is unavailable');
+        });
+
+        const toggle = document.getElementById('theme-toggle');
+
+        expect(() => toggle.click()).not.toThrow();
+
+        expect(document.documentElement.getAttribute('data-theme')).toBe('light');
+        expect(toggle.getAttribute('aria-pressed')).toBe('true');
+    });
 });
 
 describe('Project Filters', () => {
