@@ -157,6 +157,36 @@ describe('Hero Terminal', () => {
     });
 });
 
+describe('Tools - CIDR Calculator', () => {
+    beforeEach(() => {
+        document.documentElement.innerHTML = html.toString();
+        document.dispatchEvent(new Event('DOMContentLoaded'));
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
+        jest.restoreAllMocks();
+    });
+
+    it('displays an error message for an invalid CIDR format', () => {
+        jest.useFakeTimers();
+
+        const cidrCalcItem = document.querySelector('.script-item[data-script="cidr-calc"]');
+        cidrCalcItem.click();
+
+        const input = document.getElementById('tool-input');
+        input.value = 'invalid-cidr-format';
+
+        const runBtn = document.getElementById('run-btn');
+        runBtn.click();
+
+        jest.advanceTimersByTime(3000);
+
+        const dynamicOutput = document.getElementById('dynamic-output');
+        expect(dynamicOutput.textContent).toContain('Error: Invalid CIDR format. Please use x.x.x.x/y format.');
+    });
+});
+
 describe('Pipeline Visualizer', () => {
     beforeEach(() => {
         document.documentElement.innerHTML = html.toString();
