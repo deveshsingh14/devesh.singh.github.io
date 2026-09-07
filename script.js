@@ -1442,7 +1442,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const echoCommand = (raw) => {
             const div = document.createElement('div');
             div.className = 'term-line';
-            div.innerHTML = `<span style="color:var(--teal)">guest@devesh:~$</span> ${escapeHtml(raw)}`;
+            div.innerHTML = `<span style="color:var(--teal)" aria-hidden="true">guest@devesh:~$</span> ${escapeHtml(raw)}`;
             heroTermOutput.appendChild(div);
             heroTermOutput.scrollTop = heroTermOutput.scrollHeight;
         };
@@ -1472,7 +1472,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 html: `<div class="term-line">${job.dates} — <span style="color:var(--teal)">${job.title}</span> @ ${job.company}</div>`,
                 delay: 120
             }));
-            lines.push({ html: `<div class="term-line">→ <a href="#experience">jump to full experience section</a></div>`, delay: 120 });
+            lines.push({ html: `<div class="term-line"><span aria-hidden="true">→</span> <a href="#experience">jump to full experience section</a></div>`, delay: 120 });
             return lines;
         };
 
@@ -1481,7 +1481,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 html: `<div class="term-line"><span style="color:var(--teal)">${p.name}</span> — ${p.stack}</div>`,
                 delay: 120
             }));
-            lines.push({ html: `<div class="term-line">→ <a href="#projects">jump to full projects section</a></div>`, delay: 120 });
+            lines.push({ html: `<div class="term-line"><span aria-hidden="true">→</span> <a href="#projects">jump to full projects section</a></div>`, delay: 120 });
             return lines;
         };
 
@@ -1491,7 +1491,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 { html: `<div class="term-line">email: <a href="mailto:${c.email}">${c.email}</a></div>`, delay: 120 },
                 { html: `<div class="term-line">github: <a href="${c.github}" target="_blank" rel="noreferrer">${c.github}</a></div>`, delay: 120 },
                 { html: `<div class="term-line">linkedin: <a href="${c.linkedin}" target="_blank" rel="noreferrer">${c.linkedin}</a></div>`, delay: 120 },
-                { html: `<div class="term-line">→ <a href="#contact">jump to contact form</a></div>`, delay: 120 }
+                { html: `<div class="term-line"><span aria-hidden="true">→</span> <a href="#contact">jump to contact form</a></div>`, delay: 120 }
             ];
         };
 
