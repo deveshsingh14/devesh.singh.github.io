@@ -87,3 +87,6 @@
 ## 2026-09-04 - Hide decorative SVGs from screen readers
 **Learning:** Decorative SVG icons placed inside interactive elements (like the upload icon in the DOCX to PDF converter) add unnecessary verbosity for screen reader users when the parent element already has a clear, descriptive accessible name via `aria-label` or `role`.
 **Action:** Always add `aria-hidden="true"` to SVG icons that are purely decorative or redundant within labeled interactive components.
+## 2024-03-24 - Screen Reader Announcements for Dynamic Filter Results and Clipboard Actions
+**Learning:** Screen readers often miss dynamic updates like search result counts or "Copied" text state changes on buttons if they are not explicitly placed in an `aria-live` region. Appending `aria-live` directly to the active control (like the copy button itself) can sometimes conflict or cause erratic screen reader behavior if the button is disabled at the same time.
+**Action:** Use visually hidden (`sr-only`) `aria-live="polite"` elements specifically designed to announce status updates (like `X commands found` or `Copied to clipboard`) separately from the interactive elements, ensuring reliable accessibility feedback for dynamic UI changes.

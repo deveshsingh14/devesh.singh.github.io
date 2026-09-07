@@ -112,6 +112,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const renderResults = () => {
             cmdkResults.innerHTML = '';
+
+            const cmdkStatus = document.getElementById('cmdk-status');
+            if (cmdkStatus) {
+                if (filteredCommands.length > 0) {
+                    cmdkStatus.textContent = `${filteredCommands.length} command${filteredCommands.length === 1 ? '' : 's'} available. Use up and down arrows to navigate.`;
+                } else {
+                    cmdkStatus.textContent = '';
+                }
+            }
+
             if (!filteredCommands.length) {
                 cmdkEmpty.hidden = false;
                 cmdkInput.removeAttribute('aria-activedescendant');
@@ -1173,7 +1183,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function copyToClipboard(textToCopy, buttonElement) {
         navigator.clipboard.writeText(textToCopy);
         buttonElement.innerText = "Copied!";
-        setTimeout(() => buttonElement.innerText = "Copy", 2000);
+
+        const copyStatus = document.getElementById('copy-status');
+        if (copyStatus) copyStatus.textContent = 'Copied to clipboard';
+
+        setTimeout(() => {
+            buttonElement.innerText = "Copy";
+            if (copyStatus) copyStatus.textContent = '';
+        }, 2000);
     }
 
     pgRefresh.addEventListener('click', generatePassword);

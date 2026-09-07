@@ -111,6 +111,7 @@
         </div>
         <ul class="cmdk-results" id="cmdk-results" role="listbox" aria-label="Commands"></ul>
         <p class="cmdk-empty" id="cmdk-empty" role="status" aria-live="polite" hidden>No matching commands.</p>
+        <div id="cmdk-status" class="sr-only" role="status" aria-live="polite"></div>
     </div>
 
     <!-- Hero Section (Full Viewport) -->
@@ -645,6 +646,8 @@
                             <button class="gui-tab" role="tab" aria-selected="false" aria-controls="passphrase-tab" id="tab-passphrase" data-tab="passphrase-tab">Passphrase</button>
                         </div>
                         
+                        <div id="copy-status" class="sr-only" role="status" aria-live="polite"></div>
+
                         <div class="gui-tab-content active" id="password-tab" role="tabpanel" aria-labelledby="tab-password" tabindex="0">
                             <div class="result-area" aria-live="polite">
                                 <input type="text" id="pg-result" class="gui-input read-only" readonly aria-label="Generated password">
