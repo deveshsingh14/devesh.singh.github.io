@@ -399,11 +399,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const REPEL_RADIUS = 90;
         const CONNECT_RADIUS = 200;
 
+        let canvasOffsetX = 0;
+        let canvasOffsetY = 0;
+
         if (window.matchMedia('(pointer: fine)').matches && hero) {
             hero.addEventListener('mousemove', throttle((e) => {
-                const rect = canvas.getBoundingClientRect();
-                mouseX = e.clientX - rect.left;
-                mouseY = e.clientY - rect.top;
+                mouseX = e.pageX - canvasOffsetX;
+                mouseY = e.pageY - canvasOffsetY;
             }));
             hero.addEventListener('mouseleave', () => {
                 mouseX = null;
@@ -414,6 +416,9 @@ document.addEventListener('DOMContentLoaded', () => {
         function resizeCanvas() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = document.getElementById('hero').offsetHeight;
+            const rect = canvas.getBoundingClientRect();
+            canvasOffsetX = rect.left + window.scrollX;
+            canvasOffsetY = rect.top + window.scrollY;
         }
 
         window.addEventListener('resize', resizeCanvas);
