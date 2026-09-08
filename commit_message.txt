@@ -1,0 +1,19 @@
+🎨 Palette: [Micro-UX] Keyboard shortcut hints & tooltips
+
+💡 What:
+- Added `aria-keyshortcuts` to interactive buttons that have global/contextual keyboard shortcuts (`Meta+K Control+K` for the command palette, `Escape` for closing the topology drawer).
+- Added descriptive `title` tooltips to the "Copy" and "Refresh" action buttons in the password/passphrase generator tabs.
+- Added `outline: none` to the `.topo-drawer-panel:focus` pseudo-class.
+
+🎯 Why:
+- Visual keyboard shortcuts (`<kbd>`) only serve sighted users. Explicit `aria-keyshortcuts` ensures assistive technologies properly announce them.
+- Simple, unlabelled utility buttons ("Refresh", "Copy") can sometimes be ambiguous. Tooltips provide immediate clarity without changing the minimalist design.
+- When the topology drawer modal opens, programmatic focus is sent to its container. Because it's a hidden structural container and not an interactive form element, the native full-component focus ring is distracting and unnecessary. Suppressing it aligns with established accessible modal patterns.
+
+📸 Before/After:
+No major layout changes; primarily invisible metadata and focus-ring cleanup, along with native browser tooltips on hover.
+
+♿ Accessibility:
+- Explicit keyboard shortcut exposure (`aria-keyshortcuts`).
+- Reduced unnecessary verbosity (focus ring suppression on structural modal wrapper).
+- Improved component clarity (tooltips on utility buttons).

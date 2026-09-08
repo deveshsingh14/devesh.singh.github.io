@@ -89,7 +89,7 @@
                     <li><a href="#contact" class="nav-link">Contact</a></li>
                     <li><a href="#tools" class="nav-link">Tools</a></li>
                 </ul>
-                <button id="cmdk-trigger" class="cmdk-trigger" aria-label="Open command palette" title="Command palette (Ctrl+K)">
+                <button id="cmdk-trigger" class="cmdk-trigger" aria-label="Open command palette" title="Command palette (Ctrl+K)" aria-keyshortcuts="Meta+K Control+K">
                     <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
                     <kbd class="cmdk-trigger-kbd" aria-hidden="true">⌘K</kbd>
                 </button>
@@ -547,7 +547,7 @@
     <div class="topo-drawer" id="topo-drawer" role="dialog" aria-modal="true" aria-labelledby="topo-drawer-title" hidden>
         <div class="topo-drawer-backdrop" id="topo-drawer-backdrop"></div>
         <div class="topo-drawer-panel" tabindex="-1">
-            <button class="topo-drawer-close" id="topo-drawer-close" aria-label="Close details panel" title="Close">
+            <button class="topo-drawer-close" id="topo-drawer-close" aria-label="Close details panel" title="Close" aria-keyshortcuts="Escape">
                 <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
             <div class="topo-drawer-category" id="topo-drawer-category"></div>
@@ -648,8 +648,8 @@
                         <div class="gui-tab-content active" id="password-tab" role="tabpanel" aria-labelledby="tab-password" tabindex="0">
                             <div class="result-area" aria-live="polite">
                                 <input type="text" id="pg-result" class="gui-input read-only" readonly aria-label="Generated password">
-                                <button class="gui-btn primary" id="pg-refresh">Refresh</button>
-                                <button class="gui-btn" id="pg-copy">Copy</button>
+                                <button class="gui-btn primary" id="pg-refresh" title="Generate new password">Refresh</button>
+                                <button class="gui-btn" id="pg-copy" title="Copy password to clipboard">Copy</button>
                             </div>
                             
                             <div class="gui-options">
@@ -690,8 +690,8 @@
                         <div class="gui-tab-content" id="passphrase-tab" role="tabpanel" aria-labelledby="tab-passphrase" tabindex="0">
                             <div class="result-area" aria-live="polite">
                                 <input type="text" id="pp-result" class="gui-input read-only" readonly aria-label="Generated passphrase">
-                                <button class="gui-btn primary" id="pp-refresh">Refresh</button>
-                                <button class="gui-btn" id="pp-copy">Copy</button>
+                                <button class="gui-btn primary" id="pp-refresh" title="Generate new passphrase">Refresh</button>
+                                <button class="gui-btn" id="pp-copy" title="Copy passphrase to clipboard">Copy</button>
                             </div>
                             
                             <div class="gui-options">
