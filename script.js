@@ -1086,16 +1086,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return str[Math.floor(getSecureRandom() * str.length)];
     }
 
-    function generatePassword() {
-        const length = parseInt(pgLength.value);
-        const useUpper = pgUpper.checked;
-        const useLower = pgLower.checked;
-        const useNums = pgNums.checked;
-        const useSyms = pgSyms.checked;
-        const avoidAmbig = pgAmbig.checked;
-        
-        const minNums = parseInt(pgMinNums.value) || 0;
-        const minSyms = parseInt(pgMinSyms.value) || 0;
+    function createPasswordString(options) {
+        const { length, useUpper, useLower, useNums, useSyms, avoidAmbig, minNums, minSyms } = options;
 
         let upperChars = BASE_UPPER_CHARS;
         let lowerChars = BASE_LOWER_CHARS;
@@ -1115,8 +1107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (useSyms) pool += symChars;
 
         if (!pool) {
-            pgResult.value = "Select at least one character set.";
-            return;
+            return { error: "Select at least one character set." };
         }
 
         let passwordChars = [];
@@ -1144,7 +1135,26 @@ document.addEventListener('DOMContentLoaded', () => {
             [passwordChars[i], passwordChars[j]] = [passwordChars[j], passwordChars[i]];
         }
 
-        pgResult.value = passwordChars.join('').substring(0, length);
+        return { password: passwordChars.join('').substring(0, length) };
+    }
+
+    function generatePassword() {
+        const result = createPasswordString({
+            length: parseInt(pgLength.value),
+            useUpper: pgUpper.checked,
+            useLower: pgLower.checked,
+            useNums: pgNums.checked,
+            useSyms: pgSyms.checked,
+            avoidAmbig: pgAmbig.checked,
+            minNums: parseInt(pgMinNums.value) || 0,
+            minSyms: parseInt(pgMinSyms.value) || 0
+        });
+
+        if (result.error) {
+            pgResult.value = result.error;
+        } else {
+            pgResult.value = result.password;
+        }
     }
 
     function generatePassphrase() {
