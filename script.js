@@ -1948,6 +1948,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        const projectTitleCache = {};
+
         function openTopoDrawer(nodeId) {
             const node = TOPOLOGY_DATA.find(n => n.id === nodeId);
             if (!node) return;
@@ -1957,9 +1959,11 @@ document.addEventListener('DOMContentLoaded', () => {
             drawerYears.textContent = `${node.years} hands-on experience`;
             drawerAchievements.innerHTML = node.achievements.map(a => `<li>${a}</li>`).join('');
             drawerProjects.innerHTML = node.projects.map(pid => {
-                const titleEl = document.querySelector(`#${pid} .project-title`);
-                const label = titleEl ? titleEl.textContent : pid;
-                return `<li><a href="#${pid}">${label}</a></li>`;
+                if (!projectTitleCache[pid]) {
+                    const titleEl = document.querySelector(`#${pid} .project-title`);
+                    projectTitleCache[pid] = titleEl ? titleEl.textContent : pid;
+                }
+                return `<li><a href="#${pid}">${projectTitleCache[pid]}</a></li>`;
             }).join('');
             topoDrawer.hidden = false;
             drawerPanel.focus();
