@@ -90,3 +90,7 @@
 ## 2026-09-07 - Hide dynamically generated decorative text symbols
 **Learning:** Dynamically generated decorative text and symbols (such as terminal prompts like `$`, `>`, or UI hints like `→`) are read aloud by screen readers, which creates unnecessary verbosity and noise for visually impaired users navigating mock terminals or command palettes.
 **Action:** Hide purely decorative text and symbols from screen readers by applying `aria-hidden="true"` to their container elements.
+
+## 2026-09-08 - Screen reader announcements for input values
+**Learning:** Updating the `value` property of an `<input>` element dynamically via JavaScript does not trigger screen reader announcements, even if the element is inside an `aria-live` region. This is because changes to a native input's `value` are not considered DOM mutation events by the accessibility tree.
+**Action:** When a generated value is output into a read-only input field, always duplicate that value into a visually hidden (`.sr-only`) text element (like a `<span>`) within the same `aria-live` region to ensure screen readers announce the newly generated text.
