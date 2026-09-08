@@ -2127,6 +2127,10 @@ ul, ol {
   z-index: 90;
 }
 
+.topo-drawer-panel:focus {
+  outline: none;
+}
+
 .topo-drawer-panel {
   position: fixed;
   top: 0;
