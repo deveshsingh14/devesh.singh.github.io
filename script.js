@@ -474,19 +474,24 @@ document.addEventListener('DOMContentLoaded', () => {
         function animateParticles() {
             ctx.clearRect(0, 0, width, height);
 
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
+            const len = particles.length;
+            for (let i = 0; i < len; i++) {
+                const pi = particles[i];
+                pi.update();
+                pi.draw();
+
+                const pix = pi.x;
+                const piy = pi.y;
 
                 // Draw a line reaching toward the cursor when a particle is close enough
                 if (mouseX !== null) {
-                    const mdx = particles[i].x - mouseX;
-                    const mdy = particles[i].y - mouseY;
+                    const mdx = pix - mouseX;
+                    const mdy = piy - mouseY;
                     const mDistSq = mdx * mdx + mdy * mdy;
                     if (mDistSq < CONNECT_RADIUS * CONNECT_RADIUS) {
                         const mDist = Math.sqrt(mDistSq);
                         ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.moveTo(pix, piy);
                         ctx.lineTo(mouseX, mouseY);
                         ctx.strokeStyle = `rgba(255, 87, 49, ${0.65 - mDist / 320})`;
                         ctx.lineWidth = 1;
@@ -495,16 +500,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 // Draw connections
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
+                for (let j = i + 1; j < len; j++) {
+                    const pj = particles[j];
+                    const dx = pix - pj.x;
+                    const dy = piy - pj.y;
                     const distSq = dx * dx + dy * dy;
 
                     if (distSq < 22500) { // 150 * 150
                         const dist = Math.sqrt(distSq);
                         ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.moveTo(pix, piy);
+                        ctx.lineTo(pj.x, pj.y);
                         ctx.strokeStyle = `rgba(255, 87, 49, ${0.4 - dist / 375})`;
                         ctx.lineWidth = 0.8;
                         ctx.stroke();
