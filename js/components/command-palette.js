@@ -85,7 +85,7 @@ export function initCommandPalette() {
                 item.innerHTML = `<span>${cmd.label}</span><span class="cmdk-item-hint" aria-hidden="true">${cmd.group === 'Navigate' ? '↵ Jump' : '↵ Run'}</span>`;
                 item.addEventListener('mouseenter', () => {
                     selectedIndex = index;
-                    renderResults();
+                    updateSelection();
                 });
                 item.addEventListener('click', () => runCommand(cmd));
                 cmdkResults.appendChild(item);
@@ -93,6 +93,23 @@ export function initCommandPalette() {
 
             const activeItem = cmdkResults.querySelector('.cmdk-item.selected');
             if (activeItem) cmdkInput.setAttribute('aria-activedescendant', activeItem.id);
+        };
+
+        const updateSelection = () => {
+            const items = cmdkResults.querySelectorAll('.cmdk-item');
+            items.forEach((item, index) => {
+                if (index === selectedIndex) {
+                    item.classList.add('selected');
+                    item.setAttribute('aria-selected', 'true');
+                    cmdkInput.setAttribute('aria-activedescendant', item.id);
+                    if (typeof item.scrollIntoView === 'function') {
+                        item.scrollIntoView({ block: 'nearest' });
+                    }
+                } else {
+                    item.classList.remove('selected');
+                    item.setAttribute('aria-selected', 'false');
+                }
+            });
         };
 
         const filterCommands = () => {
@@ -116,13 +133,13 @@ export function initCommandPalette() {
                 e.preventDefault();
                 if (filteredCommands.length) {
                     selectedIndex = (selectedIndex + 1) % filteredCommands.length;
-                    renderResults();
+                    updateSelection();
                 }
             } else if (e.key === 'ArrowUp') {
                 e.preventDefault();
                 if (filteredCommands.length) {
                     selectedIndex = (selectedIndex - 1 + filteredCommands.length) % filteredCommands.length;
-                    renderResults();
+                    updateSelection();
                 }
             } else if (e.key === 'Enter') {
                 e.preventDefault();
