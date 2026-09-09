@@ -1,0 +1,12 @@
+import './components/theme.js';
+import './components/command-palette.js';
+import './components/ui-effects.js';
+import './components/typewriter.js';
+import './components/canvas.js';
+import './components/experience.js';
+import './components/projects.js';
+import './components/hero-terminal.js';
+import './components/ops-dashboard.js';
+import './components/topology.js';
+import './components/contact-form.js';
+import './components/tools.js';
