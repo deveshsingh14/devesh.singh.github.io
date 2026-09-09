@@ -1111,18 +1111,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         let passwordChars = [];
-        
-        if (useNums && minNums > 0) {
-            for (let i = 0; i < Math.min(minNums, length); i++) {
-                passwordChars.push(getRandomChar(numChars));
+
+        function pushRandomChars(condition, minCount, charSet) {
+            if (condition && minCount > 0) {
+                const limit = Math.min(minCount, length - passwordChars.length);
+                for (let i = 0; i < limit; i++) {
+                    passwordChars.push(getRandomChar(charSet));
+                }
             }
         }
         
-        if (useSyms && minSyms > 0) {
-            for (let i = 0; i < Math.min(minSyms, length - passwordChars.length); i++) {
-                passwordChars.push(getRandomChar(symChars));
-            }
-        }
+        pushRandomChars(useNums, minNums, numChars);
+        pushRandomChars(useSyms, minSyms, symChars);
 
         const remainingLength = length - passwordChars.length;
         for (let i = 0; i < remainingLength; i++) {
