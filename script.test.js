@@ -1,6 +1,10 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { jest } from '@jest/globals';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const html = fs.readFileSync(path.resolve(__dirname, './index.html'), 'utf8');
 
 // script.js attaches its setup logic to a single `document`-level
@@ -8,7 +12,7 @@ const html = fs.readFileSync(path.resolve(__dirname, './index.html'), 'utf8');
 // (not per test), so requiring the script again in every test would stack
 // up duplicate listeners that all fire on the next dispatch. Load it once
 // here; each test below only needs to reset the markup and re-dispatch.
-require('./script.js');
+import './js/main.js';
 
 describe('generatePassphrase', () => {
     beforeEach(() => {
