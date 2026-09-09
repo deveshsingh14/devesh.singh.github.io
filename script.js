@@ -1978,14 +1978,30 @@ document.addEventListener('DOMContentLoaded', () => {
             drawerCategory.textContent = CATEGORY_LABELS[node.category] || node.category;
             drawerTitle.textContent = node.label;
             drawerYears.textContent = `${node.years} hands-on experience`;
-            drawerAchievements.innerHTML = node.achievements.map(a => `<li>${a}</li>`).join('');
-            drawerProjects.innerHTML = node.projects.map(pid => {
+            drawerAchievements.innerHTML = '';
+            node.achievements.forEach(a => {
+                const li = document.createElement('li');
+                li.textContent = a;
+                drawerAchievements.appendChild(li);
+            });
+
+            drawerProjects.innerHTML = '';
+            node.projects.forEach(pid => {
                 if (!projectTitleCache[pid]) {
-                    const titleEl = document.querySelector(`#${pid} .project-title`);
-                    projectTitleCache[pid] = titleEl ? titleEl.textContent : pid;
+                    try {
+                        const titleEl = document.querySelector(`#${CSS.escape(pid)} .project-title`);
+                        projectTitleCache[pid] = titleEl ? titleEl.textContent : pid;
+                    } catch (e) {
+                        projectTitleCache[pid] = pid;
+                    }
                 }
-                return `<li><a href="#${pid}">${projectTitleCache[pid]}</a></li>`;
-            }).join('');
+                const li = document.createElement('li');
+                const aEl = document.createElement('a');
+                aEl.href = `#${pid}`;
+                aEl.textContent = projectTitleCache[pid];
+                li.appendChild(aEl);
+                drawerProjects.appendChild(li);
+            });
             topoDrawer.hidden = false;
             drawerPanel.focus();
             document.addEventListener('keydown', onDrawerKeydown);
