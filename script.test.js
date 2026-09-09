@@ -570,3 +570,99 @@ describe('DOCX to PDF Converter', () => {
         expect(btnConvertDocx.style.display).toBe('none');
     });
 });
+describe('Contact Form', () => {
+    beforeEach(() => {
+        document.documentElement.innerHTML = html.toString();
+        document.dispatchEvent(new Event('DOMContentLoaded'));
+        jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+        jest.restoreAllMocks();
+        jest.useRealTimers();
+    });
+
+    it('handles successful form submission', async () => {
+        const contactForm = document.getElementById('contact-form');
+        const submitBtn = contactForm.querySelector('.submit-btn');
+        const originalHTML = submitBtn.innerHTML;
+
+        global.fetch = jest.fn().mockResolvedValue({
+            ok: true,
+        });
+
+        const resetSpy = jest.spyOn(contactForm, 'reset');
+
+        contactForm.dispatchEvent(new Event('submit', { cancelable: true }));
+
+        expect(submitBtn.disabled).toBe(true);
+        expect(submitBtn.innerHTML).toContain('<span class="spinner"></span> Sending...');
+
+        await Promise.resolve(); // Wait for microtasks
+
+        expect(global.fetch).toHaveBeenCalledWith(contactForm.action, expect.objectContaining({
+            method: contactForm.method,
+            headers: {
+                'Accept': 'application/json'
+            }
+        }));
+
+        expect(submitBtn.innerText).toBe('Message Sent!');
+        expect(submitBtn.style.backgroundColor).toBe('var(--teal-tint)');
+        expect(resetSpy).toHaveBeenCalled();
+
+        jest.advanceTimersByTime(3000);
+
+        expect(submitBtn.disabled).toBe(false);
+        expect(submitBtn.innerHTML).toBe(originalHTML);
+        expect(submitBtn.style.backgroundColor).toBe('');
+    });
+
+    it('handles failed form submission (server error)', async () => {
+        const contactForm = document.getElementById('contact-form');
+        const submitBtn = contactForm.querySelector('.submit-btn');
+        const originalHTML = submitBtn.innerHTML;
+
+        global.fetch = jest.fn().mockResolvedValue({
+            ok: false,
+        });
+
+        contactForm.dispatchEvent(new Event('submit', { cancelable: true }));
+
+        await Promise.resolve();
+
+        expect(submitBtn.innerText).toBe('Error: Please try again.');
+        expect(submitBtn.style.color).toBe('var(--danger)');
+        expect(submitBtn.style.borderColor).toBe('var(--danger)');
+
+        jest.advanceTimersByTime(3000);
+
+        expect(submitBtn.disabled).toBe(false);
+        expect(submitBtn.innerHTML).toBe(originalHTML);
+        expect(submitBtn.style.color).toBe('');
+        expect(submitBtn.style.borderColor).toBe('');
+    });
+
+    it('handles network errors during form submission', async () => {
+        const contactForm = document.getElementById('contact-form');
+        const submitBtn = contactForm.querySelector('.submit-btn');
+        const originalHTML = submitBtn.innerHTML;
+
+        global.fetch = jest.fn().mockRejectedValue(new Error('Network error'));
+
+        contactForm.dispatchEvent(new Event('submit', { cancelable: true }));
+
+        await Promise.resolve();
+
+        expect(submitBtn.innerText).toBe('Error: Network issue.');
+        expect(submitBtn.style.color).toBe('var(--danger)');
+        expect(submitBtn.style.borderColor).toBe('var(--danger)');
+
+        jest.advanceTimersByTime(3000);
+
+        expect(submitBtn.disabled).toBe(false);
+        expect(submitBtn.innerHTML).toBe(originalHTML);
+        expect(submitBtn.style.color).toBe('');
+        expect(submitBtn.style.borderColor).toBe('');
+    });
+});
