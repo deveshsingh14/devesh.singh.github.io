@@ -1150,10 +1150,13 @@ document.addEventListener('DOMContentLoaded', () => {
             minSyms: parseInt(pgMinSyms.value) || 0
         });
 
+        const announcer = document.getElementById('pg-announcer');
         if (result.error) {
             pgResult.value = result.error;
+            if (announcer) announcer.textContent = result.error;
         } else {
             pgResult.value = result.password;
+            if (announcer) announcer.textContent = result.password;
         }
     }
 
@@ -1171,7 +1174,10 @@ document.addEventListener('DOMContentLoaded', () => {
             words.push(word);
         }
 
-        ppResult.value = words.join(separator);
+        const passphrase = words.join(separator);
+        ppResult.value = passphrase;
+        const announcer = document.getElementById('pp-announcer');
+        if (announcer) announcer.textContent = passphrase;
     }
 
     // Attach Events
