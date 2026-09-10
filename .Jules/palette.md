@@ -94,3 +94,7 @@
 ## 2026-09-08 - Screen reader announcements for input values
 **Learning:** Updating the `value` property of an `<input>` element dynamically via JavaScript does not trigger screen reader announcements, even if the element is inside an `aria-live` region. This is because changes to a native input's `value` are not considered DOM mutation events by the accessibility tree.
 **Action:** When a generated value is output into a read-only input field, always duplicate that value into a visually hidden (`.sr-only`) text element (like a `<span>`) within the same `aria-live` region to ensure screen readers announce the newly generated text.
+
+## 2026-11-04 - Command Palette Selection and active descendant
+**Learning:** Rebuilding the DOM (using `innerHTML = ''`) on every arrow key press for a custom combobox (like a command palette) breaks screen reader `aria-activedescendant` announcements, causes performance thrashing, and removes DOM nodes users are actively inspecting. Furthermore, missing `scrollIntoView` means users can arrow down past the visible scroll container bounds.
+**Action:** Instead of recreating DOM elements to reflect selection changes, toggle the `.selected` class and `aria-selected` attributes on existing nodes. Ensure the parent container's `aria-activedescendant` is updated to match the active element's ID, and call `scrollIntoView({ block: 'nearest' })` on the newly selected element so it remains visible without jarring the scroll position.
