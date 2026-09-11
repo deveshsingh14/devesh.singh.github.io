@@ -26,8 +26,11 @@ export const typeLines = (lines, container, onDone) => {
     const next = () => {
         if (i >= lines.length) { if (onDone) onDone(); return; }
         const { html, delay } = lines[i];
+        if (typeof DOMPurify === 'undefined') {
+            throw new Error("Security check failed: DOMPurify failed to load. Please check your internet connection.");
+        }
         const div = document.createElement('div');
-        div.innerHTML = html;
+        div.innerHTML = DOMPurify.sanitize(html);
         div.style.opacity = '0';
         div.style.transform = 'translateY(4px)';
         div.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
