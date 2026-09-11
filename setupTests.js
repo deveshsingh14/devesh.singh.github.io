@@ -31,3 +31,7 @@ HTMLCanvasElement.prototype.getContext = () => ({
   lineTo: jest.fn(),
   stroke: jest.fn()
 });
+
+window.DOMPurify = {
+  sanitize: (html) => html
+};
