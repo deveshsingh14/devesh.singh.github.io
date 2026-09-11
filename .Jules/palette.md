@@ -98,3 +98,7 @@
 ## 2026-11-04 - Command Palette Selection and active descendant
 **Learning:** Rebuilding the DOM (using `innerHTML = ''`) on every arrow key press for a custom combobox (like a command palette) breaks screen reader `aria-activedescendant` announcements, causes performance thrashing, and removes DOM nodes users are actively inspecting. Furthermore, missing `scrollIntoView` means users can arrow down past the visible scroll container bounds.
 **Action:** Instead of recreating DOM elements to reflect selection changes, toggle the `.selected` class and `aria-selected` attributes on existing nodes. Ensure the parent container's `aria-activedescendant` is updated to match the active element's ID, and call `scrollIntoView({ block: 'nearest' })` on the newly selected element so it remains visible without jarring the scroll position.
+
+## 2026-09-10 - Visible Focus Rings for Programmatic Containers
+**Learning:** When assigning `tabindex="-1"` to containers like `.job-card` or `.topo-drawer-panel` for programmatic focus management, applying `:focus { outline: none; }` without a `:focus-visible` fallback harms keyboard navigation by hiding the current focus state.
+**Action:** Always provide a `:focus-visible` rule (e.g., `outline: 2px solid var(--teal);`) immediately after `outline: none` for programmatically focusable containers so keyboard users receive visual feedback when navigating to them.

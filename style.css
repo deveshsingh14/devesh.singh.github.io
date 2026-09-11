@@ -1287,6 +1287,12 @@ ul, ol {
   outline: none;
 }
 
+.job-card:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
 .job-card.dimmed {
   opacity: 0.45;
 }
@@ -2129,6 +2135,11 @@ ul, ol {
 
 .topo-drawer-panel:focus {
   outline: none;
+}
+
+.topo-drawer-panel:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: -2px;
 }
 
 .topo-drawer-panel {
