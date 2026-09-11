@@ -2,6 +2,7 @@ import { escapeHtml } from '../utils/dom.js';
 
 export function initTools() {
     let currentAnimation = null;
+    const guiBodies = document.querySelectorAll('.gui-body');
 
     const animateLines = (lines, container, onDone) => {
         let i = 0;
@@ -280,7 +281,7 @@ export function initTools() {
             if (scriptKey === 'password-gen') {
                 if (currentAnimation) { clearTimeout(currentAnimation); currentAnimation = null; }
                 terminalOutput.style.display = 'none';
-                document.querySelectorAll('.gui-body').forEach(el => el.style.display = 'none');
+                guiBodies.forEach(el => el.style.display = 'none');
                 document.getElementById('gui-output-password').style.display = 'flex';
                 document.querySelector('.terminal-title').innerText = 'Password Generator App';
 
@@ -296,14 +297,14 @@ export function initTools() {
             } else if (scriptKey === 'docx-to-pdf') {
                 if (currentAnimation) { clearTimeout(currentAnimation); currentAnimation = null; }
                 terminalOutput.style.display = 'none';
-                document.querySelectorAll('.gui-body').forEach(el => el.style.display = 'none');
+                guiBodies.forEach(el => el.style.display = 'none');
                 document.getElementById('gui-output-docx').style.display = 'flex';
                 document.querySelector('.terminal-title').innerText = 'DOCX to PDF Converter';
 
                 const docxUploadArea = document.getElementById('docx-upload-area');
                 if (docxUploadArea) docxUploadArea.focus({ preventScroll: true });
             } else {
-                document.querySelectorAll('.gui-body').forEach(el => el.style.display = 'none');
+                guiBodies.forEach(el => el.style.display = 'none');
                 terminalOutput.style.display = 'block';
                 document.querySelector('.terminal-title').innerText = 'user@dsb-macbook: ~/devops-tools';
                 renderTerminal(scriptKey, true);
