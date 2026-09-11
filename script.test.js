@@ -94,6 +94,110 @@ describe('generatePassphrase', () => {
     });
 });
 
+describe('generatePassword', () => {
+    beforeEach(() => {
+        document.documentElement.innerHTML = html.toString();
+        document.dispatchEvent(new Event('DOMContentLoaded'));
+    });
+
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
+    it('generates a password with default settings (length 14)', () => {
+        const pgResult = document.getElementById('pg-result');
+        const pgRefresh = document.getElementById('pg-refresh');
+
+        pgRefresh.click();
+        expect(pgResult.value.length).toBe(14);
+    });
+
+    it('generates a password of the exact requested length', () => {
+        const pgLength = document.getElementById('pg-length');
+        const pgResult = document.getElementById('pg-result');
+        const pgRefresh = document.getElementById('pg-refresh');
+
+        pgLength.value = 20;
+        pgRefresh.click();
+        expect(pgResult.value.length).toBe(20);
+    });
+
+    it('uses only uppercase characters when others are disabled', () => {
+        const pgLower = document.getElementById('pg-lower');
+        const pgNums = document.getElementById('pg-nums');
+        const pgSyms = document.getElementById('pg-syms');
+        const pgResult = document.getElementById('pg-result');
+        const pgRefresh = document.getElementById('pg-refresh');
+
+        pgLower.checked = false;
+        pgNums.checked = false;
+        pgSyms.checked = false;
+
+        pgRefresh.click();
+
+        expect(pgResult.value).toMatch(/^[A-Z]+$/);
+    });
+
+    it('enforces the minimum number of symbols', () => {
+        const pgSyms = document.getElementById('pg-syms');
+        const pgMinSyms = document.getElementById('pg-min-syms');
+        const pgResult = document.getElementById('pg-result');
+        const pgRefresh = document.getElementById('pg-refresh');
+
+        pgSyms.checked = true;
+        pgMinSyms.value = 5;
+
+        pgRefresh.click();
+
+        const symbolsInResult = (pgResult.value.match(/[!@#$%^&*]/g) || []).length;
+        expect(symbolsInResult).toBeGreaterThanOrEqual(5);
+    });
+
+    it('enforces the minimum number of numbers', () => {
+        const pgMinNums = document.getElementById('pg-min-nums');
+        const pgResult = document.getElementById('pg-result');
+        const pgRefresh = document.getElementById('pg-refresh');
+
+        pgMinNums.value = 5;
+
+        pgRefresh.click();
+
+        const numbersInResult = (pgResult.value.match(/[0-9]/g) || []).length;
+        expect(numbersInResult).toBeGreaterThanOrEqual(5);
+    });
+
+    it('avoids ambiguous characters when checked', () => {
+        const pgAmbig = document.getElementById('pg-ambig');
+        const pgResult = document.getElementById('pg-result');
+        const pgRefresh = document.getElementById('pg-refresh');
+        const pgLength = document.getElementById('pg-length');
+
+        pgAmbig.checked = true;
+        pgLength.value = 100; // Large string to test heavily
+
+        pgRefresh.click();
+
+        expect(pgResult.value).not.toMatch(/[l1IO0]/);
+    });
+
+    it('shows an error if no character sets are selected', () => {
+        const pgUpper = document.getElementById('pg-upper');
+        const pgLower = document.getElementById('pg-lower');
+        const pgNums = document.getElementById('pg-nums');
+        const pgSyms = document.getElementById('pg-syms');
+        const pgResult = document.getElementById('pg-result');
+        const pgRefresh = document.getElementById('pg-refresh');
+
+        pgUpper.checked = false;
+        pgLower.checked = false;
+        pgNums.checked = false;
+        pgSyms.checked = false;
+
+        pgRefresh.click();
+
+        expect(pgResult.value).toBe('Select at least one character set.');
+    });
+});
 describe('formatUptime', () => {
     beforeEach(() => {
         document.documentElement.innerHTML = html.toString();
