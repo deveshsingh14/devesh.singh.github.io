@@ -102,3 +102,7 @@
 ## 2026-09-10 - Visible Focus Rings for Programmatic Containers
 **Learning:** When assigning `tabindex="-1"` to containers like `.job-card` or `.topo-drawer-panel` for programmatic focus management, applying `:focus { outline: none; }` without a `:focus-visible` fallback harms keyboard navigation by hiding the current focus state.
 **Action:** Always provide a `:focus-visible` rule (e.g., `outline: 2px solid var(--teal);`) immediately after `outline: none` for programmatically focusable containers so keyboard users receive visual feedback when navigating to them.
+
+## 2026-11-20 - Handle dynamic textual updates correctly using aria-live and sr-only siblings
+**Learning:** When handling dynamic textual updates for interactive elements like buttons (which disable and change text simultaneously), avoid applying `aria-live` directly to the button or its parent wrapper. This prevents duplicate or garbled screen reader announcements caused by simultaneous mutations.
+**Action:** Instead, apply `aria-live="polite"` exclusively to a dedicated, visually hidden (`.sr-only`) sibling status text container. Update the text of this container simultaneously with the button to ensure the status is read properly.

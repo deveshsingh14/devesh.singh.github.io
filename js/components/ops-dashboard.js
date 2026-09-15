@@ -78,8 +78,10 @@ export function initOpsDashboard() {
             if (PIPELINE_STATE.running) return;
             PIPELINE_STATE.running = true;
             resetPipelineUi();
+            const announcer = document.getElementById('pipeline-run-announcer');
             runPipelineBtn.disabled = true;
             runPipelineBtn.innerHTML = '<span class="spinner"></span> Running…';
+            if (announcer) announcer.textContent = 'Running…';
             pipelineStatusLive.textContent = 'Starting pipeline…';
 
             let scanRetried = false;
@@ -90,6 +92,7 @@ export function initOpsDashboard() {
                 pipelineStatusLive.textContent = 'Deployment complete. All stages green.';
                 runPipelineBtn.disabled = false;
                 runPipelineBtn.textContent = 'Run Pipeline';
+                if (announcer) announcer.textContent = '';
                 if (typeof window.__incrementDeploymentCount === 'function') {
                     window.__incrementDeploymentCount();
                 }
