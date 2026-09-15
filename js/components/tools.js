@@ -243,10 +243,12 @@ export function initTools() {
         const executeSim = () => {
             let val = inputField.value.trim();
             val = escapeHtml(val);
+            const runAnnouncer = document.getElementById('tool-run-announcer');
 
             inputField.disabled = true;
             runBtn.disabled = true;
             runBtn.innerHTML = '<span class="spinner"></span> Running…';
+            if (runAnnouncer) runAnnouncer.textContent = 'Running…';
             runBtn.classList.add('running');
 
             dynamicOutput.innerHTML = '';
@@ -255,6 +257,7 @@ export function initTools() {
                 inputField.disabled = false;
                 runBtn.disabled = false;
                 runBtn.innerText = 'Run Script';
+                if (runAnnouncer) runAnnouncer.textContent = '';
                 runBtn.classList.remove('running');
                 inputField.value = '';
                 inputField.focus();
@@ -594,9 +597,11 @@ export function initTools() {
 
         btnConvertDocx.addEventListener('click', async () => {
             if (!selectedDocxFile) return;
+            const docxAnnouncer = document.getElementById('docx-convert-announcer');
 
             btnConvertDocx.disabled = true;
             btnConvertDocx.innerHTML = '<span class="spinner"></span> Converting...';
+            if (docxAnnouncer) docxAnnouncer.textContent = 'Converting...';
             docxStatus.innerText = 'Extracting content from DOCX...';
             docxStatus.style.color = 'var(--teal)';
 
@@ -634,6 +639,7 @@ export function initTools() {
             } finally {
                 btnConvertDocx.disabled = false;
                 btnConvertDocx.innerText = 'Convert to PDF';
+                if (docxAnnouncer) docxAnnouncer.textContent = '';
             }
         });
     }
