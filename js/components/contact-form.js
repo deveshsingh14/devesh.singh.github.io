@@ -6,9 +6,11 @@ export function initContactForm() {
 
             const submitBtn = contactForm.querySelector('.submit-btn');
             const originalHTML = submitBtn.innerHTML;
+            const contactStatus = document.getElementById('contact-status');
 
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<span class="spinner"></span> Sending...';
+            if (contactStatus) contactStatus.textContent = 'Sending message...';
 
             try {
                 const formData = new FormData(contactForm);
@@ -22,15 +24,18 @@ export function initContactForm() {
 
                 if (response.ok) {
                     submitBtn.innerText = 'Message Sent!';
+                    if (contactStatus) contactStatus.textContent = 'Message successfully sent.';
                     submitBtn.style.backgroundColor = 'var(--teal-tint)';
                     contactForm.reset();
                 } else {
                     submitBtn.innerText = 'Error: Please try again.';
+                    if (contactStatus) contactStatus.textContent = 'Error sending message. Please try again.';
                     submitBtn.style.color = 'var(--danger)';
                     submitBtn.style.borderColor = 'var(--danger)';
                 }
             } catch (error) {
                 submitBtn.innerText = 'Error: Network issue.';
+                if (contactStatus) contactStatus.textContent = 'Error sending message. Please try again.';
                 submitBtn.style.color = 'var(--danger)';
                 submitBtn.style.borderColor = 'var(--danger)';
             } finally {
