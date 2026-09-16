@@ -1,5 +1,73 @@
 import { escapeHtml } from '../utils/dom.js';
 
+const BASE_UPPER_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const BASE_LOWER_CHARS = "abcdefghijklmnopqrstuvwxyz";
+const BASE_NUM_CHARS = "0123456789";
+const AMBIGUOUS_CHARS = "l1IO0";
+
+const UNAMBIG_UPPER_CHARS = BASE_UPPER_CHARS.split('').filter(c => !AMBIGUOUS_CHARS.includes(c)).join('');
+const UNAMBIG_LOWER_CHARS = BASE_LOWER_CHARS.split('').filter(c => !AMBIGUOUS_CHARS.includes(c)).join('');
+const UNAMBIG_NUM_CHARS = BASE_NUM_CHARS.split('').filter(c => !AMBIGUOUS_CHARS.includes(c)).join('');
+
+function getSecureRandom() {
+    const randomBuffer = new Uint32Array(1);
+    window.crypto.getRandomValues(randomBuffer);
+    return randomBuffer[0] / (0xFFFFFFFF + 1);
+}
+
+function getRandomChar(str) {
+    return str[Math.floor(getSecureRandom() * str.length)];
+}
+
+export function createPasswordString(options) {
+    const { length, useUpper, useLower, useNums, useSyms, avoidAmbig, minNums, minSyms } = options;
+
+    let upperChars = BASE_UPPER_CHARS;
+    let lowerChars = BASE_LOWER_CHARS;
+    let numChars = BASE_NUM_CHARS;
+    let symChars = "!@#$%^&*";
+
+    if (avoidAmbig) {
+        upperChars = UNAMBIG_UPPER_CHARS;
+        lowerChars = UNAMBIG_LOWER_CHARS;
+        numChars = UNAMBIG_NUM_CHARS;
+    }
+
+    let pool = "";
+    if (useUpper) pool += upperChars;
+    if (useLower) pool += lowerChars;
+    if (useNums) pool += numChars;
+    if (useSyms) pool += symChars;
+
+    if (!pool) return { error: "Select at least one character set." };
+
+    let passwordChars = [];
+
+    function pushRandomChars(condition, minCount, charSet) {
+        if (condition && minCount > 0) {
+            const limit = Math.min(minCount, length - passwordChars.length);
+            for (let i = 0; i < limit; i++) {
+                passwordChars.push(getRandomChar(charSet));
+            }
+        }
+    }
+
+    pushRandomChars(useNums, minNums, numChars);
+    pushRandomChars(useSyms, minSyms, symChars);
+
+    const remainingLength = length - passwordChars.length;
+    for (let i = 0; i < remainingLength; i++) {
+        passwordChars.push(getRandomChar(pool));
+    }
+
+    for (let i = passwordChars.length - 1; i > 0; i--) {
+        const j = Math.floor(getSecureRandom() * (i + 1));
+        [passwordChars[i], passwordChars[j]] = [passwordChars[j], passwordChars[i]];
+    }
+
+    return { password: passwordChars.join('').substring(0, length) };
+}
+
 export function initTools() {
     let currentAnimation = null;
     const guiBodies = document.querySelectorAll('.gui-body');
@@ -366,14 +434,6 @@ export function initTools() {
     const pgRefresh = document.getElementById('pg-refresh');
     const pgCopy = document.getElementById('pg-copy');
 
-    const BASE_UPPER_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const BASE_LOWER_CHARS = "abcdefghijklmnopqrstuvwxyz";
-    const BASE_NUM_CHARS = "0123456789";
-    const AMBIGUOUS_CHARS = "l1IO0";
-
-    const UNAMBIG_UPPER_CHARS = BASE_UPPER_CHARS.split('').filter(c => !AMBIGUOUS_CHARS.includes(c)).join('');
-    const UNAMBIG_LOWER_CHARS = BASE_LOWER_CHARS.split('').filter(c => !AMBIGUOUS_CHARS.includes(c)).join('');
-    const UNAMBIG_NUM_CHARS = BASE_NUM_CHARS.split('').filter(c => !AMBIGUOUS_CHARS.includes(c)).join('');
 
     const ppResult = document.getElementById('pp-result');
     const ppWords = document.getElementById('pp-words');
@@ -390,64 +450,6 @@ export function initTools() {
         "forest", "mountain", "valley", "spring", "summer", "autumn", "winter", "silver", "gold"
     ];
 
-    function getSecureRandom() {
-        const randomBuffer = new Uint32Array(1);
-        window.crypto.getRandomValues(randomBuffer);
-        return randomBuffer[0] / (0xFFFFFFFF + 1);
-    }
-
-    function getRandomChar(str) {
-        return str[Math.floor(getSecureRandom() * str.length)];
-    }
-
-    function createPasswordString(options) {
-        const { length, useUpper, useLower, useNums, useSyms, avoidAmbig, minNums, minSyms } = options;
-
-        let upperChars = BASE_UPPER_CHARS;
-        let lowerChars = BASE_LOWER_CHARS;
-        let numChars = BASE_NUM_CHARS;
-        let symChars = "!@#$%^&*";
-
-        if (avoidAmbig) {
-            upperChars = UNAMBIG_UPPER_CHARS;
-            lowerChars = UNAMBIG_LOWER_CHARS;
-            numChars = UNAMBIG_NUM_CHARS;
-        }
-
-        let pool = "";
-        if (useUpper) pool += upperChars;
-        if (useLower) pool += lowerChars;
-        if (useNums) pool += numChars;
-        if (useSyms) pool += symChars;
-
-        if (!pool) return { error: "Select at least one character set." };
-
-        let passwordChars = [];
-
-        function pushRandomChars(condition, minCount, charSet) {
-            if (condition && minCount > 0) {
-                const limit = Math.min(minCount, length - passwordChars.length);
-                for (let i = 0; i < limit; i++) {
-                    passwordChars.push(getRandomChar(charSet));
-                }
-            }
-        }
-
-        pushRandomChars(useNums, minNums, numChars);
-        pushRandomChars(useSyms, minSyms, symChars);
-
-        const remainingLength = length - passwordChars.length;
-        for (let i = 0; i < remainingLength; i++) {
-            passwordChars.push(getRandomChar(pool));
-        }
-
-        for (let i = passwordChars.length - 1; i > 0; i--) {
-            const j = Math.floor(getSecureRandom() * (i + 1));
-            [passwordChars[i], passwordChars[j]] = [passwordChars[j], passwordChars[i]];
-        }
-
-        return { password: passwordChars.join('').substring(0, length) };
-    }
 
     function generatePassword() {
         if (!pgLength) return;
