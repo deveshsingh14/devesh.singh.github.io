@@ -506,14 +506,20 @@ export function initTools() {
             el.addEventListener('input', generatePassword);
         });
 
-        function copyToClipboard(textToCopy, buttonElement) {
+        function copyToClipboard(textToCopy, buttonElement, announcerElement) {
             navigator.clipboard.writeText(textToCopy);
             buttonElement.innerText = "Copied!";
-            setTimeout(() => buttonElement.innerText = "Copy", 2000);
+            if (announcerElement) announcerElement.textContent = "Copied to clipboard!";
+            setTimeout(() => {
+                buttonElement.innerText = "Copy";
+                if (announcerElement && announcerElement.textContent === "Copied to clipboard!") {
+                    announcerElement.textContent = "";
+                }
+            }, 2000);
         }
 
         pgRefresh.addEventListener('click', generatePassword);
-        pgCopy.addEventListener('click', () => copyToClipboard(pgResult.value, pgCopy));
+        pgCopy.addEventListener('click', () => copyToClipboard(pgResult.value, pgCopy, document.getElementById('pg-copy-announcer')));
 
         ppWords.addEventListener('input', (e) => {
             ppWordsLabel.innerText = `Number of words: ${e.target.value}`;
@@ -526,7 +532,7 @@ export function initTools() {
         });
 
         ppRefresh.addEventListener('click', generatePassphrase);
-        ppCopy.addEventListener('click', () => copyToClipboard(ppResult.value, ppCopy));
+        ppCopy.addEventListener('click', () => copyToClipboard(ppResult.value, ppCopy, document.getElementById('pp-copy-announcer')));
 
         const autoSelectText = (e) => e.target.select();
         [pgResult, ppResult].forEach(el => {
