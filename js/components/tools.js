@@ -285,8 +285,9 @@ export function initTools() {
             <div class="output-line"><span class="prompt" aria-hidden="true">$</span> <span class="command">${script.cmd}</span></div>
             <div class="output-line system-msg">Loading dependencies...</div>
             <div class="output-line prompt-req">${script.promptReq}</div>
-            <div class="interactive-input" aria-live="polite">
+            <div class="interactive-input">
                 <span class="prompt" aria-hidden="true">></span> <input type="text" id="tool-input" placeholder="${script.placeholder}" autocomplete="off" aria-label="Terminal command input">
+                <span id="tool-run-announcer" class="sr-only" aria-live="polite"></span>
                 <button id="run-btn">Run Script</button>
             </div>
             <div id="dynamic-output" aria-live="polite"></div>
