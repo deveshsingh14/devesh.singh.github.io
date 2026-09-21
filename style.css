@@ -85,9 +85,29 @@
    Global Reset & Base Styles
 ========================================= */
 
+#docx-upload-area {
+  border: 2px dashed var(--slate);
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#docx-upload-area:hover,
+#docx-upload-area:focus-visible {
+  border-color: var(--teal);
+  background-color: var(--teal-tint);
+}
+
 #docx-upload-area:focus-visible {
   outline: 2px solid var(--teal) !important;
   outline-offset: 2px;
+}
+
+.gui-tab:not(.active):hover {
+  background-color: var(--navy-light);
+  color: var(--slate-light);
 }
 .skip-link {
   position: absolute;
