@@ -11,9 +11,8 @@ export function formatUptime(ms) {
 }
 window.formatUptime = formatUptime;
 
-export function initOpsDashboard() {
-    const PIPELINE_STATE = { running: false };
 
+function initPipeline(PIPELINE_STATE) {
     const runPipelineBtn = document.getElementById('run-pipeline');
     const pipelineStatusLive = document.getElementById('pipeline-status');
     const pipelineLog = document.getElementById('pipeline-log');
@@ -150,7 +149,9 @@ export function initOpsDashboard() {
             pipelineAutoRunObserver.observe(opsSection);
         }
     }
+}
 
+function initMetrics(PIPELINE_STATE) {
     const metricCpuValue = document.getElementById('metric-cpu-value');
     const metricCpuFill = document.getElementById('metric-cpu-fill');
     const metricMemValue = document.getElementById('metric-mem-value');
@@ -207,5 +208,12 @@ export function initOpsDashboard() {
 
         metricCoffee.textContent = `${(4 + Math.random() * 0.6).toFixed(1)} cups / 1k LOC`;
     }
+}
+
+export function initOpsDashboard() {
+    const PIPELINE_STATE = { running: false };
+
+    initPipeline(PIPELINE_STATE);
+    initMetrics(PIPELINE_STATE);
 }
 document.addEventListener('DOMContentLoaded', initOpsDashboard);
