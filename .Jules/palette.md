@@ -109,3 +109,6 @@
 ## 2024-05-21 - Fix screen reader announcements for clipboard copy
 **Learning:** Adding screen reader announcements to a copy button using a dynamically updated aria-live text container can be broken if the necessary HTML elements do not exist in the DOM. Ensure HTML markup and JavaScript logic match exactly when implementing accessibility improvements.
 **Action:** When adding `.sr-only` aria-live regions via JS modifications, simultaneously modify the corresponding HTML structure to prevent dead code and ensure screen reader compatibility.
+## 2026-09-21 - Correctly scoping aria-live for dynamic inputs
+**Learning:** When handling dynamic textual updates for interactive elements (like a terminal input container that includes a run button), avoid applying `aria-live` directly to the parent wrapper or the input itself, especially if child elements disable or change simultaneously. This prevents duplicate or garbled screen reader announcements.
+**Action:** Instead, apply `aria-live="polite"` exclusively to a dedicated, visually hidden (`.sr-only`) sibling status text container and remove it from the parent container.
