@@ -155,6 +155,7 @@ export function initCommandPalette() {
             cmdkInput.value = '';
             filterCommands();
             cmdkInput.focus();
+            cmdkInput.setAttribute("aria-expanded", "true");
             document.addEventListener('keydown', onPaletteKeydown);
         }
 
@@ -162,6 +163,7 @@ export function initCommandPalette() {
             cmdkBackdrop.hidden = true;
             cmdkPalette.hidden = true;
             document.removeEventListener('keydown', onPaletteKeydown);
+            cmdkInput.setAttribute("aria-expanded", "false");
             if (lastFocusedBeforePalette && typeof lastFocusedBeforePalette.focus === 'function') {
                 lastFocusedBeforePalette.focus();
             }
