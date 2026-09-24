@@ -704,7 +704,7 @@ describe('Contact Form', () => {
         contactForm.dispatchEvent(new Event('submit', { cancelable: true }));
 
         expect(submitBtn.disabled).toBe(true);
-        expect(submitBtn.innerHTML).toContain('<span class="spinner"></span> Sending...');
+        expect(submitBtn.innerHTML).toContain('<span class="spinner" aria-hidden="true"></span> Sending...');
 
         await Promise.resolve(); // Wait for microtasks
 

@@ -316,7 +316,7 @@ export function initTools() {
 
             inputField.disabled = true;
             runBtn.disabled = true;
-            runBtn.innerHTML = '<span class="spinner"></span> Running…';
+            runBtn.innerHTML = '<span class="spinner" aria-hidden="true"></span> Running…';
             if (runAnnouncer) runAnnouncer.textContent = 'Running…';
             runBtn.classList.add('running');
 
@@ -609,7 +609,7 @@ export function initTools() {
             const docxAnnouncer = document.getElementById('docx-convert-announcer');
 
             btnConvertDocx.disabled = true;
-            btnConvertDocx.innerHTML = '<span class="spinner"></span> Converting...';
+            btnConvertDocx.innerHTML = '<span class="spinner" aria-hidden="true"></span> Converting...';
             if (docxAnnouncer) docxAnnouncer.textContent = 'Converting...';
             docxStatus.innerText = 'Extracting content from DOCX...';
             docxStatus.style.color = 'var(--teal)';

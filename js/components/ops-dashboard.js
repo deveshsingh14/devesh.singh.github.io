@@ -79,7 +79,7 @@ function initPipeline(PIPELINE_STATE) {
             resetPipelineUi();
             const announcer = document.getElementById('pipeline-run-announcer');
             runPipelineBtn.disabled = true;
-            runPipelineBtn.innerHTML = '<span class="spinner"></span> Running…';
+            runPipelineBtn.innerHTML = '<span class="spinner" aria-hidden="true"></span> Running…';
             if (announcer) announcer.textContent = 'Running…';
             pipelineStatusLive.textContent = 'Starting pipeline…';
 
