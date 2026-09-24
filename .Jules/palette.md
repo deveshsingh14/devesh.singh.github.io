@@ -112,3 +112,7 @@
 ## 2026-11-20 - Handle dynamic textual updates correctly using aria-live and sr-only siblings (Update)
 **Learning:** Adding `.sr-only` aria-live regions via JS string templates (like in `renderTerminal`) can create dead code if the corresponding JS logic isn't wired up to update them.
 **Action:** When adding `.sr-only` aria-live regions in JS, ensure you also update the JS logic to populate that region when the button state changes.
+
+## 2024-05-22 - Enhance limited text inputs with character counts
+**Learning:** Textareas and inputs with constraints (like `maxlength`) often leave users guessing about how many characters they have left, creating friction when they hit the limit unexpectedly.
+**Action:** When an input has a length limit, always add a real-time character count indicator below it to guide users and improve form usability. Ensure it updates dynamically as the user types and resets upon form submission.
