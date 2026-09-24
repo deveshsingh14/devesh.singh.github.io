@@ -9,7 +9,7 @@ export function initContactForm() {
             const announcer = document.getElementById('contact-submit-announcer');
 
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner"></span> Sending...';
+            submitBtn.innerHTML = '<span class="spinner" aria-hidden="true"></span> Sending...';
             if (announcer) announcer.textContent = 'Sending...';
 
             try {
