@@ -1,6 +1,15 @@
 export function initContactForm() {
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
+        const messageInput = document.getElementById('message');
+        const charCount = document.getElementById('message-char-count');
+
+        if (messageInput && charCount) {
+            messageInput.addEventListener('input', () => {
+                charCount.textContent = messageInput.value.length;
+            });
+        }
+
         contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -27,6 +36,7 @@ export function initContactForm() {
                     if (announcer) announcer.textContent = 'Message Sent!';
                     submitBtn.style.backgroundColor = 'var(--teal-tint)';
                     contactForm.reset();
+                    if (charCount) charCount.textContent = '0';
                 } else {
                     submitBtn.innerText = 'Error: Please try again.';
                     if (announcer) announcer.textContent = 'Error: Please try again.';
