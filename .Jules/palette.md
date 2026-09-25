@@ -116,3 +116,6 @@
 ## 2024-05-22 - Enhance limited text inputs with character counts
 **Learning:** Textareas and inputs with constraints (like `maxlength`) often leave users guessing about how many characters they have left, creating friction when they hit the limit unexpectedly.
 **Action:** When an input has a length limit, always add a real-time character count indicator below it to guide users and improve form usability. Ensure it updates dynamically as the user types and resets upon form submission.
+## 2026-11-20 - Ensure aria-expanded matches initial and dynamic state for comboboxes
+**Learning:** When implementing custom comboboxes (like command palettes) that toggle visibility, it is common to leave `aria-expanded="true"` hardcoded in the HTML even when the component is initially hidden. This causes screen readers to misreport the state.
+**Action:** Ensure the `aria-expanded` attribute on the combobox input matches the initial HTML state (e.g., `false` if hidden) and updates dynamically via JavaScript (e.g., using `setAttribute("aria-expanded", "true"/"false")`) to accurately reflect its open/closed state to screen readers.
