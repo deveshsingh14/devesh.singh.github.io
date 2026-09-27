@@ -119,3 +119,6 @@
 ## 2026-11-20 - Ensure aria-expanded matches initial and dynamic state for comboboxes
 **Learning:** When implementing custom comboboxes (like command palettes) that toggle visibility, it is common to leave `aria-expanded="true"` hardcoded in the HTML even when the component is initially hidden. This causes screen readers to misreport the state.
 **Action:** Ensure the `aria-expanded` attribute on the combobox input matches the initial HTML state (e.g., `false` if hidden) and updates dynamically via JavaScript (e.g., using `setAttribute("aria-expanded", "true"/"false")`) to accurately reflect its open/closed state to screen readers.
+## 2026-09-27 - Playwright Clipboard Permissions
+**Learning:** When testing clipboard copy functionality in headless Playwright tests, the browser context must be explicitly granted clipboard permissions, otherwise the `navigator.clipboard` methods will fail silently or throw errors.
+**Action:** When testing clipboard functionality with Playwright in Python, explicitly grant clipboard permissions to the browser context using `context.grant_permissions(['clipboard-read', 'clipboard-write'])` before navigating to the page.
