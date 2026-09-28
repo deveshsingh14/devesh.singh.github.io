@@ -596,6 +596,7 @@ export function initTools() {
                 docxStatus.innerText = `Selected: ${file.name}`;
                 docxStatus.style.color = 'var(--teal)';
                 btnConvertDocx.style.display = 'block';
+                btnConvertDocx.focus({ preventScroll: true });
             } else {
                 selectedDocxFile = null;
                 docxStatus.innerText = 'Error: Please select a valid .docx file.';
