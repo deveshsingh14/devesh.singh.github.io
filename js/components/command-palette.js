@@ -41,7 +41,17 @@ export function initCommandPalette() {
             } },
             { id: 'action-terminal', group: 'Actions', label: 'Focus the portfolio terminal', run: focusHeroTerminal },
             { id: 'action-copy-email', group: 'Actions', label: 'Copy email address', run: () => {
-                navigator.clipboard.writeText('devesh141singh@gmail.com').catch(() => {});
+                navigator.clipboard.writeText('devesh141singh@gmail.com').then(() => {
+                    const announcer = document.getElementById('cmdk-copy-announcer');
+                    if (announcer) {
+                        announcer.textContent = 'Copied to clipboard!';
+                        setTimeout(() => {
+                            if (announcer.textContent === 'Copied to clipboard!') {
+                                announcer.textContent = '';
+                            }
+                        }, 2000);
+                    }
+                }).catch(() => {});
             } },
             { id: 'action-github', group: 'Actions', label: 'Open GitHub profile', run: () => window.open('https://github.com/deveshsingh14', '_blank', 'noopener') },
             { id: 'action-linkedin', group: 'Actions', label: 'Open LinkedIn profile', run: () => window.open('https://www.linkedin.com/in/devesh-s-4ab189263', '_blank', 'noopener') },
