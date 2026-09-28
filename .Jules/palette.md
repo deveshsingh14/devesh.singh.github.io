@@ -119,3 +119,9 @@
 ## 2026-11-20 - Ensure aria-expanded matches initial and dynamic state for comboboxes
 **Learning:** When implementing custom comboboxes (like command palettes) that toggle visibility, it is common to leave `aria-expanded="true"` hardcoded in the HTML even when the component is initially hidden. This causes screen readers to misreport the state.
 **Action:** Ensure the `aria-expanded` attribute on the combobox input matches the initial HTML state (e.g., `false` if hidden) and updates dynamically via JavaScript (e.g., using `setAttribute("aria-expanded", "true"/"false")`) to accurately reflect its open/closed state to screen readers.
+## 2026-09-28 - Programmatic container focus management
+**Learning:** When programmatically directing focus to non-interactive container elements to guide reading flow (e.g., highlighting a filtered item or changing views), assigning `tabindex="-1"` is preferable to `tabindex="0"`. This allows JavaScript to set focus for screen readers and visual continuity without unnecessarily cluttering the sequential tab order for keyboard users.
+**Action:** Use `tabindex="-1"` on container elements like  when implementing programmatic focus jumping, and ensure a corresponding `:focus-visible` style exists to indicate the focus.
+## 2026-11-25 - Programmatic container focus management
+**Learning:** When programmatically directing focus to non-interactive container elements to guide reading flow (e.g., highlighting a filtered item or changing views), assigning `tabindex="-1"` is preferable to `tabindex="0"`. This allows JavaScript to set focus for screen readers and visual continuity without unnecessarily cluttering the sequential tab order for keyboard users.
+**Action:** Use `tabindex="-1"` on container elements like `.project-card` when implementing programmatic focus jumping, and ensure a corresponding `:focus-visible` style exists to indicate the focus.

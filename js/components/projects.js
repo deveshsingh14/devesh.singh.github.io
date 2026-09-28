@@ -8,6 +8,7 @@ export function initProjects() {
 
         const applyFilter = (filter) => {
             let visibleCount = 0;
+            let firstVisibleCard = null;
             projectCards.forEach(card => {
                 const categories = (card.dataset.categories || '').split(' ');
                 const show = filter === 'all' || categories.includes(filter);
@@ -15,6 +16,9 @@ export function initProjects() {
 
                 if (show) {
                     card.style.display = '';
+                    if (!firstVisibleCard) {
+                        firstVisibleCard = card;
+                    }
                     requestAnimationFrame(() => card.classList.remove('project-filtered-out'));
                 } else {
                     card.classList.add('project-filtered-out');
@@ -27,6 +31,12 @@ export function initProjects() {
             filterStatus.textContent = filter === 'all'
                 ? `Showing all ${visibleCount} projects.`
                 : `Showing ${visibleCount} project${visibleCount === 1 ? '' : 's'} tagged "${FILTER_LABELS[filter]}".`;
+
+            if (firstVisibleCard) {
+                setTimeout(() => {
+                    firstVisibleCard.focus({ preventScroll: true });
+                }, 50);
+            }
         };
 
         filterButtons.forEach(btn => {
