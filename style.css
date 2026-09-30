@@ -2360,6 +2360,11 @@ ul, ol {
   border-width: 0;
 }
 
+.char-count-container {
+  color: var(--light-slate);
+  transition: color 0.3s ease;
+}
+
 .form-input {
   width: 100%;
   background-color: var(--light-navy);
