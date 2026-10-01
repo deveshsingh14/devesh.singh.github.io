@@ -122,3 +122,6 @@
 ## 2026-09-27 - Playwright Clipboard Permissions
 **Learning:** When testing clipboard copy functionality in headless Playwright tests, the browser context must be explicitly granted clipboard permissions, otherwise the `navigator.clipboard` methods will fail silently or throw errors.
 **Action:** When testing clipboard functionality with Playwright in Python, explicitly grant clipboard permissions to the browser context using `context.grant_permissions(['clipboard-read', 'clipboard-write'])` before navigating to the page.
+## 2026-10-01 - Character Count Visual Feedback using existing tokens
+**Learning:** Adding dynamic color feedback to character limits (e.g. 90% and 100%) significantly improves the UX of constrained forms. Existing CSS tokens (like `var(--amber)` and `var(--danger)`) can be safely applied via inline styles without needing to modify existing CSS classes, ensuring no design regressions.
+**Action:** When adding warning or error states for length limits, use percentage thresholds and existing CSS variables, and be sure to fully clear out the inline styles (by setting them to an empty string `""`) when resetting the form or when the input returns to a normal state.

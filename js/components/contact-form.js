@@ -6,7 +6,17 @@ export function initContactForm() {
 
         if (messageInput && charCount) {
             messageInput.addEventListener('input', () => {
-                charCount.textContent = messageInput.value.length;
+                const currentLength = messageInput.value.length;
+                const maxLength = messageInput.maxLength > 0 ? messageInput.maxLength : 500;
+                charCount.textContent = currentLength;
+
+                if (currentLength >= maxLength) {
+                    charCount.style.color = 'var(--danger)';
+                } else if (currentLength >= Math.floor(maxLength * 0.9)) {
+                    charCount.style.color = 'var(--amber)';
+                } else {
+                    charCount.style.color = '';
+                }
             });
         }
 
@@ -36,7 +46,10 @@ export function initContactForm() {
                     if (announcer) announcer.textContent = 'Message Sent!';
                     submitBtn.style.backgroundColor = 'var(--teal-tint)';
                     contactForm.reset();
-                    if (charCount) charCount.textContent = '0';
+                    if (charCount) {
+                        charCount.textContent = '0';
+                        charCount.style.color = '';
+                    }
                 } else {
                     submitBtn.innerText = 'Error: Please try again.';
                     if (announcer) announcer.textContent = 'Error: Please try again.';
