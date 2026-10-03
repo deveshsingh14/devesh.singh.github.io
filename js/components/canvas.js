@@ -57,7 +57,9 @@ export function initCanvas() {
                     const dy = this.y - mouseY;
                     const distSq = dx * dx + dy * dy;
                     if (distSq < REPEL_RADIUS * REPEL_RADIUS && distSq > 0.01) {
-                        const dist = Math.sqrt(distSq);
+                        const absX = dx < 0 ? -dx : dx;
+                        const absY = dy < 0 ? -dy : dy;
+                        const dist = absX > absY ? absX + 0.428 * absY : absY + 0.428 * absX;
                         const force = (REPEL_RADIUS - dist) / REPEL_RADIUS;
                         this.x += (dx / dist) * force * 1.8;
                         this.y += (dy / dist) * force * 1.8;
@@ -66,6 +68,7 @@ export function initCanvas() {
             }
 
             draw() {
+                ctx.globalAlpha = 1;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
                 ctx.fillStyle = 'rgba(255, 87, 49, 0.75)';
@@ -84,6 +87,7 @@ export function initCanvas() {
 
         function animateParticles() {
             ctx.clearRect(0, 0, width, height);
+            ctx.strokeStyle = 'rgb(255, 87, 49)';
 
             const len = particles.length;
             for (let i = 0; i < len; i++) {
@@ -99,11 +103,13 @@ export function initCanvas() {
                     const mdy = piy - mouseY;
                     const mDistSq = mdx * mdx + mdy * mdy;
                     if (mDistSq < CONNECT_RADIUS * CONNECT_RADIUS) {
-                        const mDist = Math.sqrt(mDistSq);
+                        const absX = mdx < 0 ? -mdx : mdx;
+                        const absY = mdy < 0 ? -mdy : mdy;
+                        const mDist = absX > absY ? absX + 0.428 * absY : absY + 0.428 * absX;
                         ctx.beginPath();
                         ctx.moveTo(pix, piy);
                         ctx.lineTo(mouseX, mouseY);
-                        ctx.strokeStyle = `rgba(255, 87, 49, ${0.65 - mDist / 320})`;
+                        ctx.globalAlpha = Math.max(0, 0.65 - mDist / 320);
                         ctx.lineWidth = 1;
                         ctx.stroke();
                     }
@@ -116,11 +122,13 @@ export function initCanvas() {
                     const distSq = dx * dx + dy * dy;
 
                     if (distSq < 22500) {
-                        const dist = Math.sqrt(distSq);
+                        const absX = dx < 0 ? -dx : dx;
+                        const absY = dy < 0 ? -dy : dy;
+                        const dist = absX > absY ? absX + 0.428 * absY : absY + 0.428 * absX;
                         ctx.beginPath();
                         ctx.moveTo(pix, piy);
                         ctx.lineTo(pj.x, pj.y);
-                        ctx.strokeStyle = `rgba(255, 87, 49, ${0.4 - dist / 375})`;
+                        ctx.globalAlpha = Math.max(0, 0.4 - dist / 375);
                         ctx.lineWidth = 0.8;
                         ctx.stroke();
                     }
