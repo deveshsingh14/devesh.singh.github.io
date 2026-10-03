@@ -1,7 +1,11 @@
 import { typeLines } from '../utils/dom.js';
 
 export function formatUptime(ms) {
-    const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+    const numMs = Number(ms);
+    if (isNaN(numMs)) {
+        return "00d 00:00:00";
+    }
+    const totalSeconds = Math.max(0, Math.floor(numMs / 1000));
     const days = Math.floor(totalSeconds / 86400);
     const hours = Math.floor((totalSeconds % 86400) / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
