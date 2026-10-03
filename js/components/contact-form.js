@@ -6,7 +6,19 @@ export function initContactForm() {
 
         if (messageInput && charCount) {
             messageInput.addEventListener('input', () => {
-                charCount.textContent = messageInput.value.length;
+                const len = messageInput.value.length;
+                charCount.textContent = len;
+
+                const container = document.getElementById('message-char-count-container');
+                if (container) {
+                    if (len >= 500) {
+                        container.style.color = 'var(--danger)';
+                    } else if (len >= 450) {
+                        container.style.color = 'var(--amber)';
+                    } else {
+                        container.style.color = '';
+                    }
+                }
             });
         }
 
@@ -37,6 +49,8 @@ export function initContactForm() {
                     submitBtn.style.backgroundColor = 'var(--teal-tint)';
                     contactForm.reset();
                     if (charCount) charCount.textContent = '0';
+                    const container = document.getElementById('message-char-count-container');
+                    if (container) container.style.color = '';
                 } else {
                     submitBtn.innerText = 'Error: Please try again.';
                     if (announcer) announcer.textContent = 'Error: Please try again.';
