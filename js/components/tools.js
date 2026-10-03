@@ -5,9 +5,9 @@ const BASE_LOWER_CHARS = "abcdefghijklmnopqrstuvwxyz";
 const BASE_NUM_CHARS = "0123456789";
 const AMBIGUOUS_CHARS = "l1IO0";
 
-const UNAMBIG_UPPER_CHARS = BASE_UPPER_CHARS.split('').filter(c => !AMBIGUOUS_CHARS.includes(c)).join('');
-const UNAMBIG_LOWER_CHARS = BASE_LOWER_CHARS.split('').filter(c => !AMBIGUOUS_CHARS.includes(c)).join('');
-const UNAMBIG_NUM_CHARS = BASE_NUM_CHARS.split('').filter(c => !AMBIGUOUS_CHARS.includes(c)).join('');
+const UNAMBIG_UPPER_CHARS = BASE_UPPER_CHARS.replace(/[l1IO0]/g, '');
+const UNAMBIG_LOWER_CHARS = BASE_LOWER_CHARS.replace(/[l1IO0]/g, '');
+const UNAMBIG_NUM_CHARS = BASE_NUM_CHARS.replace(/[l1IO0]/g, '');
 
 function getSecureRandom() {
     const randomBuffer = new Uint32Array(1);
