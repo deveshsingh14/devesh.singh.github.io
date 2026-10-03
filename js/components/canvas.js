@@ -103,13 +103,10 @@ export function initCanvas() {
                     const mdy = piy - mouseY;
                     const mDistSq = mdx * mdx + mdy * mdy;
                     if (mDistSq < CONNECT_RADIUS * CONNECT_RADIUS) {
-                        const absX = mdx < 0 ? -mdx : mdx;
-                        const absY = mdy < 0 ? -mdy : mdy;
-                        const mDist = absX > absY ? absX + 0.428 * absY : absY + 0.428 * absX;
                         ctx.beginPath();
                         ctx.moveTo(pix, piy);
                         ctx.lineTo(mouseX, mouseY);
-                        ctx.globalAlpha = Math.max(0, 0.65 - mDist / 320);
+                        ctx.globalAlpha = 0.65 * (1 - mDistSq / (CONNECT_RADIUS * CONNECT_RADIUS));
                         ctx.lineWidth = 1;
                         ctx.stroke();
                     }
@@ -122,13 +119,10 @@ export function initCanvas() {
                     const distSq = dx * dx + dy * dy;
 
                     if (distSq < 22500) {
-                        const absX = dx < 0 ? -dx : dx;
-                        const absY = dy < 0 ? -dy : dy;
-                        const dist = absX > absY ? absX + 0.428 * absY : absY + 0.428 * absX;
                         ctx.beginPath();
                         ctx.moveTo(pix, piy);
                         ctx.lineTo(pj.x, pj.y);
-                        ctx.globalAlpha = Math.max(0, 0.4 - dist / 375);
+                        ctx.globalAlpha = 0.4 * (1 - distSq / 22500);
                         ctx.lineWidth = 0.8;
                         ctx.stroke();
                     }
