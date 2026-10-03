@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals';
-import { escapeHtml, throttle } from './dom.js';
+import { escapeHtml, throttle, prefersReducedMotion } from './dom.js';
 
 describe('escapeHtml', () => {
     it('escapes standard HTML characters', () => {
@@ -103,5 +103,37 @@ describe('throttle', () => {
 
         // Check if `this` was correctly bound to context
         expect(callback.mock.contexts[0]).toBe(context);
+    });
+});
+
+describe('prefersReducedMotion', () => {
+    let originalMatchMedia;
+
+    beforeEach(() => {
+        originalMatchMedia = window.matchMedia;
+    });
+
+    afterEach(() => {
+        window.matchMedia = originalMatchMedia;
+    });
+
+    it('returns true when prefers-reduced-motion matches', () => {
+        window.matchMedia = jest.fn().mockImplementation(query => ({
+            matches: true,
+            media: query,
+        }));
+
+        expect(prefersReducedMotion()).toBe(true);
+        expect(window.matchMedia).toHaveBeenCalledWith('(prefers-reduced-motion: reduce)');
+    });
+
+    it('returns false when prefers-reduced-motion does not match', () => {
+        window.matchMedia = jest.fn().mockImplementation(query => ({
+            matches: false,
+            media: query,
+        }));
+
+        expect(prefersReducedMotion()).toBe(false);
+        expect(window.matchMedia).toHaveBeenCalledWith('(prefers-reduced-motion: reduce)');
     });
 });
