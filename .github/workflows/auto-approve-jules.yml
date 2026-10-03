@@ -7,8 +7,8 @@ on:
 jobs:
   auto-approve-and-merge:
     runs-on: ubuntu-latest
-    # You can update the actor string if the bot's exact GitHub username is different
-    if: github.actor == 'google-labs-jules[bot]'
+    # Check if the PR body contains the Jules signature, since the PR is authored by your user account
+    if: contains(github.event.pull_request.body, 'PR created automatically by Jules')
     permissions:
       pull-requests: write
       contents: write
