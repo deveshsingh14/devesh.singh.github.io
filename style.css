@@ -2487,13 +2487,13 @@ select.form-input {
 
 .gui-tab.active {
   background-color: #f8f9fa;
-  color: #0d6efd;
+  color: var(--teal);
   font-weight: bold;
-  border-bottom: 2px solid #0d6efd;
+  border-bottom: 2px solid var(--teal);
 }
 
 .gui-tab:focus-visible {
-  outline: 2px solid #0d6efd;
+  outline: 2px solid var(--teal);
   outline-offset: -2px;
 }
 
@@ -2502,7 +2502,7 @@ select.form-input {
 }
 
 .gui-tab-content:focus-visible {
-  outline: 2px solid #0d6efd;
+  outline: 2px solid var(--teal);
   outline-offset: -2px;
 }
 
@@ -2562,17 +2562,18 @@ select.form-input {
 }
 
 .gui-btn.primary {
-  background-color: #0d6efd;
-  color: white;
-  border: none;
+  background-color: var(--teal-tint);
+  color: var(--teal);
+  border: 1px solid var(--teal);
 }
 
 .gui-btn.primary:hover {
-  background-color: #0b5ed7;
+  background-color: var(--teal);
+  color: var(--navy);
 }
 
 .gui-btn:focus-visible {
-  outline: 2px solid #0d6efd;
+  outline: 2px solid var(--teal);
   outline-offset: 2px;
 }
 
@@ -2639,6 +2640,6 @@ select.form-input {
 .gui-input:focus-visible,
 .gui-slider:focus-visible,
 .checkbox-label input:focus-visible {
-  outline: 2px solid #0d6efd;
+  outline: 2px solid var(--teal);
   outline-offset: 2px;
 }
