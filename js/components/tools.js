@@ -281,7 +281,11 @@ export function initTools() {
 
         const script = scripts[scriptKey];
         if(!terminalOutput || !script) return;
-        terminalOutput.innerHTML = `
+
+        if (typeof DOMPurify === 'undefined') {
+            throw new Error("Security check failed: DOMPurify failed to load. Please check your internet connection.");
+        }
+        terminalOutput.innerHTML = DOMPurify.sanitize(`
             <div class="output-line"><span class="prompt" aria-hidden="true">$</span> <span class="command">${script.cmd}</span></div>
             <div class="output-line system-msg">Loading dependencies...</div>
             <div class="output-line prompt-req">${script.promptReq}</div>
@@ -291,7 +295,7 @@ export function initTools() {
                 <button id="run-btn">Run Script</button>
             </div>
             <div id="dynamic-output" aria-live="polite"></div>
-        `;
+        `);
         attachRunEvent(scriptKey);
 
         if (focusInput) {
