@@ -7,6 +7,13 @@ export function initCommandPalette() {
     const cmdkEmpty = document.getElementById('cmdk-empty');
 
     if (cmdkTrigger && cmdkBackdrop && cmdkPalette && cmdkInput && cmdkResults && cmdkEmpty) {
+        const isMac = navigator.userAgent.toLowerCase().includes('mac');
+        const kbdHint = cmdkTrigger.querySelector('.cmdk-trigger-kbd');
+        if (kbdHint) {
+            kbdHint.textContent = isMac ? '⌘K' : 'Ctrl+K';
+        }
+        cmdkTrigger.setAttribute('title', isMac ? 'Command palette (⌘K)' : 'Command palette (Ctrl+K)');
+
         const scrollToSection = (id) => {
             const target = document.getElementById(id);
             if (target) {
