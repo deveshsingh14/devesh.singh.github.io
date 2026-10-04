@@ -122,3 +122,11 @@
 ## 2026-09-27 - Playwright Clipboard Permissions
 **Learning:** When testing clipboard copy functionality in headless Playwright tests, the browser context must be explicitly granted clipboard permissions, otherwise the `navigator.clipboard` methods will fail silently or throw errors.
 **Action:** When testing clipboard functionality with Playwright in Python, explicitly grant clipboard permissions to the browser context using `context.grant_permissions(['clipboard-read', 'clipboard-write'])` before navigating to the page.
+
+## 2026-12-05 - OS-Specific Keyboard Shortcuts
+**Learning:** Displaying Mac-specific keyboard hints (like `⌘K`) to Windows or Linux users is confusing and poor UX. Hardcoding these values neglects a significant portion of the user base.
+**Action:** When displaying keyboard shortcuts in the UI (like `<kbd>` elements or `title` tooltips), dynamically check the user's OS (e.g., via `navigator.userAgent.toLowerCase().includes('mac')`) to show the correct modifier key (like `⌘` vs `Ctrl`) rather than hardcoding a single platform's symbols.
+
+## 2026-12-05 - Esc Keyboard Hints
+**Learning:** For modal dialogs or overlay elements that can be closed via the `Escape` key, it's a helpful micro-UX enhancement to append `(Esc)` to the close button's `title` or `aria-label`. This acts as a discoverable hint for keyboard users without adding visual clutter.
+**Action:** Append keyboard hints like `(Esc)` to the standard `title` attributes of close buttons.
