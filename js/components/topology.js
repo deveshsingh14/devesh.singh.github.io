@@ -132,14 +132,14 @@ export function initTopology() {
             drawerCategory.textContent = CATEGORY_LABELS[node.category] || node.category;
             drawerTitle.textContent = node.label;
             drawerYears.textContent = `${node.years} hands-on experience`;
-            drawerAchievements.innerHTML = '';
+            drawerAchievements.textContent = '';
             node.achievements.forEach(a => {
                 const li = document.createElement('li');
                 li.textContent = a;
                 drawerAchievements.appendChild(li);
             });
 
-            drawerProjects.innerHTML = '';
+            drawerProjects.textContent = '';
             node.projects.forEach(pid => {
                 if (!projectTitleCache[pid]) {
                     try {
