@@ -18,7 +18,9 @@ export function initTheme() {
             applyTheme(nextTheme);
             try {
                 localStorage.setItem('theme', nextTheme);
-            } catch (e) { /* localStorage unavailable (e.g. private mode) — theme just won't persist */ }
+            } catch (e) {
+                console.warn('localStorage is unavailable; theme preference will not persist.', e);
+            }
         });
 
         // Sync the button's a11y state with whatever the head-inline script already applied
