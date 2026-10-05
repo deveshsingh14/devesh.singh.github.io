@@ -99,7 +99,17 @@ export function initCommandPalette() {
                 item.id = `cmdk-item-${cmd.id}`;
                 item.setAttribute('role', 'option');
                 item.setAttribute('aria-selected', index === selectedIndex ? 'true' : 'false');
-                item.innerHTML = `<span>${cmd.label}</span><span class="cmdk-item-hint" aria-hidden="true">${cmd.group === 'Navigate' ? '↵ Jump' : '↵ Run'}</span>`;
+
+                const labelSpan = document.createElement('span');
+                labelSpan.textContent = cmd.label;
+                item.appendChild(labelSpan);
+
+                const hintSpan = document.createElement('span');
+                hintSpan.className = 'cmdk-item-hint';
+                hintSpan.setAttribute('aria-hidden', 'true');
+                hintSpan.textContent = cmd.group === 'Navigate' ? '↵ Jump' : '↵ Run';
+                item.appendChild(hintSpan);
+
                 item.addEventListener('mouseenter', () => {
                     selectedIndex = index;
                     updateSelection();
