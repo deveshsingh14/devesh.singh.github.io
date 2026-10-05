@@ -1,5 +1,21 @@
 import { jest } from '@jest/globals';
-import { escapeHtml, throttle, prefersReducedMotion } from './dom.js';
+import { escapeHtml, throttle, prefersReducedMotion, typeLines } from './dom.js';
+
+describe('typeLines', () => {
+    it('throws an error if DOMPurify is undefined', () => {
+        const originalDOMPurify = global.DOMPurify;
+        delete global.DOMPurify;
+
+        try {
+            const lines = [{ html: '<p>test</p>', delay: 100 }];
+            const container = document.createElement('div');
+
+            expect(() => typeLines(lines, container)).toThrow("Security check failed: DOMPurify failed to load. Please check your internet connection.");
+        } finally {
+            global.DOMPurify = originalDOMPurify;
+        }
+    });
+});
 
 describe('escapeHtml', () => {
     it('escapes standard HTML characters', () => {
