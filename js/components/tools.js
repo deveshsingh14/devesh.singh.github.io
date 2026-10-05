@@ -9,14 +9,17 @@ const UNAMBIG_UPPER_CHARS = BASE_UPPER_CHARS.replace(/[l1IO0]/g, '');
 const UNAMBIG_LOWER_CHARS = BASE_LOWER_CHARS.replace(/[l1IO0]/g, '');
 const UNAMBIG_NUM_CHARS = BASE_NUM_CHARS.replace(/[l1IO0]/g, '');
 
-function getSecureRandom() {
+function getSecureRandomInt(max) {
     const randomBuffer = new Uint32Array(1);
-    window.crypto.getRandomValues(randomBuffer);
-    return randomBuffer[0] / (0xFFFFFFFF + 1);
+    const limit = 0x100000000 - (0x100000000 % max);
+    do {
+        window.crypto.getRandomValues(randomBuffer);
+    } while (randomBuffer[0] >= limit);
+    return randomBuffer[0] % max;
 }
 
 function getRandomChar(str) {
-    return str[Math.floor(getSecureRandom() * str.length)];
+    return str[getSecureRandomInt(str.length)];
 }
 
 export function createPasswordString(options) {
@@ -61,7 +64,7 @@ export function createPasswordString(options) {
     }
 
     for (let i = passwordChars.length - 1; i > 0; i--) {
-        const j = Math.floor(getSecureRandom() * (i + 1));
+        const j = getSecureRandomInt(i + 1);
         [passwordChars[i], passwordChars[j]] = [passwordChars[j], passwordChars[i]];
     }
 
@@ -487,7 +490,7 @@ export function initTools() {
 
         let words = [];
         for (let i = 0; i < numWords; i++) {
-            let word = wordlist[Math.floor(getSecureRandom() * wordlist.length)];
+            let word = wordlist[getSecureRandomInt(wordlist.length)];
             if (capitalize) {
                 word = word.charAt(0).toUpperCase() + word.slice(1);
             }
