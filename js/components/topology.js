@@ -158,6 +158,7 @@ export function initTopology() {
                         const titleEl = document.querySelector(`#${CSS.escape(pid)} .project-title`);
                         projectTitleCache[pid] = titleEl ? titleEl.textContent : pid;
                     } catch (e) {
+                        console.warn('Failed to resolve project title:', e);
                         projectTitleCache[pid] = pid;
                     }
                 }
