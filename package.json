@@ -19,8 +19,11 @@
   },
   "homepage": "https://github.com/deveshsingh14/devesh.singh.github.io#readme",
   "devDependencies": {
-    "jest": "^30.4.2",
+    "jest": "^30.5.2",
     "jest-environment-jsdom": "^30.5.2",
     "jsdom": "^29.1.1"
+  },
+  "overrides": {
+    "glob": "^13.0.0"
   }
 }
