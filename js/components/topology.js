@@ -96,7 +96,19 @@ export function initTopology() {
             btn.style.top = `${layout[node.id].yPct}%`;
             btn.setAttribute('aria-haspopup', 'dialog');
             btn.dataset.nodeId = node.id;
-            btn.innerHTML = `<span class="topo-node-dot" aria-hidden="true">${abbreviate(node.label)}</span><span class="topo-node-label">${node.label}</span>`;
+
+            const dotSpan = document.createElement('span');
+            dotSpan.className = 'topo-node-dot';
+            dotSpan.setAttribute('aria-hidden', 'true');
+            dotSpan.textContent = abbreviate(node.label);
+
+            const labelSpan = document.createElement('span');
+            labelSpan.className = 'topo-node-label';
+            labelSpan.textContent = node.label;
+
+            btn.appendChild(dotSpan);
+            btn.appendChild(labelSpan);
+
             btn.addEventListener('click', () => openTopoDrawer(node.id));
             topoMap.appendChild(btn);
         });
