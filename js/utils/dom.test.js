@@ -15,6 +15,143 @@ describe('typeLines', () => {
             global.DOMPurify = originalDOMPurify;
         }
     });
+
+    it('processes lines sequentially and appends them to the container', () => {
+        jest.useFakeTimers();
+        const originalDOMPurify = global.DOMPurify;
+        const originalRAF = window.requestAnimationFrame;
+        global.DOMPurify = { sanitize: jest.fn(html => html.toUpperCase()) };
+        window.requestAnimationFrame = jest.fn();
+
+        try {
+            const lines = [
+                { html: '<span>line 1</span>', delay: 100 },
+                { html: '<span>line 2</span>', delay: 200 }
+            ];
+            const container = document.createElement('div');
+            const onDone = jest.fn();
+
+            typeLines(lines, container, onDone);
+
+            // First line is added immediately
+            expect(global.DOMPurify.sanitize).toHaveBeenCalledWith('<span>line 1</span>');
+            expect(container.children.length).toBe(1);
+            expect(container.children[0].innerHTML).toBe('<span>LINE 1</span>');
+            expect(window.requestAnimationFrame).toHaveBeenCalledTimes(1);
+            expect(onDone).not.toHaveBeenCalled();
+
+            // Advance time for first delay
+            jest.advanceTimersByTime(100);
+
+            // Second line is added
+            expect(global.DOMPurify.sanitize).toHaveBeenCalledWith('<span>line 2</span>');
+            expect(container.children.length).toBe(2);
+            expect(container.children[1].innerHTML).toBe('<span>LINE 2</span>');
+            expect(window.requestAnimationFrame).toHaveBeenCalledTimes(2);
+            expect(onDone).not.toHaveBeenCalled();
+
+            // Advance time for second delay
+            jest.advanceTimersByTime(200);
+
+            // Done callback is called
+            expect(onDone).toHaveBeenCalledTimes(1);
+        } finally {
+            global.DOMPurify = originalDOMPurify;
+            window.requestAnimationFrame = originalRAF;
+            jest.useRealTimers();
+        }
+    });
+
+    it('applies correct initial and animated styles', () => {
+        const originalDOMPurify = global.DOMPurify;
+        const originalRAF = window.requestAnimationFrame;
+        global.DOMPurify = { sanitize: jest.fn(html => html) };
+        window.requestAnimationFrame = jest.fn();
+
+        try {
+            const lines = [{ html: 'test', delay: 100 }];
+            const container = document.createElement('div');
+
+            typeLines(lines, container);
+
+            const addedDiv = container.children[0];
+
+            // Check initial styles
+            expect(addedDiv.style.opacity).toBe('0');
+            expect(addedDiv.style.transform).toBe('translateY(4px)');
+            expect(addedDiv.style.transition).toBe('opacity 0.2s ease, transform 0.2s ease');
+
+            // Simulate requestAnimationFrame execution
+            const rafCallback = window.requestAnimationFrame.mock.calls[0][0];
+            rafCallback();
+
+            // Check animated styles
+            expect(addedDiv.style.opacity).toBe('1');
+            expect(addedDiv.style.transform).toBe('translateY(0)');
+        } finally {
+            global.DOMPurify = originalDOMPurify;
+            window.requestAnimationFrame = originalRAF;
+        }
+    });
+
+    it('updates container scrollTop', () => {
+        const originalDOMPurify = global.DOMPurify;
+        const originalRAF = window.requestAnimationFrame;
+        global.DOMPurify = { sanitize: jest.fn(html => html) };
+        window.requestAnimationFrame = jest.fn();
+
+        try {
+            const lines = [{ html: 'test', delay: 100 }];
+            const container = document.createElement('div');
+
+            // Mock scrollHeight
+            Object.defineProperty(container, 'scrollHeight', {
+                value: 500,
+                configurable: true
+            });
+
+            typeLines(lines, container);
+
+            expect(container.scrollTop).toBe(500);
+        } finally {
+            global.DOMPurify = originalDOMPurify;
+            window.requestAnimationFrame = originalRAF;
+        }
+    });
+
+    it('calls onDone callback when all lines are processed (empty array)', () => {
+        const lines = [];
+        const container = document.createElement('div');
+        const onDone = jest.fn();
+
+        typeLines(lines, container, onDone);
+
+        expect(onDone).toHaveBeenCalledTimes(1);
+    });
+
+    it('handles missing onDone callback gracefully', () => {
+        jest.useFakeTimers();
+        const originalDOMPurify = global.DOMPurify;
+        const originalRAF = window.requestAnimationFrame;
+        global.DOMPurify = { sanitize: jest.fn(html => html) };
+        window.requestAnimationFrame = jest.fn();
+
+        try {
+            const lines = [{ html: 'test', delay: 100 }];
+            const container = document.createElement('div');
+
+            // Should not throw
+            expect(() => {
+                typeLines(lines, container);
+                jest.advanceTimersByTime(100);
+            }).not.toThrow();
+        } finally {
+            global.DOMPurify = originalDOMPurify;
+            window.requestAnimationFrame = originalRAF;
+            jest.useRealTimers();
+        }
+    });
+
 });
 
 describe('escapeHtml', () => {
