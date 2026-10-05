@@ -58,7 +58,7 @@ export function initCommandPalette() {
                             }
                         }, 2000);
                     }
-                }).catch(() => {});
+                }).catch((err) => { console.error('Failed to copy email to clipboard:', err); });
             } },
             { id: 'action-github', group: 'Actions', label: 'Open GitHub profile', run: () => window.open('https://github.com/deveshsingh14', '_blank', 'noopener') },
             { id: 'action-linkedin', group: 'Actions', label: 'Open LinkedIn profile', run: () => window.open('https://www.linkedin.com/in/devesh-s-4ab189263', '_blank', 'noopener') },
