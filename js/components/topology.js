@@ -118,8 +118,8 @@ export function initTopology() {
                 if (!focusables.length) return;
                 const first = focusables[0];
                 const last = focusables[focusables.length - 1];
-                if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-                else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+                if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus({ preventScroll: true }); }
+                else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus({ preventScroll: true }); }
             }
         }
 
@@ -157,14 +157,14 @@ export function initTopology() {
                 drawerProjects.appendChild(li);
             });
             topoDrawer.hidden = false;
-            drawerPanel.focus();
+            drawerPanel.focus({ preventScroll: true });
             document.addEventListener('keydown', onDrawerKeydown);
         }
 
         function closeTopoDrawer() {
             topoDrawer.hidden = true;
             document.removeEventListener('keydown', onDrawerKeydown);
-            if (lastFocusedNode) lastFocusedNode.focus();
+            if (lastFocusedNode) lastFocusedNode.focus({ preventScroll: true });
         }
 
         drawerClose.addEventListener('click', closeTopoDrawer);

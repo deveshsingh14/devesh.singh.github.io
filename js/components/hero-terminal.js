@@ -210,7 +210,7 @@ export function initHeroTerminal() {
 
         if (heroTermBody) {
             heroTermBody.addEventListener('click', (e) => {
-                if (e.target !== heroTermInput) heroTermInput.focus();
+                if (e.target !== heroTermInput) heroTermInput.focus({ preventScroll: true });
             });
         }
 
