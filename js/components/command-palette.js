@@ -26,7 +26,7 @@ export function initCommandPalette() {
             const heroTerminalInput = document.getElementById('hero-term-input');
             if (heroTerminalInput) {
                 heroTerminalInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                heroTerminalInput.focus();
+                heroTerminalInput.focus({ preventScroll: true });
             }
         };
 
@@ -171,7 +171,7 @@ export function initCommandPalette() {
             cmdkPalette.hidden = false;
             cmdkInput.value = '';
             filterCommands();
-            cmdkInput.focus();
+            cmdkInput.focus({ preventScroll: true });
             cmdkInput.setAttribute("aria-expanded", "true");
             document.addEventListener('keydown', onPaletteKeydown);
         }
@@ -182,7 +182,7 @@ export function initCommandPalette() {
             document.removeEventListener('keydown', onPaletteKeydown);
             cmdkInput.setAttribute("aria-expanded", "false");
             if (lastFocusedBeforePalette && typeof lastFocusedBeforePalette.focus === 'function') {
-                lastFocusedBeforePalette.focus();
+                lastFocusedBeforePalette.focus({ preventScroll: true });
             }
         }
 

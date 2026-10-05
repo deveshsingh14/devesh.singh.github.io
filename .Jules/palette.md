@@ -130,3 +130,6 @@
 ## 2026-12-05 - Esc Keyboard Hints
 **Learning:** For modal dialogs or overlay elements that can be closed via the `Escape` key, it's a helpful micro-UX enhancement to append `(Esc)` to the close button's `title` or `aria-label`. This acts as a discoverable hint for keyboard users without adding visual clutter.
 **Action:** Append keyboard hints like `(Esc)` to the standard `title` attributes of close buttons.
+## 2026-10-05 - Prevent Jarring Page Jumps on Programmatic Focus
+**Learning:** When programmatically placing focus on an element using `element.focus()`, the browser natively attempts to scroll the element into view. If the element is already partially visible, or if the developer just finished scrolling smoothly to it via `.scrollIntoView({ behavior: 'smooth' })`, the `.focus()` call will cause a jarring, instantaneous scroll jump that interrupts the smooth transition or disrupts the user's reading flow.
+**Action:** When programmatically managing focus via JavaScript (e.g., dynamically revealing components, closing modals, cycling through options, or switching tabs), always use `element.focus({ preventScroll: true })` instead of a plain `.focus()` to prevent these jarring page jumps, unless scrolling directly to the element is explicitly desired.

@@ -333,7 +333,7 @@ export function initTools() {
                 if (runAnnouncer) runAnnouncer.textContent = '';
                 runBtn.classList.remove('running');
                 inputField.value = '';
-                inputField.focus();
+                inputField.focus({ preventScroll: true });
             });
         };
 
