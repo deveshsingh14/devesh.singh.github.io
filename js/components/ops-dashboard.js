@@ -16,6 +16,119 @@ export function formatUptime(ms) {
 window.formatUptime = formatUptime;
 
 
+
+const STAGE_ORDER = ['build', 'test', 'scan', 'deploy'];
+
+const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
+let buildNumber = 127;
+
+const STAGE_LOGS = {
+    build: () => {
+        buildNumber += 1;
+        return [
+            { html: `<div class="log-line">[build] Installing dependencies…</div>`, delay: 350 },
+            { html: `<div class="log-line">[build] Compiling artifacts…</div>`, delay: 450 },
+            { html: `<div class="log-line success-msg">[build] Artifact created: portfolio-app-v2.4.${buildNumber}.tar.gz</div>`, delay: 250 }
+        ];
+    },
+    test: () => [
+        { html: `<div class="log-line">[test] Running unit test suite…</div>`, delay: 350 },
+        { html: `<div class="log-line">[test] 128 passed, 0 failed</div>`, delay: 400 },
+        { html: `<div class="log-line success-msg">[test] Coverage: 94.2%</div>`, delay: 250 }
+    ],
+    scan: () => [
+        { html: `<div class="log-line">[scan] Running SonarQube static analysis…</div>`, delay: 350 },
+        { html: `<div class="log-line">[scan] Scanning dependencies for CVEs…</div>`, delay: 450 }
+    ],
+    deploy: () => [
+        { html: `<div class="log-line">[deploy] Rolling out via ArgoCD…</div>`, delay: 350 },
+        { html: `<div class="log-line">[deploy] Waiting for readiness probes…</div>`, delay: 450 },
+        { html: `<div class="log-line success-msg">[deploy] Rollout complete. All replicas healthy.</div>`, delay: 250 }
+    ]
+};
+
+const SCAN_RETRY_LOGS = [
+    { html: `<div class="log-line error-msg">[scan] Vulnerable dependency detected: lodash@4.17.15 (CVE-2020-8203)</div>`, delay: 300 },
+    { html: `<div class="log-line">[scan] Auto-patching to lodash@4.17.21…</div>`, delay: 400 },
+    { html: `<div class="log-line success-msg">[scan] Re-scan clean. 0 vulnerabilities found.</div>`, delay: 250 }
+];
+
+const shouldScanFailThisRun = () => Math.random() < 0.2;
+
+const fillConnectorAfter = (stageName, pipelineConnectorEls) => {
+    const idx = STAGE_ORDER.indexOf(stageName);
+    const connector = pipelineConnectorEls[idx];
+    if (connector) connector.classList.add('filled');
+};
+
+const resetPipelineUi = (pipelineStageEls, pipelineConnectorEls, pipelineLog) => {
+    pipelineStageEls.forEach(el => el.removeAttribute('data-status'));
+    pipelineConnectorEls.forEach(el => el.classList.remove('filled'));
+    pipelineLog.innerHTML = '';
+};
+
+const runPipelineCore = (PIPELINE_STATE, runPipelineBtn, pipelineStatusLive, pipelineLog, pipelineStageEls, pipelineConnectorEls, stageElByName, announcer) => {
+    if (PIPELINE_STATE.running) return;
+    PIPELINE_STATE.running = true;
+    resetPipelineUi(pipelineStageEls, pipelineConnectorEls, pipelineLog);
+
+    runPipelineBtn.disabled = true;
+    runPipelineBtn.innerHTML = '<span class="spinner" aria-hidden="true"></span> Running…';
+    if (announcer) announcer.textContent = 'Running…';
+    pipelineStatusLive.textContent = 'Starting pipeline…';
+
+    let scanRetried = false;
+    let stageIndex = 0;
+
+    const finish = () => {
+        PIPELINE_STATE.running = false;
+        pipelineStatusLive.textContent = 'Deployment complete. All stages green.';
+        runPipelineBtn.disabled = false;
+        runPipelineBtn.textContent = 'Run Pipeline';
+        if (announcer) announcer.textContent = '';
+        if (typeof window.__incrementDeploymentCount === 'function') {
+            window.__incrementDeploymentCount();
+        }
+    };
+
+    const advance = () => {
+        stageIndex += 1;
+        if (stageIndex < STAGE_ORDER.length) {
+            runStage(STAGE_ORDER[stageIndex]);
+        } else {
+            finish();
+        }
+    };
+
+    const runStage = (name) => {
+        const el = stageElByName[name];
+        el.setAttribute('data-status', 'running');
+        pipelineStatusLive.textContent = `${capitalize(name)}: running…`;
+
+        typeLines(STAGE_LOGS[name](), pipelineLog, () => {
+            if (name === 'scan' && !scanRetried && shouldScanFailThisRun()) {
+                scanRetried = true;
+                el.setAttribute('data-status', 'fail');
+                pipelineStatusLive.textContent = 'Scan: vulnerability found — patching and retrying…';
+                typeLines(SCAN_RETRY_LOGS, pipelineLog, () => {
+                    el.setAttribute('data-status', 'success');
+                    fillConnectorAfter(name, pipelineConnectorEls);
+                    pipelineStatusLive.textContent = 'Scan: success (after 1 retry).';
+                    advance();
+                });
+                return;
+            }
+            el.setAttribute('data-status', 'success');
+            fillConnectorAfter(name, pipelineConnectorEls);
+            pipelineStatusLive.textContent = `${capitalize(name)}: success.`;
+            advance();
+        });
+    };
+
+    runStage(STAGE_ORDER[0]);
+};
+
 function initPipeline(PIPELINE_STATE) {
     const runPipelineBtn = document.getElementById('run-pipeline');
     const pipelineStatusLive = document.getElementById('pipeline-status');
@@ -24,118 +137,12 @@ function initPipeline(PIPELINE_STATE) {
     const pipelineConnectorEls = document.querySelectorAll('.pipeline-connector');
 
     if (runPipelineBtn && pipelineStatusLive && pipelineLog && pipelineStageEls.length) {
-        const STAGE_ORDER = ['build', 'test', 'scan', 'deploy'];
         const stageElByName = {};
         pipelineStageEls.forEach(el => { stageElByName[el.getAttribute('data-stage')] = el; });
 
-        const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
-
-        let buildNumber = 127;
-
-        const STAGE_LOGS = {
-            build: () => {
-                buildNumber += 1;
-                return [
-                    { html: `<div class="log-line">[build] Installing dependencies…</div>`, delay: 350 },
-                    { html: `<div class="log-line">[build] Compiling artifacts…</div>`, delay: 450 },
-                    { html: `<div class="log-line success-msg">[build] Artifact created: portfolio-app-v2.4.${buildNumber}.tar.gz</div>`, delay: 250 }
-                ];
-            },
-            test: () => [
-                { html: `<div class="log-line">[test] Running unit test suite…</div>`, delay: 350 },
-                { html: `<div class="log-line">[test] 128 passed, 0 failed</div>`, delay: 400 },
-                { html: `<div class="log-line success-msg">[test] Coverage: 94.2%</div>`, delay: 250 }
-            ],
-            scan: () => [
-                { html: `<div class="log-line">[scan] Running SonarQube static analysis…</div>`, delay: 350 },
-                { html: `<div class="log-line">[scan] Scanning dependencies for CVEs…</div>`, delay: 450 }
-            ],
-            deploy: () => [
-                { html: `<div class="log-line">[deploy] Rolling out via ArgoCD…</div>`, delay: 350 },
-                { html: `<div class="log-line">[deploy] Waiting for readiness probes…</div>`, delay: 450 },
-                { html: `<div class="log-line success-msg">[deploy] Rollout complete. All replicas healthy.</div>`, delay: 250 }
-            ]
-        };
-
-        const SCAN_RETRY_LOGS = [
-            { html: `<div class="log-line error-msg">[scan] Vulnerable dependency detected: lodash@4.17.15 (CVE-2020-8203)</div>`, delay: 300 },
-            { html: `<div class="log-line">[scan] Auto-patching to lodash@4.17.21…</div>`, delay: 400 },
-            { html: `<div class="log-line success-msg">[scan] Re-scan clean. 0 vulnerabilities found.</div>`, delay: 250 }
-        ];
-
-        const shouldScanFailThisRun = () => Math.random() < 0.2;
-
-        const fillConnectorAfter = (stageName) => {
-            const idx = STAGE_ORDER.indexOf(stageName);
-            const connector = pipelineConnectorEls[idx];
-            if (connector) connector.classList.add('filled');
-        };
-
-        const resetPipelineUi = () => {
-            pipelineStageEls.forEach(el => el.removeAttribute('data-status'));
-            pipelineConnectorEls.forEach(el => el.classList.remove('filled'));
-            pipelineLog.innerHTML = '';
-        };
-
         const runPipeline = () => {
-            if (PIPELINE_STATE.running) return;
-            PIPELINE_STATE.running = true;
-            resetPipelineUi();
             const announcer = document.getElementById('pipeline-run-announcer');
-            runPipelineBtn.disabled = true;
-            runPipelineBtn.innerHTML = '<span class="spinner" aria-hidden="true"></span> Running…';
-            if (announcer) announcer.textContent = 'Running…';
-            pipelineStatusLive.textContent = 'Starting pipeline…';
-
-            let scanRetried = false;
-            let stageIndex = 0;
-
-            const finish = () => {
-                PIPELINE_STATE.running = false;
-                pipelineStatusLive.textContent = 'Deployment complete. All stages green.';
-                runPipelineBtn.disabled = false;
-                runPipelineBtn.textContent = 'Run Pipeline';
-                if (announcer) announcer.textContent = '';
-                if (typeof window.__incrementDeploymentCount === 'function') {
-                    window.__incrementDeploymentCount();
-                }
-            };
-
-            const advance = () => {
-                stageIndex += 1;
-                if (stageIndex < STAGE_ORDER.length) {
-                    runStage(STAGE_ORDER[stageIndex]);
-                } else {
-                    finish();
-                }
-            };
-
-            const runStage = (name) => {
-                const el = stageElByName[name];
-                el.setAttribute('data-status', 'running');
-                pipelineStatusLive.textContent = `${capitalize(name)}: running…`;
-
-                typeLines(STAGE_LOGS[name](), pipelineLog, () => {
-                    if (name === 'scan' && !scanRetried && shouldScanFailThisRun()) {
-                        scanRetried = true;
-                        el.setAttribute('data-status', 'fail');
-                        pipelineStatusLive.textContent = 'Scan: vulnerability found — patching and retrying…';
-                        typeLines(SCAN_RETRY_LOGS, pipelineLog, () => {
-                            el.setAttribute('data-status', 'success');
-                            fillConnectorAfter(name);
-                            pipelineStatusLive.textContent = 'Scan: success (after 1 retry).';
-                            advance();
-                        });
-                        return;
-                    }
-                    el.setAttribute('data-status', 'success');
-                    fillConnectorAfter(name);
-                    pipelineStatusLive.textContent = `${capitalize(name)}: success.`;
-                    advance();
-                });
-            };
-
-            runStage(STAGE_ORDER[0]);
+            runPipelineCore(PIPELINE_STATE, runPipelineBtn, pipelineStatusLive, pipelineLog, pipelineStageEls, pipelineConnectorEls, stageElByName, announcer);
         };
 
         runPipelineBtn.addEventListener('click', runPipeline);
