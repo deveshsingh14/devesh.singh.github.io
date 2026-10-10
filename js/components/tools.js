@@ -515,15 +515,26 @@ export function initTools() {
         });
 
         function copyToClipboard(textToCopy, buttonElement, announcerElement) {
-            navigator.clipboard.writeText(textToCopy);
-            buttonElement.innerText = "Copied!";
-            if (announcerElement) announcerElement.textContent = "Copied to clipboard!";
-            setTimeout(() => {
-                buttonElement.innerText = "Copy";
-                if (announcerElement && announcerElement.textContent === "Copied to clipboard!") {
-                    announcerElement.textContent = "";
-                }
-            }, 2000);
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                buttonElement.innerText = "Copied!";
+                if (announcerElement) announcerElement.textContent = "Copied to clipboard!";
+                setTimeout(() => {
+                    buttonElement.innerText = "Copy";
+                    if (announcerElement && announcerElement.textContent === "Copied to clipboard!") {
+                        announcerElement.textContent = "";
+                    }
+                }, 2000);
+            }).catch((err) => {
+                console.error('Failed to copy text to clipboard:', err);
+                buttonElement.innerText = "Error";
+                if (announcerElement) announcerElement.textContent = "Error copying to clipboard";
+                setTimeout(() => {
+                    buttonElement.innerText = "Copy";
+                    if (announcerElement && announcerElement.textContent === "Error copying to clipboard") {
+                        announcerElement.textContent = "";
+                    }
+                }, 2000);
+            });
         }
 
         pgRefresh.addEventListener('click', generatePassword);
