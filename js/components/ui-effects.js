@@ -27,6 +27,24 @@ export function initUIEffects() {
 
     // Change navbar style on scroll
     if (navbar) {
+        let sectionCache = [];
+        let cachedHeroHeight = 0;
+
+        const updateLayoutCache = () => {
+            if (hero) cachedHeroHeight = hero.offsetHeight;
+            sectionCache = Array.from(sections).map(section => ({
+                id: section.getAttribute('id'),
+                top: section.offsetTop,
+                height: section.clientHeight
+            }));
+        };
+
+        // Initialize cache
+        updateLayoutCache();
+
+        // Update cache on resize to handle layout changes
+        window.addEventListener('resize', throttle(updateLayoutCache));
+
         window.addEventListener('scroll', throttle(() => {
             const scrollY = window.scrollY;
 
@@ -40,7 +58,7 @@ export function initUIEffects() {
 
             // Reveal the persistent social sidebars and scroll rail once the hero has scrolled by
             if (hero && sideSocial && sideEmail) {
-                const pastHero = scrollY > hero.offsetHeight - 200;
+                const pastHero = scrollY > cachedHeroHeight - 200;
                 sideSocial.classList.toggle('visible', pastHero);
                 sideEmail.classList.toggle('visible', pastHero);
                 if (scrollRail) scrollRail.classList.toggle('visible', pastHero);
@@ -48,11 +66,9 @@ export function initUIEffects() {
 
             // Scroll spy logic
             let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                if (scrollY >= (sectionTop - sectionHeight / 3)) {
-                    current = section.getAttribute('id');
+            sectionCache.forEach(section => {
+                if (scrollY >= (section.top - section.height / 3)) {
+                    current = section.id;
                 }
             });
 
