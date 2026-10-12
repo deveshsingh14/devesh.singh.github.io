@@ -6,10 +6,14 @@ export function initProjects() {
     if (filterButtons.length && filterStatus) {
         const FILTER_LABELS = { cloud: 'Cloud', 'ci-cd': 'CI/CD', 'ai-ml': 'AI/ML', testing: 'Testing' };
 
+        projectCards.forEach(card => {
+            card._cachedCategories = (card.dataset.categories || '').split(' ');
+        });
+
         const applyFilter = (filter) => {
             let visibleCount = 0;
             projectCards.forEach(card => {
-                const categories = (card.dataset.categories || '').split(' ');
+                const categories = card._cachedCategories;
                 const show = filter === 'all' || categories.includes(filter);
                 if (show) visibleCount++;
 
