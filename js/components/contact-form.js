@@ -58,6 +58,7 @@ export function initContactForm() {
                     submitBtn.style.borderColor = 'var(--danger)';
                 }
             } catch (error) {
+                console.error('Contact form submission error:', error);
                 submitBtn.innerText = 'Error: Network issue.';
                 if (announcer) announcer.textContent = 'Error: Network issue.';
                 submitBtn.style.color = 'var(--danger)';
