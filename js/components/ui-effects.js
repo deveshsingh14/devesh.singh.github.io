@@ -125,8 +125,16 @@ export function initUIEffects() {
     // 3D Tilt Effect for Project Cards
     const projectCards = document.querySelectorAll('.project-card');
     projectCards.forEach(card => {
+        let cachedRect;
+        card.addEventListener('mouseenter', () => {
+            cachedRect = card.getBoundingClientRect();
+        });
+
         card.addEventListener('mousemove', throttle((e) => {
-            const rect = card.getBoundingClientRect();
+            if (!cachedRect) {
+                cachedRect = card.getBoundingClientRect();
+            }
+            const rect = cachedRect;
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
 
