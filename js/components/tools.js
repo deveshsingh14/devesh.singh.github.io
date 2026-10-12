@@ -185,7 +185,7 @@ export function initTools() {
                         { html: `<div class="output-line success-msg">[✓] Calculation complete.</div>`, delay: 100 }
                     );
 
-                } catch (e) {
+                } catch {
                     lines.push({ html: `<div class="output-line error-msg">Error: Invalid CIDR format. Please use x.x.x.x/y format.</div>`, delay: 200 });
                 }
 
