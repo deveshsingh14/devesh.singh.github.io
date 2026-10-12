@@ -136,3 +136,6 @@
 ## 2026-10-09 - Focus State Visual Disconnect
 **Learning:** When styling inputs within container rows (like a search input next to an icon), applying `:focus-visible` solely to the input element can result in a disconnected visual experience where the adjacent icon remains dimmed, failing to clearly signal that the entire row is now the active interactive context.
 **Action:** Utilize the `:focus-within` pseudo-class on the parent container (e.g., `.cmdk-input-row:focus-within .cmdk-input-icon`) to apply focus-state styling (like accent colors) to adjacent elements, ensuring a cohesive and clear visual focus indicator for the entire input component.
+## 2026-10-12 - Descriptive ARIA labels for isolated context
+**Learning:** Icon buttons, or buttons with generic text like "Copy" or "Refresh" nested inside complex tabbed components (like a password/passphrase generator), become confusing when navigated to out of context using a screen reader. A user tabbing rapidly might hear "Copy, button" without knowing *what* they are copying.
+**Action:** Always provide explicit, context-rich `aria-label`s (e.g., `aria-label="Copy password to clipboard"`) for action buttons that use generic visible text or icons, so they remain fully descriptive when isolated from their visual surroundings.
