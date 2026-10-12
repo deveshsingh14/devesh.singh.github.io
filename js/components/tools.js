@@ -3,7 +3,6 @@ import { escapeHtml } from '../utils/dom.js';
 const BASE_UPPER_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const BASE_LOWER_CHARS = "abcdefghijklmnopqrstuvwxyz";
 const BASE_NUM_CHARS = "0123456789";
-const AMBIGUOUS_CHARS = "l1IO0";
 
 const UNAMBIG_UPPER_CHARS = BASE_UPPER_CHARS.replace(/[l1IO0]/g, '');
 const UNAMBIG_LOWER_CHARS = BASE_LOWER_CHARS.replace(/[l1IO0]/g, '');
