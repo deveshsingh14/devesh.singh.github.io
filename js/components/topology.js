@@ -137,6 +137,18 @@ export function initTopology() {
 
         const projectTitleCache = {};
 
+        // Pre-cache project titles during component initialization to avoid redundant DOM queries
+        // in the openTopoDrawer event listener loop.
+        const projectCards = document.querySelectorAll('.project-card');
+        projectCards.forEach(card => {
+            if (card.id) {
+                const titleEl = card.querySelector('.project-title');
+                if (titleEl) {
+                    projectTitleCache[card.id] = titleEl.textContent;
+                }
+            }
+        });
+
         function openTopoDrawer(nodeId) {
             const node = TOPOLOGY_DATA.find(n => n.id === nodeId);
             if (!node) return;
@@ -153,19 +165,10 @@ export function initTopology() {
 
             drawerProjects.textContent = '';
             node.projects.forEach(pid => {
-                if (!projectTitleCache[pid]) {
-                    try {
-                        const titleEl = document.querySelector(`#${CSS.escape(pid)} .project-title`);
-                        projectTitleCache[pid] = titleEl ? titleEl.textContent : pid;
-                    } catch (e) {
-                        console.warn('Failed to resolve project title:', e);
-                        projectTitleCache[pid] = pid;
-                    }
-                }
                 const li = document.createElement('li');
                 const aEl = document.createElement('a');
                 aEl.href = `#${pid}`;
-                aEl.textContent = projectTitleCache[pid];
+                aEl.textContent = projectTitleCache[pid] || pid;
                 li.appendChild(aEl);
                 drawerProjects.appendChild(li);
             });
