@@ -65,6 +65,8 @@ export function initCommandPalette() {
             { id: 'action-email', group: 'Actions', label: 'Send an email', run: () => { window.location.href = 'mailto:devesh141singh@gmail.com'; } }
         ];
 
+        PALETTE_COMMANDS.forEach(cmd => cmd.lowerLabel = cmd.label.toLowerCase());
+
         let filteredCommands = PALETTE_COMMANDS.slice();
         let selectedIndex = 0;
         let lastFocusedBeforePalette = null;
@@ -142,7 +144,7 @@ export function initCommandPalette() {
         const filterCommands = () => {
             const query = cmdkInput.value.trim().toLowerCase();
             filteredCommands = query
-                ? PALETTE_COMMANDS.filter(cmd => cmd.label.toLowerCase().includes(query))
+                ? PALETTE_COMMANDS.filter(cmd => cmd.lowerLabel.includes(query))
                 : PALETTE_COMMANDS.slice();
             selectedIndex = 0;
             renderResults();
