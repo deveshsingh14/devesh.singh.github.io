@@ -70,7 +70,7 @@ export function createPasswordString(options) {
     return { password: passwordChars.join('').substring(0, length) };
 }
 
-export function initTools() {
+function initTerminalTools() {
     let currentAnimation = null;
     const guiBodies = document.querySelectorAll('.gui-body');
 
@@ -402,6 +402,9 @@ export function initTools() {
         renderTerminal('k8s-deploy');
     }
 
+}
+
+function initPasswordGenerator() {
     // Password Generator
     const guiTabs = document.querySelectorAll('.gui-tab');
     const guiTabContents = document.querySelectorAll('.gui-tab-content');
@@ -562,6 +565,9 @@ export function initTools() {
         generatePassphrase();
     }
 
+}
+
+function initDocxToPdf() {
     // DOCX to PDF Logic
     const docxUploadArea = document.getElementById('docx-upload-area');
     const docxFileInput = document.getElementById('docx-file-input');
@@ -670,5 +676,11 @@ export function initTools() {
             }
         });
     }
+}
+
+export function initTools() {
+    initTerminalTools();
+    initPasswordGenerator();
+    initDocxToPdf();
 }
 document.addEventListener('DOMContentLoaded', initTools);
