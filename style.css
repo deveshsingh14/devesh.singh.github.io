@@ -640,6 +640,10 @@ ul, ol {
   flex-shrink: 0;
 }
 
+.cmdk-input-row:focus-within .cmdk-input-icon {
+  color: var(--console-accent);
+}
+
 .cmdk-input {
   flex-grow: 1;
   background: transparent;
