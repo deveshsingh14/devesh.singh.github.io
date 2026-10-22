@@ -491,12 +491,24 @@ function initPasswordGenerator() {
         const capitalize = ppCap.checked;
 
         let words = [];
-        for (let i = 0; i < numWords; i++) {
-            let word = wordlist[getSecureRandomInt(wordlist.length)];
-            if (capitalize) {
-                word = word.charAt(0).toUpperCase() + word.slice(1);
+        if (numWords > 0) {
+            const randomValues = new Uint32Array(numWords);
+            window.crypto.getRandomValues(randomValues);
+            const limit = 0x100000000 - (0x100000000 % wordlist.length);
+
+            for (let i = 0; i < numWords; i++) {
+                let val = randomValues[i];
+                while (val >= limit) {
+                    const single = new Uint32Array(1);
+                    window.crypto.getRandomValues(single);
+                    val = single[0];
+                }
+                let word = wordlist[val % wordlist.length];
+                if (capitalize) {
+                    word = word.charAt(0).toUpperCase() + word.slice(1);
+                }
+                words.push(word);
             }
-            words.push(word);
         }
 
         const passphrase = words.join(separator);
