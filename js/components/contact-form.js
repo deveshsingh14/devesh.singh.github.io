@@ -26,11 +26,14 @@ export function initContactForm() {
             e.preventDefault();
 
             const submitBtn = contactForm.querySelector('.submit-btn');
-            const originalHTML = submitBtn.innerHTML;
+            const originalNodes = Array.from(submitBtn.childNodes);
             const announcer = document.getElementById('contact-submit-announcer');
 
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner" aria-hidden="true"></span> Sending...';
+            const spinner = document.createElement('span');
+            spinner.className = 'spinner';
+            spinner.setAttribute('aria-hidden', 'true');
+            submitBtn.replaceChildren(spinner, ' Sending...');
             if (announcer) announcer.textContent = 'Sending...';
 
             try {
@@ -66,7 +69,7 @@ export function initContactForm() {
             } finally {
                 setTimeout(() => {
                     submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalHTML;
+                    submitBtn.replaceChildren(...originalNodes);
                     if (announcer) announcer.textContent = '';
                     submitBtn.style.backgroundColor = '';
                     submitBtn.style.color = '';
