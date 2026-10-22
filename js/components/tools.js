@@ -661,8 +661,11 @@ function initDocxToPdf() {
                 if (typeof DOMPurify === 'undefined') {
                     throw new Error("Security check failed: DOMPurify failed to load. Please check your internet connection.");
                 }
-                htmlContent = DOMPurify.sanitize(htmlContent);
-                docxPreview.innerHTML = `<div style="padding: 40px; color: #000; background: #fff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: 1.6;">${htmlContent}</div>`;
+                const sanitizedFragment = DOMPurify.sanitize(htmlContent, { RETURN_DOM_FRAGMENT: true });
+                const wrapperDiv = document.createElement('div');
+                wrapperDiv.style.cssText = "padding: 40px; color: #000; background: #fff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: 1.6;";
+                wrapperDiv.appendChild(sanitizedFragment);
+                docxPreview.replaceChildren(wrapperDiv);
 
                 docxStatus.innerText = 'Generating PDF file...';
 
