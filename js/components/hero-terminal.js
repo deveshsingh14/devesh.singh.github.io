@@ -57,7 +57,15 @@ export function initHeroTerminal() {
         const echoCommand = (raw) => {
             const div = document.createElement('div');
             div.className = 'term-line';
-            div.innerHTML = `<span style="color:var(--teal)" aria-hidden="true">guest@devesh:~$</span> ${escapeHtml(raw)}`;
+
+            const promptSpan = document.createElement('span');
+            promptSpan.style.color = 'var(--teal)';
+            promptSpan.setAttribute('aria-hidden', 'true');
+            promptSpan.textContent = 'guest@devesh:~$ ';
+
+            div.appendChild(promptSpan);
+            div.appendChild(document.createTextNode(raw));
+
             heroTermOutput.appendChild(div);
             heroTermOutput.scrollTop = heroTermOutput.scrollHeight;
         };
