@@ -90,7 +90,7 @@ export function initUIEffects() {
             railConnectors.forEach((connector, i) => {
                 connector.classList.toggle('filled', i < currentRailIndex);
             });
-        }));
+        }), { passive: true });
     }
 
     // Fade-in Animation on Scroll
