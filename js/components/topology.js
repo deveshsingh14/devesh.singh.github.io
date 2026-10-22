@@ -78,6 +78,7 @@ export function initTopology() {
         const layout = computeRadialLayout(TOPOLOGY_DATA);
         const hubId = TOPOLOGY_DATA.find(n => n.category === 'hub').id;
 
+        const linesFragment = document.createDocumentFragment();
         TOPOLOGY_DATA.forEach(node => {
             if (node.id === hubId) return;
             const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -85,9 +86,11 @@ export function initTopology() {
             line.setAttribute('y1', layout[hubId].yPct);
             line.setAttribute('x2', layout[node.id].xPct);
             line.setAttribute('y2', layout[node.id].yPct);
-            topoLines.appendChild(line);
+            linesFragment.appendChild(line);
         });
+        topoLines.appendChild(linesFragment);
 
+        const nodesFragment = document.createDocumentFragment();
         TOPOLOGY_DATA.forEach(node => {
             const btn = document.createElement('button');
             btn.type = 'button';
@@ -110,8 +113,9 @@ export function initTopology() {
             btn.appendChild(labelSpan);
 
             btn.addEventListener('click', () => openTopoDrawer(node.id));
-            topoMap.appendChild(btn);
+            nodesFragment.appendChild(btn);
         });
+        topoMap.appendChild(nodesFragment);
 
         const drawerPanel = topoDrawer.querySelector('.topo-drawer-panel');
         const drawerBackdrop = document.getElementById('topo-drawer-backdrop');
