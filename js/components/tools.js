@@ -8,9 +8,11 @@ const UNAMBIG_UPPER_CHARS = BASE_UPPER_CHARS.replace(/[l1IO0]/g, '');
 const UNAMBIG_LOWER_CHARS = BASE_LOWER_CHARS.replace(/[l1IO0]/g, '');
 const UNAMBIG_NUM_CHARS = BASE_NUM_CHARS.replace(/[l1IO0]/g, '');
 
+const MAX_UINT32 = 0x100000000;
+
 function getSecureRandomInt(max) {
     const randomBuffer = new Uint32Array(1);
-    const limit = 0x100000000 - (0x100000000 % max);
+    const limit = MAX_UINT32 - (MAX_UINT32 % max);
     do {
         window.crypto.getRandomValues(randomBuffer);
     } while (randomBuffer[0] >= limit);
@@ -472,7 +474,7 @@ function initPasswordGenerator() {
         if (numWords > 0) {
             const randomValues = new Uint32Array(numWords);
             window.crypto.getRandomValues(randomValues);
-            const limit = 0x100000000 - (0x100000000 % wordlist.length);
+            const limit = MAX_UINT32 - (MAX_UINT32 % wordlist.length);
 
             for (let i = 0; i < numWords; i++) {
                 let val = randomValues[i];
