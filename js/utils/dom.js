@@ -30,7 +30,7 @@ export const typeLines = (lines, container, onDone) => {
             throw new Error("Security check failed: DOMPurify failed to load. Please check your internet connection.");
         }
         const div = document.createElement('div');
-        div.innerHTML = DOMPurify.sanitize(html);
+        div.appendChild(DOMPurify.sanitize(html, { RETURN_DOM_FRAGMENT: true }));
         div.style.opacity = '0';
         div.style.transform = 'translateY(4px)';
         div.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
