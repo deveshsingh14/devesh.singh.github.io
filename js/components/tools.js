@@ -1,4 +1,4 @@
-import { escapeHtml } from '../utils/dom.js';
+import { escapeHtml, typeLines } from '../utils/dom.js';
 
 const BASE_UPPER_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const BASE_LOWER_CHARS = "abcdefghijklmnopqrstuvwxyz";
@@ -74,28 +74,6 @@ function initTerminalTools() {
     let currentAnimation = null;
     const guiBodies = document.querySelectorAll('.gui-body');
 
-    const animateLines = (lines, container, onDone) => {
-        let i = 0;
-        const next = () => {
-            if (i >= lines.length) { if (onDone) onDone(); return; }
-            const { html, delay } = lines[i];
-            if (typeof DOMPurify === 'undefined') {
-                throw new Error("Security check failed: DOMPurify failed to load. Please check your internet connection.");
-            }
-            const div = document.createElement('div');
-            div.innerHTML = DOMPurify.sanitize(html);
-            div.style.opacity = '0';
-            div.style.transform = 'translateY(4px)';
-            div.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
-            container.appendChild(div);
-            requestAnimationFrame(() => { div.style.opacity = '1'; div.style.transform = 'translateY(0)'; });
-            container.scrollTop = container.scrollHeight;
-            i++;
-            currentAnimation = setTimeout(next, delay);
-        };
-        next();
-    };
-
     const progressBar = (pct) => {
         const filled = Math.round(pct / 5);
         const empty = 20 - filled;
@@ -139,7 +117,7 @@ function initTerminalTools() {
                     ];
                 }
 
-                animateLines(lines, container, onDone);
+                typeLines(lines, container, onDone);
             }
         },
         'cidr-calc': {
@@ -189,7 +167,7 @@ function initTerminalTools() {
                     lines.push({ html: `<div class="output-line error-msg">Error: Invalid CIDR format. Please use x.x.x.x/y format.</div>`, delay: 200 });
                 }
 
-                animateLines(lines, container, onDone);
+                typeLines(lines, container, onDone);
             }
         },
         'cron-gen': {
@@ -220,7 +198,7 @@ function initTerminalTools() {
                     desc = "At 12:00 every day (fallback interpretation).";
                 }
 
-                animateLines([
+                typeLines([
                     { html: `<div class="output-line system-msg">[cron] Analyzing NLP input: "${input}"...</div>`, delay: 500 },
                     { html: `<div class="output-line system-msg">----------------------------------------</div>`, delay: 200 },
                     { html: `<div class="output-line system-msg">Generated Cron: <span style="color:var(--teal); font-weight:bold; font-size: 1.1em;">${cron}</span></div>`, delay: 300 },
@@ -236,7 +214,7 @@ function initTerminalTools() {
             placeholder: 'frontend-app',
             simulate: (input, container, onDone) => {
                 if (!input) input = 'frontend-app';
-                animateLines([
+                typeLines([
                     { html: `<div class="output-line system-msg">[kubectl] Setting context to cluster 'prod-cluster-us-east-1'...</div>`, delay: 500 },
                     { html: `<div class="output-line system-msg">[kubectl] Analyzing deployment manifest for ${input}...</div>`, delay: 400 },
                     { html: `<div class="output-line system-msg">[kubectl] Validating resource requests and limits...</div>`, delay: 300 },
@@ -256,7 +234,7 @@ function initTerminalTools() {
             placeholder: 'hotelkey/auth-service',
             simulate: (input, container, onDone) => {
                 if (!input) input = 'hotelkey/auth-service';
-                animateLines([
+                typeLines([
                     { html: `<div class="output-line system-msg">[docker] Fetching latest commit for ${input}...</div>`, delay: 400 },
                     { html: `<div class="output-line system-msg">[docker] Building image with tag v2.4.1...</div>`, delay: 500 },
                     { html: '<div class="output-line system-msg">[docker] Step 1/7 : FROM python:3.9-slim</div>', delay: 300 },
