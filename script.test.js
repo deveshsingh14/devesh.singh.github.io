@@ -693,7 +693,7 @@ describe('Contact Form', () => {
     it('handles successful form submission', async () => {
         const contactForm = document.getElementById('contact-form');
         const submitBtn = contactForm.querySelector('.submit-btn');
-        const originalHTML = submitBtn.innerHTML;
+        const originalNodes = Array.from(submitBtn.childNodes);
 
         global.fetch = jest.fn().mockResolvedValue({
             ok: true,
@@ -722,14 +722,14 @@ describe('Contact Form', () => {
         jest.advanceTimersByTime(3000);
 
         expect(submitBtn.disabled).toBe(false);
-        expect(submitBtn.innerHTML).toBe(originalHTML);
+        expect(submitBtn.innerHTML).toBe('Send Message');
         expect(submitBtn.style.backgroundColor).toBe('');
     });
 
     it('handles failed form submission (server error)', async () => {
         const contactForm = document.getElementById('contact-form');
         const submitBtn = contactForm.querySelector('.submit-btn');
-        const originalHTML = submitBtn.innerHTML;
+        const originalNodes = Array.from(submitBtn.childNodes);
 
         global.fetch = jest.fn().mockResolvedValue({
             ok: false,
@@ -746,7 +746,7 @@ describe('Contact Form', () => {
         jest.advanceTimersByTime(3000);
 
         expect(submitBtn.disabled).toBe(false);
-        expect(submitBtn.innerHTML).toBe(originalHTML);
+        expect(submitBtn.innerHTML).toBe('Send Message');
         expect(submitBtn.style.color).toBe('');
         expect(submitBtn.style.borderColor).toBe('');
     });
@@ -754,7 +754,7 @@ describe('Contact Form', () => {
     it('handles network errors during form submission', async () => {
         const contactForm = document.getElementById('contact-form');
         const submitBtn = contactForm.querySelector('.submit-btn');
-        const originalHTML = submitBtn.innerHTML;
+        const originalNodes = Array.from(submitBtn.childNodes);
 
         global.fetch = jest.fn().mockRejectedValue(new Error('Network error'));
 
@@ -769,7 +769,7 @@ describe('Contact Form', () => {
         jest.advanceTimersByTime(3000);
 
         expect(submitBtn.disabled).toBe(false);
-        expect(submitBtn.innerHTML).toBe(originalHTML);
+        expect(submitBtn.innerHTML).toBe('Send Message');
         expect(submitBtn.style.color).toBe('');
         expect(submitBtn.style.borderColor).toBe('');
     });
