@@ -169,4 +169,39 @@ describe('Command Palette', () => {
         expect(clicked).toBe(true);
         expect(document.getElementById('cmdk-palette').hidden).toBe(true);
     });
+
+    test('logs error when clipboard copy fails', async () => {
+        initCommandPalette();
+        document.getElementById('cmdk-trigger').click();
+
+        const originalConsoleError = console.error;
+        console.error = jest.fn();
+
+        try {
+            Object.defineProperty(window.navigator, 'clipboard', {
+                value: {
+                    writeText: jest.fn(() => Promise.reject(new Error('Network error'))),
+                },
+                configurable: true
+            });
+
+            const input = document.getElementById('cmdk-input');
+            input.value = 'Copy email address';
+            input.dispatchEvent(new Event('input'));
+
+            const eventEnter = new KeyboardEvent('keydown', { key: 'Enter' });
+            document.dispatchEvent(eventEnter);
+
+            // Wait for microtasks to process so promise rejections resolve
+            await new Promise(process.nextTick);
+
+            expect(console.error).toHaveBeenCalledWith('Failed to copy email to clipboard:', expect.any(Error));
+        } finally {
+            console.error = originalConsoleError;
+            Object.defineProperty(window.navigator, 'clipboard', {
+                value: originalClipboard,
+                configurable: true
+            });
+        }
+    });
 });
