@@ -20,7 +20,15 @@ describe('typeLines', () => {
         jest.useFakeTimers();
         const originalDOMPurify = global.DOMPurify;
         const originalRAF = window.requestAnimationFrame;
-        global.DOMPurify = { sanitize: jest.fn(html => html.toUpperCase()) };
+        global.DOMPurify = { sanitize: jest.fn((html, options) => {
+            const upper = html.toUpperCase();
+            if (options && options.RETURN_DOM_FRAGMENT) {
+                const template = document.createElement('template');
+                template.innerHTML = upper;
+                return template.content;
+            }
+            return upper;
+        }) };
         window.requestAnimationFrame = jest.fn();
 
         try {
@@ -34,7 +42,7 @@ describe('typeLines', () => {
             typeLines(lines, container, onDone);
 
             // First line is added immediately
-            expect(global.DOMPurify.sanitize).toHaveBeenCalledWith('<span>line 1</span>');
+            expect(global.DOMPurify.sanitize).toHaveBeenCalledWith('<span>line 1</span>', { RETURN_DOM_FRAGMENT: true });
             expect(container.children.length).toBe(1);
             expect(container.children[0].innerHTML).toBe('<span>LINE 1</span>');
             expect(window.requestAnimationFrame).toHaveBeenCalledTimes(1);
@@ -44,7 +52,7 @@ describe('typeLines', () => {
             jest.advanceTimersByTime(100);
 
             // Second line is added
-            expect(global.DOMPurify.sanitize).toHaveBeenCalledWith('<span>line 2</span>');
+            expect(global.DOMPurify.sanitize).toHaveBeenCalledWith('<span>line 2</span>', { RETURN_DOM_FRAGMENT: true });
             expect(container.children.length).toBe(2);
             expect(container.children[1].innerHTML).toBe('<span>LINE 2</span>');
             expect(window.requestAnimationFrame).toHaveBeenCalledTimes(2);
@@ -65,7 +73,7 @@ describe('typeLines', () => {
     it('applies correct initial and animated styles', () => {
         const originalDOMPurify = global.DOMPurify;
         const originalRAF = window.requestAnimationFrame;
-        global.DOMPurify = { sanitize: jest.fn(html => html) };
+        global.DOMPurify = { sanitize: jest.fn((html, options) => { if (options && options.RETURN_DOM_FRAGMENT) { const template = document.createElement('template'); template.innerHTML = html; return template.content; } return html; }) };
         window.requestAnimationFrame = jest.fn();
 
         try {
@@ -97,7 +105,7 @@ describe('typeLines', () => {
     it('updates container scrollTop', () => {
         const originalDOMPurify = global.DOMPurify;
         const originalRAF = window.requestAnimationFrame;
-        global.DOMPurify = { sanitize: jest.fn(html => html) };
+        global.DOMPurify = { sanitize: jest.fn((html, options) => { if (options && options.RETURN_DOM_FRAGMENT) { const template = document.createElement('template'); template.innerHTML = html; return template.content; } return html; }) };
         window.requestAnimationFrame = jest.fn();
 
         try {
@@ -133,7 +141,7 @@ describe('typeLines', () => {
         jest.useFakeTimers();
         const originalDOMPurify = global.DOMPurify;
         const originalRAF = window.requestAnimationFrame;
-        global.DOMPurify = { sanitize: jest.fn(html => html) };
+        global.DOMPurify = { sanitize: jest.fn((html, options) => { if (options && options.RETURN_DOM_FRAGMENT) { const template = document.createElement('template'); template.innerHTML = html; return template.content; } return html; }) };
         window.requestAnimationFrame = jest.fn();
 
         try {

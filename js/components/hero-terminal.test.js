@@ -25,7 +25,14 @@ describe('hero-terminal', () => {
         heroTermBody = document.getElementById('hero-term-body');
 
         global.DOMPurify = {
-            sanitize: jest.fn(html => html)
+            sanitize: jest.fn((html, options) => {
+                if (options && options.RETURN_DOM_FRAGMENT) {
+                    const template = document.createElement('template');
+                    template.innerHTML = html;
+                    return template.content;
+                }
+                return html;
+            })
         };
 
         global.requestAnimationFrame = jest.fn(cb => setTimeout(cb, 0));

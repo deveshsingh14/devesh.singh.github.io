@@ -25,7 +25,16 @@ describe('ops dashboard pipeline', () => {
             <div id="metric-coffee"></div>
         `;
 
-        global.DOMPurify = { sanitize: (html) => html };
+        global.DOMPurify = {
+            sanitize: (html, options) => {
+                if (options && options.RETURN_DOM_FRAGMENT) {
+                    const template = document.createElement('template');
+                    template.innerHTML = html;
+                    return template.content;
+                }
+                return html;
+            }
+        };
         global.requestAnimationFrame = jest.fn(cb => setTimeout(cb, 0));
         global.IntersectionObserver = jest.fn(function() {
             this.observe = jest.fn();
