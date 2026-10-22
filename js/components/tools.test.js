@@ -1,5 +1,66 @@
 import { jest } from '@jest/globals';
-import { createPasswordString } from './tools.js';
+import { createPasswordString, initTools } from './tools.js';
+
+describe('Clipboard Error Handling', () => {
+    it('handles clipboard error', async () => {
+        document.body.innerHTML = `
+            <input type="range" id="pg-length" min="5" max="128" value="14">
+            <label id="pg-length-label"></label>
+            <input type="checkbox" id="pg-upper" checked>
+            <input type="checkbox" id="pg-lower" checked>
+            <input type="checkbox" id="pg-nums" checked>
+            <input type="checkbox" id="pg-syms">
+            <input type="number" id="pg-min-nums" value="1">
+            <input type="number" id="pg-min-syms" value="0">
+            <input type="checkbox" id="pg-ambig">
+            <span id="pg-announcer"></span>
+
+            <input type="text" id="pg-result" value="test-pass">
+            <button id="pg-refresh">Refresh</button>
+            <button id="pg-copy">Copy</button>
+            <span id="pg-copy-announcer"></span>
+
+            <input type="range" id="pp-words" min="3" max="12" value="4">
+            <label id="pp-words-label"></label>
+            <input type="text" id="pp-sep" value="-">
+            <input type="checkbox" id="pp-cap">
+
+            <input type="text" id="pp-result">
+            <button id="pp-refresh"></button>
+            <button id="pp-copy">Copy</button>
+            <span id="pp-copy-announcer"></span>
+        `;
+
+        let writeTextMock = jest.fn().mockRejectedValue(new Error('Clipboard error'));
+        const originalClipboard = navigator.clipboard;
+        Object.defineProperty(navigator, 'clipboard', {
+            value: { writeText: writeTextMock },
+            configurable: true
+        });
+
+        const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+        try {
+            initTools();
+
+            const copyBtn = document.getElementById('pg-copy');
+            copyBtn.click();
+
+            await new Promise(resolve => setTimeout(resolve, 0)); // flush promises
+
+            expect(consoleErrorMock).toHaveBeenCalledWith('Failed to copy text to clipboard:', expect.any(Error));
+            expect(copyBtn.innerText).toBe('Error');
+            expect(document.getElementById('pg-copy-announcer').textContent).toBe('Error copying to clipboard');
+        } finally {
+            Object.defineProperty(navigator, 'clipboard', {
+                value: originalClipboard,
+                configurable: true
+            });
+            consoleErrorMock.mockRestore();
+            document.body.innerHTML = '';
+        }
+    });
+});
 
 describe('createPasswordString', () => {
 
