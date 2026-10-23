@@ -205,7 +205,8 @@ function initMetrics(PIPELINE_STATE) {
         renderMetricTile(metricMemValue, metricMemFill, memVal);
         if (motionOk) setInterval(tickMetrics, 2000);
 
-        const tickUptime = () => { metricUptime.textContent = formatUptime(Date.now() - SITE_EPOCH_MS); };
+        const initialUptimeMs = Date.now() - SITE_EPOCH_MS - performance.now();
+        const tickUptime = () => { metricUptime.textContent = formatUptime(initialUptimeMs + performance.now()); };
         tickUptime();
         setInterval(tickUptime, 1000);
 
