@@ -48,9 +48,15 @@ describe('Clipboard Error Handling', () => {
 
             await new Promise(resolve => setTimeout(resolve, 0)); // flush promises
 
-            expect(consoleErrorMock).toHaveBeenCalledWith('Failed to copy text to clipboard:', expect.any(Error));
+            // console.error is no longer used, we show a toast instead
+            expect(consoleErrorMock).not.toHaveBeenCalled();
             expect(copyBtn.innerText).toBe('Error');
             expect(document.getElementById('pg-copy-announcer').textContent).toBe('Error copying to clipboard');
+
+            // Check if toast was created
+            const toast = document.querySelector('.toast-error');
+            expect(toast).toBeTruthy();
+            expect(toast.textContent).toBe('Failed to copy to clipboard');
         } finally {
             Object.defineProperty(navigator, 'clipboard', {
                 value: originalClipboard,
@@ -223,7 +229,7 @@ describe('DOCX to PDF Conversion Error Handling', () => {
             await new Promise(resolve => setTimeout(resolve, 0));
             await new Promise(resolve => setTimeout(resolve, 0));
 
-            expect(consoleErrorMock).toHaveBeenCalledWith(expect.any(Error));
+            expect(consoleErrorMock).not.toHaveBeenCalled();
             expect(document.getElementById('docx-status').innerText).toBe('Conversion failed');
             expect(document.getElementById('docx-status').style.color).toBe('var(--danger)');
             expect(convertBtn.disabled).toBe(false);

@@ -757,11 +757,15 @@ describe('Contact Form', () => {
         const originalNodes = Array.from(submitBtn.childNodes);
 
         global.fetch = jest.fn().mockRejectedValue(new Error('Network error'));
+        const originalConsoleError = console.error;
+        console.error = jest.fn();
 
         contactForm.dispatchEvent(new Event('submit', { cancelable: true }));
 
         await Promise.resolve();
 
+        expect(console.error).not.toHaveBeenCalled();
+        console.error = originalConsoleError;
         expect(submitBtn.innerText).toBe('Error: Network issue.');
         expect(submitBtn.style.color).toBe('var(--danger)');
         expect(submitBtn.style.borderColor).toBe('var(--danger)');

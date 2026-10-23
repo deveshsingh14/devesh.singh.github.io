@@ -1,3 +1,4 @@
+import { showToast } from '../utils/toast.js';
 export function initContactForm() {
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
@@ -61,7 +62,7 @@ export function initContactForm() {
                     submitBtn.style.borderColor = 'var(--danger)';
                 }
             } catch (error) {
-                console.error('Contact form submission error:', error);
+                showToast('Contact form submission error: ' + error.message, 'error');
                 submitBtn.innerText = 'Error: Network issue.';
                 if (announcer) announcer.textContent = 'Error: Network issue.';
                 submitBtn.style.color = 'var(--danger)';

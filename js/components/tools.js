@@ -1,4 +1,5 @@
 import { escapeHtml, typeLines } from '../utils/dom.js';
+import { showToast } from '../utils/toast.js';
 
 const BASE_UPPER_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const BASE_LOWER_CHARS = "abcdefghijklmnopqrstuvwxyz";
@@ -512,6 +513,7 @@ function initPasswordGenerator() {
             navigator.clipboard.writeText(textToCopy).then(() => {
                 buttonElement.innerText = "Copied!";
                 if (announcerElement) announcerElement.textContent = "Copied to clipboard!";
+                showToast("Copied to clipboard!", "success");
                 setTimeout(() => {
                     buttonElement.innerText = "Copy";
                     if (announcerElement && announcerElement.textContent === "Copied to clipboard!") {
@@ -519,7 +521,7 @@ function initPasswordGenerator() {
                     }
                 }, 2000);
             }).catch((err) => {
-                console.error('Failed to copy text to clipboard:', err);
+                showToast("Failed to copy to clipboard", "error");
                 buttonElement.innerText = "Error";
                 if (announcerElement) announcerElement.textContent = "Error copying to clipboard";
                 setTimeout(() => {
@@ -661,7 +663,7 @@ function initDocxToPdf() {
 
                 docxStatus.innerText = 'Conversion Complete! Your PDF has been downloaded.';
             } catch (err) {
-                console.error(err);
+                showToast(err.message || 'Error during conversion.', 'error');
                 docxStatus.innerText = err.message || 'Error during conversion. Check console for details.';
                 docxStatus.style.color = 'var(--danger)';
             } finally {
