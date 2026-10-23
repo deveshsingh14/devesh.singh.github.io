@@ -1,3 +1,4 @@
+import { showToast } from '../utils/toast.js';
 export function initCommandPalette() {
     const cmdkTrigger = document.getElementById('cmdk-trigger');
     const cmdkBackdrop = document.getElementById('cmdk-backdrop');
@@ -52,13 +53,16 @@ export function initCommandPalette() {
                     const announcer = document.getElementById('cmdk-copy-announcer');
                     if (announcer) {
                         announcer.textContent = 'Copied to clipboard!';
+                        showToast('Copied to clipboard!', 'success');
                         setTimeout(() => {
                             if (announcer.textContent === 'Copied to clipboard!') {
                                 announcer.textContent = '';
                             }
                         }, 2000);
                     }
-                }).catch((err) => { console.error('Failed to copy email to clipboard:', err); });
+                }).catch((err) => {
+                    showToast('Failed to copy email to clipboard', 'error');
+                });
             } },
             { id: 'action-github', group: 'Actions', label: 'Open GitHub profile', run: () => window.open('https://github.com/deveshsingh14', '_blank', 'noopener') },
             { id: 'action-linkedin', group: 'Actions', label: 'Open LinkedIn profile', run: () => window.open('https://www.linkedin.com/in/devesh-s-4ab189263', '_blank', 'noopener') },
