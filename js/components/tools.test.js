@@ -181,3 +181,60 @@ describe('createPasswordString', () => {
         expect(syms.length).toBeGreaterThanOrEqual(3);
     });
 });
+
+describe('DOCX to PDF Conversion Error Handling', () => {
+    it('handles conversion error and resets UI', async () => {
+        document.body.innerHTML = `
+            <div id="docx-upload-area"></div>
+            <input type="file" id="docx-file-input">
+            <div id="docx-status"></div>
+            <button id="btn-convert-docx"></button>
+            <div id="docx-preview"></div>
+            <span id="docx-convert-announcer"></span>
+        `;
+
+        const mockFile = new File(['dummy content'], 'test.docx', { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+        mockFile.arrayBuffer = jest.fn().mockResolvedValue(new ArrayBuffer(8));
+
+        // Mock globals
+        global.mammoth = { convertToHtml: jest.fn().mockResolvedValue({ value: '<p>test</p>' }) };
+        global.DOMPurify = { sanitize: jest.fn().mockReturnValue(document.createDocumentFragment()) };
+
+        const mockSave = jest.fn().mockRejectedValue(new Error('Conversion failed'));
+        const mockFrom = jest.fn().mockReturnValue({ save: mockSave });
+        const mockSet = jest.fn().mockReturnValue({ from: mockFrom });
+        global.html2pdf = jest.fn().mockReturnValue({ set: mockSet });
+
+        const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+        try {
+            initTools();
+
+            Object.defineProperty(document.getElementById('docx-file-input'), 'files', {
+                value: [mockFile]
+            });
+            document.getElementById('docx-file-input').dispatchEvent(new Event('change'));
+
+            const convertBtn = document.getElementById('btn-convert-docx');
+            convertBtn.click();
+
+            await new Promise(resolve => setTimeout(resolve, 0));
+            await new Promise(resolve => setTimeout(resolve, 0));
+            await new Promise(resolve => setTimeout(resolve, 0));
+            await new Promise(resolve => setTimeout(resolve, 0));
+
+            expect(consoleErrorMock).toHaveBeenCalledWith(expect.any(Error));
+            expect(document.getElementById('docx-status').innerText).toBe('Conversion failed');
+            expect(document.getElementById('docx-status').style.color).toBe('var(--danger)');
+            expect(convertBtn.disabled).toBe(false);
+            expect(convertBtn.innerText).toBe('Convert to PDF');
+            expect(document.getElementById('docx-convert-announcer').textContent).toBe('');
+        } finally {
+            delete global.mammoth;
+            delete global.DOMPurify;
+            delete global.html2pdf;
+            consoleErrorMock.mockRestore();
+            document.body.innerHTML = '';
+        }
+    });
+});
