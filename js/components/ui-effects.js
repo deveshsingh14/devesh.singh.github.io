@@ -121,7 +121,7 @@ export function initUIEffects() {
         const staggerObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (!entry.isIntersecting) return;
-                [...entry.target.children].forEach((child, index) => {
+                entry.target._cachedChildren.forEach((child, index) => {
                     setTimeout(() => child.classList.add('revealed'), index * STAGGER_STEP_MS);
                 });
                 observer.unobserve(entry.target);
@@ -133,7 +133,8 @@ export function initUIEffects() {
         });
 
         staggerContainers.forEach(container => {
-            [...container.children].forEach(child => child.classList.add('reveal-item'));
+            container._cachedChildren = [...container.children];
+            container._cachedChildren.forEach(child => child.classList.add('reveal-item'));
             staggerObserver.observe(container);
         });
     }
