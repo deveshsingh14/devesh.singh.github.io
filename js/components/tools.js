@@ -73,186 +73,196 @@ export function createPasswordString(options) {
     return { password: passwordChars.join('').substring(0, length) };
 }
 
+const progressBar = (pct) => {
+    const filled = Math.round(pct / 5);
+    const empty = 20 - filled;
+    return `[${'█'.repeat(filled)}${'░'.repeat(empty)}] ${pct}%`;
+};
+
+const simulateFixPipeline = (input, container, onDone) => {
+    input = (input || '').toLowerCase().trim();
+    let lines = [];
+
+    if (input === 'logs') {
+        lines = [
+            { html: `<div class="output-line system-msg">[jenkins] Fetching logs for failed pod payment-service-xyz...</div>`, delay: 400 },
+            { html: `<div class="output-line error-msg">FATAL: Exception in thread "main" java.lang.OutOfMemoryError: Java heap space</div>`, delay: 600 },
+            { html: `<div class="output-line system-msg">Hint: The pod needs more memory. Try 'patch' to update resources.</div>`, delay: 300 }
+        ];
+    } else if (input === 'patch') {
+        lines = [
+            { html: `<div class="output-line system-msg">[kubectl] Patching deployment payment-service...</div>`, delay: 400 },
+            { html: `<div class="output-line system-msg">Setting resources.requests.memory="1Gi" and limits.memory="2Gi"...</div>`, delay: 500 },
+            { html: `<div class="output-line system-msg">deployment.apps/payment-service patched</div>`, delay: 300 },
+            { html: `<div class="output-line system-msg">Hint: Deployment updated. Try 'restart' to apply changes immediately.</div>`, delay: 300 }
+        ];
+    } else if (input === 'restart') {
+        lines = [
+            { html: `<div class="output-line system-msg">[kubectl] Rolling restart deployment payment-service...</div>`, delay: 500 },
+            { html: `<div class="output-line system-msg">Waiting for rollout to finish: 0 of 3 updated replicas are available...</div>`, delay: 600 },
+            { html: `<div class="output-line system-msg">Waiting for rollout to finish: 1 of 3 updated replicas are available...</div>`, delay: 600 },
+            { html: `<div class="output-line system-msg">Waiting for rollout to finish: 2 of 3 updated replicas are available...</div>`, delay: 600 },
+            { html: `<div class="output-line success-msg">[✓] deployment "payment-service" successfully rolled out. Pipeline FIXED!</div>`, delay: 200 }
+        ];
+    } else {
+        lines = [
+            { html: `<div class="output-line error-msg">Command not recognized.</div>`, delay: 200 },
+            { html: `<div class="output-line system-msg">Available commands: logs, patch, restart</div>`, delay: 100 }
+        ];
+    }
+
+    typeLines(lines, container, onDone);
+};
+
+const simulateCidrCalc = (input, container, onDone) => {
+    if (!input) input = '10.0.0.0/24';
+
+    let lines = [
+        { html: `<div class="output-line system-msg">[calc] Parsing ${input}...</div>`, delay: 300 }
+    ];
+
+    try {
+        const parts = input.split('/');
+        if (parts.length !== 2) throw new Error("Invalid format");
+
+        const ipParts = parts[0].split('.');
+        if (ipParts.length !== 4) throw new Error("Invalid IP");
+
+        const cidr = parseInt(parts[1], 10);
+        if (isNaN(cidr) || cidr < 0 || cidr > 32) throw new Error("Invalid CIDR");
+
+        const mask = ~((1 << (32 - cidr)) - 1);
+        const ipNum = ipParts.reduce((acc, octet) => (acc << 8) + parseInt(octet, 10), 0);
+
+        const networkNum = ipNum & mask;
+        const broadcastNum = networkNum | ~mask;
+        const numHosts = cidr === 31 || cidr === 32 ? 0 : Math.pow(2, 32 - cidr) - 2;
+
+        const numToIp = (num) => [
+            (num >>> 24) & 255,
+            (num >>> 16) & 255,
+            (num >>> 8) & 255,
+            num & 255
+        ].join('.');
+
+        lines.push(
+            { html: `<div class="output-line system-msg">Network Address: <span style="color:var(--teal)">${numToIp(networkNum)}</span></div>`, delay: 200 },
+            { html: `<div class="output-line system-msg">Broadcast Address: <span style="color:var(--teal)">${numToIp(broadcastNum)}</span></div>`, delay: 200 },
+            { html: `<div class="output-line system-msg">Usable Hosts: <span style="color:var(--teal)">${numHosts.toLocaleString()}</span></div>`, delay: 200 },
+            { html: `<div class="output-line system-msg">Subnet Mask: <span style="color:var(--teal)">${numToIp(mask)}</span></div>`, delay: 200 },
+            { html: `<div class="output-line success-msg">[✓] Calculation complete.</div>`, delay: 100 }
+        );
+
+    } catch {
+        lines.push({ html: `<div class="output-line error-msg">Error: Invalid CIDR format. Please use x.x.x.x/y format.</div>`, delay: 200 });
+    }
+
+    typeLines(lines, container, onDone);
+};
+
+const simulateCronGen = (input, container, onDone) => {
+    if (!input) input = 'every day at midnight';
+    input = input.toLowerCase();
+
+    let cron = "* * * * *";
+    let desc = "unknown schedule";
+
+    if (input.includes('15 minutes') || input.includes('15 min')) {
+        cron = "*/15 * * * *";
+        desc = "At every 15th minute.";
+    } else if (input.includes('midnight') || (input.includes('day') && input.includes('0:00'))) {
+        cron = "0 0 * * *";
+        desc = "At 00:00 every day.";
+    } else if (input.includes('sunday') && input.includes('night')) {
+        cron = "0 0 * * 0";
+        desc = "At 00:00 on Sunday.";
+    } else if (input.includes('hour')) {
+        cron = "0 * * * *";
+        desc = "At minute 0 past every hour.";
+    } else {
+        cron = "0 12 * * *"; // default fallback
+        desc = "At 12:00 every day (fallback interpretation).";
+    }
+
+    typeLines([
+        { html: `<div class="output-line system-msg">[cron] Analyzing NLP input: "${input}"...</div>`, delay: 500 },
+        { html: `<div class="output-line system-msg">----------------------------------------</div>`, delay: 200 },
+        { html: `<div class="output-line system-msg">Generated Cron: <span style="color:var(--teal); font-weight:bold; font-size: 1.1em;">${cron}</span></div>`, delay: 300 },
+        { html: `<div class="output-line system-msg">Explanation: ${desc}</div>`, delay: 200 },
+        { html: `<div class="output-line system-msg">----------------------------------------</div>`, delay: 200 },
+        { html: `<div class="output-line success-msg">[✓] Ready for crontab insertion.</div>`, delay: 100 }
+    ], container, onDone);
+};
+
+const simulateK8sDeploy = (input, container, onDone) => {
+    if (!input) input = 'frontend-app';
+    typeLines([
+        { html: `<div class="output-line system-msg">[kubectl] Setting context to cluster 'prod-cluster-us-east-1'...</div>`, delay: 500 },
+        { html: `<div class="output-line system-msg">[kubectl] Analyzing deployment manifest for ${input}...</div>`, delay: 400 },
+        { html: `<div class="output-line system-msg">[kubectl] Validating resource requests and limits...</div>`, delay: 300 },
+        { html: '<div class="output-line system-msg">[helm] Upgrading release...</div>', delay: 600 },
+        { html: `<div class="output-line system-msg">[k8s] ${progressBar(0)}</div>`, delay: 300 },
+        { html: `<div class="output-line system-msg">[k8s] ${progressBar(25)} Creating new ReplicaSet...</div>`, delay: 350 },
+        { html: `<div class="output-line system-msg">[k8s] ${progressBar(50)} Terminating old pods...</div>`, delay: 300 },
+        { html: `<div class="output-line system-msg">[k8s] ${progressBar(75)} Waiting for readiness probes...</div>`, delay: 350 },
+        { html: `<div class="output-line system-msg">[k8s] ${progressBar(100)} Rollout successful!</div>`, delay: 400 },
+        { html: `<div class="output-line success-msg">[✓] Deployment ${input} successfully rolled out to prod.</div>`, delay: 0 }
+    ], container, onDone);
+};
+
+const simulateDockerBuild = (input, container, onDone) => {
+    if (!input) input = 'hotelkey/auth-service';
+    typeLines([
+        { html: `<div class="output-line system-msg">[docker] Fetching latest commit for ${input}...</div>`, delay: 400 },
+        { html: `<div class="output-line system-msg">[docker] Building image with tag v2.4.1...</div>`, delay: 500 },
+        { html: '<div class="output-line system-msg">[docker] Step 1/7 : FROM python:3.9-slim</div>', delay: 300 },
+        { html: '<div class="output-line system-msg">[docker] ---> 8a9b6c4d2e1f</div>', delay: 100 },
+        { html: '<div class="output-line system-msg">[docker] Step 2/7 : WORKDIR /app</div>', delay: 200 },
+        { html: '<div class="output-line system-msg">[docker] ---> Running in 3b2a1c4d5e6f</div>', delay: 150 },
+        { html: '<div class="output-line system-msg">[docker] Step 3/7 : COPY requirements.txt .</div>', delay: 200 },
+        { html: '<div class="output-line system-msg">[docker] Step 4/7 : RUN pip install -r requirements.txt</div>', delay: 600 },
+        { html: `<div class="output-line system-msg">[docker] Installing packages ${progressBar(50)}</div>`, delay: 400 },
+        { html: `<div class="output-line system-msg">[docker] Installing packages ${progressBar(100)}</div>`, delay: 400 },
+        { html: '<div class="output-line system-msg">[docker] Successfully built 9f8e7d6c5b4a</div>', delay: 300 },
+        { html: '<div class="output-line system-msg">[docker] Pushing to Amazon ECR...</div>', delay: 500 },
+        { html: `<div class="output-line success-msg">[✓] Image ${input}:v2.4.1 successfully built and pushed.</div>`, delay: 0 }
+    ], container, onDone);
+};
+
 function initTerminalTools() {
     let currentAnimation = null;
     const guiBodies = document.querySelectorAll('.gui-body');
-
-    const progressBar = (pct) => {
-        const filled = Math.round(pct / 5);
-        const empty = 20 - filled;
-        return `[${'█'.repeat(filled)}${'░'.repeat(empty)}] ${pct}%`;
-    };
 
     const scripts = {
         'fix-pipeline': {
             cmd: './fix-pipeline.sh',
             promptReq: 'Pipeline failed! Prod is down. Enter command (logs / patch / restart):',
             placeholder: 'logs',
-            simulate: (input, container, onDone) => {
-                input = (input || '').toLowerCase().trim();
-                let lines = [];
-
-                if (input === 'logs') {
-                    lines = [
-                        { html: `<div class="output-line system-msg">[jenkins] Fetching logs for failed pod payment-service-xyz...</div>`, delay: 400 },
-                        { html: `<div class="output-line error-msg">FATAL: Exception in thread "main" java.lang.OutOfMemoryError: Java heap space</div>`, delay: 600 },
-                        { html: `<div class="output-line system-msg">Hint: The pod needs more memory. Try 'patch' to update resources.</div>`, delay: 300 }
-                    ];
-                } else if (input === 'patch') {
-                    lines = [
-                        { html: `<div class="output-line system-msg">[kubectl] Patching deployment payment-service...</div>`, delay: 400 },
-                        { html: `<div class="output-line system-msg">Setting resources.requests.memory="1Gi" and limits.memory="2Gi"...</div>`, delay: 500 },
-                        { html: `<div class="output-line system-msg">deployment.apps/payment-service patched</div>`, delay: 300 },
-                        { html: `<div class="output-line system-msg">Hint: Deployment updated. Try 'restart' to apply changes immediately.</div>`, delay: 300 }
-                    ];
-                } else if (input === 'restart') {
-                    lines = [
-                        { html: `<div class="output-line system-msg">[kubectl] Rolling restart deployment payment-service...</div>`, delay: 500 },
-                        { html: `<div class="output-line system-msg">Waiting for rollout to finish: 0 of 3 updated replicas are available...</div>`, delay: 600 },
-                        { html: `<div class="output-line system-msg">Waiting for rollout to finish: 1 of 3 updated replicas are available...</div>`, delay: 600 },
-                        { html: `<div class="output-line system-msg">Waiting for rollout to finish: 2 of 3 updated replicas are available...</div>`, delay: 600 },
-                        { html: `<div class="output-line success-msg">[✓] deployment "payment-service" successfully rolled out. Pipeline FIXED!</div>`, delay: 200 }
-                    ];
-                } else {
-                    lines = [
-                        { html: `<div class="output-line error-msg">Command not recognized.</div>`, delay: 200 },
-                        { html: `<div class="output-line system-msg">Available commands: logs, patch, restart</div>`, delay: 100 }
-                    ];
-                }
-
-                typeLines(lines, container, onDone);
-            }
+            simulate: simulateFixPipeline
         },
         'cidr-calc': {
             cmd: 'python3 cidr_calculator.py',
             promptReq: 'Enter IP and CIDR (e.g., 192.168.1.0/24):',
             placeholder: '10.0.0.0/24',
-            simulate: (input, container, onDone) => {
-                if (!input) input = '10.0.0.0/24';
-
-                let lines = [
-                    { html: `<div class="output-line system-msg">[calc] Parsing ${input}...</div>`, delay: 300 }
-                ];
-
-                try {
-                    const parts = input.split('/');
-                    if (parts.length !== 2) throw new Error("Invalid format");
-
-                    const ipParts = parts[0].split('.');
-                    if (ipParts.length !== 4) throw new Error("Invalid IP");
-
-                    const cidr = parseInt(parts[1], 10);
-                    if (isNaN(cidr) || cidr < 0 || cidr > 32) throw new Error("Invalid CIDR");
-
-                    const mask = ~((1 << (32 - cidr)) - 1);
-                    const ipNum = ipParts.reduce((acc, octet) => (acc << 8) + parseInt(octet, 10), 0);
-
-                    const networkNum = ipNum & mask;
-                    const broadcastNum = networkNum | ~mask;
-                    const numHosts = cidr === 31 || cidr === 32 ? 0 : Math.pow(2, 32 - cidr) - 2;
-
-                    const numToIp = (num) => [
-                        (num >>> 24) & 255,
-                        (num >>> 16) & 255,
-                        (num >>> 8) & 255,
-                        num & 255
-                    ].join('.');
-
-                    lines.push(
-                        { html: `<div class="output-line system-msg">Network Address: <span style="color:var(--teal)">${numToIp(networkNum)}</span></div>`, delay: 200 },
-                        { html: `<div class="output-line system-msg">Broadcast Address: <span style="color:var(--teal)">${numToIp(broadcastNum)}</span></div>`, delay: 200 },
-                        { html: `<div class="output-line system-msg">Usable Hosts: <span style="color:var(--teal)">${numHosts.toLocaleString()}</span></div>`, delay: 200 },
-                        { html: `<div class="output-line system-msg">Subnet Mask: <span style="color:var(--teal)">${numToIp(mask)}</span></div>`, delay: 200 },
-                        { html: `<div class="output-line success-msg">[✓] Calculation complete.</div>`, delay: 100 }
-                    );
-
-                } catch {
-                    lines.push({ html: `<div class="output-line error-msg">Error: Invalid CIDR format. Please use x.x.x.x/y format.</div>`, delay: 200 });
-                }
-
-                typeLines(lines, container, onDone);
-            }
+            simulate: simulateCidrCalc
         },
         'cron-gen': {
             cmd: './cron_generator.sh',
             promptReq: 'Enter schedule description (e.g., "every day at midnight" or "every 15 minutes"):',
             placeholder: 'every day at midnight',
-            simulate: (input, container, onDone) => {
-                if (!input) input = 'every day at midnight';
-                input = input.toLowerCase();
-
-                let cron = "* * * * *";
-                let desc = "unknown schedule";
-
-                if (input.includes('15 minutes') || input.includes('15 min')) {
-                    cron = "*/15 * * * *";
-                    desc = "At every 15th minute.";
-                } else if (input.includes('midnight') || (input.includes('day') && input.includes('0:00'))) {
-                    cron = "0 0 * * *";
-                    desc = "At 00:00 every day.";
-                } else if (input.includes('sunday') && input.includes('night')) {
-                    cron = "0 0 * * 0";
-                    desc = "At 00:00 on Sunday.";
-                } else if (input.includes('hour')) {
-                    cron = "0 * * * *";
-                    desc = "At minute 0 past every hour.";
-                } else {
-                    cron = "0 12 * * *"; // default fallback
-                    desc = "At 12:00 every day (fallback interpretation).";
-                }
-
-                typeLines([
-                    { html: `<div class="output-line system-msg">[cron] Analyzing NLP input: "${input}"...</div>`, delay: 500 },
-                    { html: `<div class="output-line system-msg">----------------------------------------</div>`, delay: 200 },
-                    { html: `<div class="output-line system-msg">Generated Cron: <span style="color:var(--teal); font-weight:bold; font-size: 1.1em;">${cron}</span></div>`, delay: 300 },
-                    { html: `<div class="output-line system-msg">Explanation: ${desc}</div>`, delay: 200 },
-                    { html: `<div class="output-line system-msg">----------------------------------------</div>`, delay: 200 },
-                    { html: `<div class="output-line success-msg">[✓] Ready for crontab insertion.</div>`, delay: 100 }
-                ], container, onDone);
-            }
+            simulate: simulateCronGen
         },
         'k8s-deploy': {
             cmd: './k8s-deploy.sh',
             promptReq: 'Enter Deployment Name:',
             placeholder: 'frontend-app',
-            simulate: (input, container, onDone) => {
-                if (!input) input = 'frontend-app';
-                typeLines([
-                    { html: `<div class="output-line system-msg">[kubectl] Setting context to cluster 'prod-cluster-us-east-1'...</div>`, delay: 500 },
-                    { html: `<div class="output-line system-msg">[kubectl] Analyzing deployment manifest for ${input}...</div>`, delay: 400 },
-                    { html: `<div class="output-line system-msg">[kubectl] Validating resource requests and limits...</div>`, delay: 300 },
-                    { html: '<div class="output-line system-msg">[helm] Upgrading release...</div>', delay: 600 },
-                    { html: `<div class="output-line system-msg">[k8s] ${progressBar(0)}</div>`, delay: 300 },
-                    { html: `<div class="output-line system-msg">[k8s] ${progressBar(25)} Creating new ReplicaSet...</div>`, delay: 350 },
-                    { html: `<div class="output-line system-msg">[k8s] ${progressBar(50)} Terminating old pods...</div>`, delay: 300 },
-                    { html: `<div class="output-line system-msg">[k8s] ${progressBar(75)} Waiting for readiness probes...</div>`, delay: 350 },
-                    { html: `<div class="output-line system-msg">[k8s] ${progressBar(100)} Rollout successful!</div>`, delay: 400 },
-                    { html: `<div class="output-line success-msg">[✓] Deployment ${input} successfully rolled out to prod.</div>`, delay: 0 }
-                ], container, onDone);
-            }
+            simulate: simulateK8sDeploy
         },
         'docker-build': {
             cmd: 'python3 docker-build.py',
             promptReq: 'Enter Repository/Image Name:',
             placeholder: 'hotelkey/auth-service',
-            simulate: (input, container, onDone) => {
-                if (!input) input = 'hotelkey/auth-service';
-                typeLines([
-                    { html: `<div class="output-line system-msg">[docker] Fetching latest commit for ${input}...</div>`, delay: 400 },
-                    { html: `<div class="output-line system-msg">[docker] Building image with tag v2.4.1...</div>`, delay: 500 },
-                    { html: '<div class="output-line system-msg">[docker] Step 1/7 : FROM python:3.9-slim</div>', delay: 300 },
-                    { html: '<div class="output-line system-msg">[docker] ---> 8a9b6c4d2e1f</div>', delay: 100 },
-                    { html: '<div class="output-line system-msg">[docker] Step 2/7 : WORKDIR /app</div>', delay: 200 },
-                    { html: '<div class="output-line system-msg">[docker] ---> Running in 3b2a1c4d5e6f</div>', delay: 150 },
-                    { html: '<div class="output-line system-msg">[docker] Step 3/7 : COPY requirements.txt .</div>', delay: 200 },
-                    { html: '<div class="output-line system-msg">[docker] Step 4/7 : RUN pip install -r requirements.txt</div>', delay: 600 },
-                    { html: `<div class="output-line system-msg">[docker] Installing packages ${progressBar(50)}</div>`, delay: 400 },
-                    { html: `<div class="output-line system-msg">[docker] Installing packages ${progressBar(100)}</div>`, delay: 400 },
-                    { html: '<div class="output-line system-msg">[docker] Successfully built 9f8e7d6c5b4a</div>', delay: 300 },
-                    { html: '<div class="output-line system-msg">[docker] Pushing to Amazon ECR...</div>', delay: 500 },
-                    { html: `<div class="output-line success-msg">[✓] Image ${input}:v2.4.1 successfully built and pushed.</div>`, delay: 0 }
-                ], container, onDone);
-            }
+            simulate: simulateDockerBuild
         },
     };
 
