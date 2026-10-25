@@ -638,10 +638,16 @@ ul, ol {
   height: 18px;
   color: var(--console-text-dim);
   flex-shrink: 0;
+  transition: color 0.2s ease;
 }
 
-.cmdk-input-row:focus-within .cmdk-input-icon {
+.cmdk-input-row:focus-within .cmdk-input-icon,
+.cmdk-input-row:focus-within .cmdk-esc-hint {
   color: var(--console-accent);
+}
+
+.cmdk-input-row:focus-within .cmdk-esc-hint {
+  border-color: var(--console-accent);
 }
 
 .cmdk-input {
@@ -673,6 +679,7 @@ ul, ol {
   border-radius: 4px;
   padding: 0.15rem 0.4rem;
   flex-shrink: 0;
+  transition: color 0.2s ease, border-color 0.2s ease;
 }
 
 .cmdk-results {
