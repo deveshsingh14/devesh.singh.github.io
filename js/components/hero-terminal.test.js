@@ -112,7 +112,7 @@ describe('hero-terminal', () => {
             { cmd: 'whoami', expected: 'devesh-singh-baish' },
             { cmd: 'skills', expected: 'Languages:' },
             { cmd: 'experience', expected: 'DevOps Engineer' },
-            { cmd: 'projects', expected: 'Rajeshwari B2B' },
+            { cmd: 'projects', expected: 'Radha' },
             { cmd: 'contact', expected: 'email:' }
         ];
 
