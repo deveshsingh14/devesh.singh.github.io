@@ -65,7 +65,7 @@ export function initCommandPalette() {
                 });
             } },
             { id: 'action-github', group: 'Actions', label: 'Open GitHub profile', run: () => window.open('https://github.com/deveshsingh14', '_blank', 'noopener') },
-            { id: 'action-linkedin', group: 'Actions', label: 'Open LinkedIn profile', run: () => window.open('https://www.linkedin.com/in/devesh-s-4ab189263', '_blank', 'noopener') },
+            { id: 'action-linkedin', group: 'Actions', label: 'Open LinkedIn profile', run: () => window.open('https://www.linkedin.com/in/devesh-singh-4ab189263', '_blank', 'noopener') },
             { id: 'action-email', group: 'Actions', label: 'Send an email', run: () => { window.location.href = 'mailto:devesh141singh@gmail.com'; } }
         ];
 

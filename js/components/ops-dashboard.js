@@ -38,7 +38,7 @@ const STAGE_LOGS = {
         { html: `<div class="log-line success-msg">[test] Coverage: 94.2%</div>`, delay: 250 }
     ],
     scan: () => [
-        { html: `<div class="log-line">[scan] Running SonarQube static analysis…</div>`, delay: 350 },
+        { html: `<div class="log-line">[scan] Running static analysis…</div>`, delay: 350 },
         { html: `<div class="log-line">[scan] Scanning dependencies for CVEs…</div>`, delay: 450 }
     ],
     deploy: () => [

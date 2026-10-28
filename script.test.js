@@ -434,7 +434,7 @@ describe('Project Filters', () => {
 
         const hiddenCards = [...document.querySelectorAll('.project-card')].filter(c => c.style.display === 'none');
         expect(hiddenCards.length).toBe(0);
-        expect(document.getElementById('project-filter-status').textContent).toContain('all 7 projects');
+        expect(document.getElementById('project-filter-status').textContent).toContain('all 4 projects');
     });
 });
 

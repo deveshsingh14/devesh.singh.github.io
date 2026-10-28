@@ -5,48 +5,44 @@ export function initTopology() {
 
     if (topoMap && topoLines && topoDrawer) {
         const TOPOLOGY_DATA = [
-            { id: 'aws', label: 'AWS', category: 'hub', years: '2+ yrs', achievements: [
-                'Manage EC2/EKS/S3/IAM across HotelKey production infrastructure.',
-                'Automated large-scale data injection with SQL sets on managed databases.',
-                'Deployed KServe/Seldon Core model-serving workloads on an AWS EKS cluster.'
-            ], projects: ['project-mlops-serving', 'project-gitops-k8s'] },
-            { id: 'docker', label: 'Docker', category: 'containers', years: '3+ yrs', achievements: [
-                'Containerized services for consistent builds across every environment.',
-                'Authored multi-stage Dockerfiles to shrink image size and build time.'
-            ], projects: ['project-mlops-serving'] },
-            { id: 'kubernetes', label: 'Kubernetes', category: 'containers', years: '2+ yrs', achievements: [
-                'Ran declarative GitOps deployments across a Kubernetes platform.',
-                'Deployed ML model-serving workloads on AWS EKS.'
-            ], projects: ['project-gitops-k8s', 'project-mlops-serving'] },
-            { id: 'terraform', label: 'Terraform', category: 'iac', years: '2+ yrs', achievements: [
-                'Wrote infrastructure-as-code workflows that cut manual ops overhead.',
-                'Provisioned reproducible environments for the GitOps Kubernetes platform.'
-            ], projects: ['project-gitops-k8s'] },
-            { id: 'jenkins', label: 'Jenkins', category: 'cicd', years: '1+ yr', achievements: [
-                'Converted manual configuration steps into stable Jenkins jobs.',
-                'Designed a regex-based role/group access matrix for Jenkins.',
-                'Built an MCP server exposing Jenkins pipeline operations to an LLM agent.'
+            { id: 'aws', label: 'AWS', category: 'hub', context: 'Used daily at HotelKey', achievements: [
+                'Handle deployments, server operations, security and health checks on AWS at HotelKey.',
+                'Completed HotelKey\'s internal AWS training: EC2, VPC, S3, RDS, IAM, CloudWatch and more.'
+            ], projects: [] },
+            { id: 'docker', label: 'Docker', category: 'containers', context: 'Used daily at HotelKey', achievements: [
+                'Run containerized cron and scheduled jobs.'
+            ], projects: [] },
+            { id: 'kubernetes', label: 'Kubernetes', category: 'containers', context: 'Used daily at HotelKey', achievements: [
+                'Manage clusters, environment configuration and workloads.',
+                'Tail pod logs for live troubleshooting.'
+            ], projects: [] },
+            { id: 'terraform', label: 'Terraform', category: 'iac', context: 'Used at HotelKey (DevOps)', achievements: [
+                'Prepare and review Terraform plans for infrastructure changes.'
+            ], projects: [] },
+            { id: 'jenkins', label: 'Jenkins', category: 'cicd', context: 'Core tool since 2025', achievements: [
+                'Redesigned the Jenkins RBAC model: 70+ roles, 1,000+ users, least-privilege regex.',
+                'Built a Python engine behind all read-only database jobs across environments.',
+                'Built an MCP server exposing Jenkins operations to an LLM agent.'
             ], projects: ['project-mcp-jenkins'] },
-            { id: 'argocd', label: 'ArgoCD', category: 'cicd', years: '1+ yr', achievements: [
-                'Ran automated, declarative deployments via ArgoCD.',
-                'Cut deployment inconsistencies through GitOps workflows.'
-            ], projects: ['project-gitops-k8s'] },
-            { id: 'python', label: 'Python', category: 'lang', years: '4+ yrs', achievements: [
-                'Built automation, REST integrations, and Bitbucket diff-analyzers.',
-                'Developed Playwright-based browser automation and self-healing UI tests.',
-                'Trained deep learning models for satellite/radar data at ISRO.'
+            { id: 'argocd', label: 'ArgoCD', category: 'cicd', context: 'Used at HotelKey (DevOps)', achievements: [
+                'Support GitOps deployments with ArgoCD.'
+            ], projects: [] },
+            { id: 'python', label: 'Python', category: 'lang', context: 'Primary language since college', achievements: [
+                'Built automation, a sharded-MySQL query engine and validation tools at HotelKey.',
+                'Processed weather radar data at ISRO; published an LSTM forecasting study.',
+                'Built Playwright automation and a self-healing UI test framework.'
             ], projects: ['project-self-healing-ui', 'project-stock-lstm'] },
-            { id: 'node-postgres', label: 'Node.js / PostgreSQL', category: 'app', years: '2+ yrs', achievements: [
-                'Built a full-stack B2B platform with Node.js, Express, and PostgreSQL.',
-                'Engineered a custom ETL pipeline for bulk CSV uploads with strict RBAC.'
+            { id: 'node-postgres', label: 'Node.js / PostgreSQL', category: 'app', context: 'Personal projects (2026)', achievements: [
+                'Built and run a live e-commerce platform with Node.js, Express and PostgreSQL.',
+                'Engineered a bulk CSV import pipeline with strict role-based access.'
             ], projects: ['project-rajeshwari'] },
-            { id: 'observability', label: 'Prometheus / Grafana', category: 'observability', years: '1+ yr', achievements: [
-                'Stood up full-stack observability with OpenTelemetry, Prometheus, and Grafana.',
-                'Integrated SonarQube for continuous security scanning.'
-            ], projects: ['project-devsecops-observability'] },
-            { id: 'playwright', label: 'Playwright', category: 'testing', years: '1+ yr', achievements: [
-                'Built a self-healing UI test framework with an LLM agent that repairs broken selectors.',
-                'Automated implementation-team QA workflows at HotelKey.'
+            { id: 'observability', label: 'Grafana / Sentry', category: 'observability', context: 'Used daily at HotelKey', achievements: [
+                'Monitor cloud operations with Grafana dashboards.',
+                'Run Sentry error monitoring and structured logging on a live app.'
+            ], projects: ['project-rajeshwari'] },
+            { id: 'playwright', label: 'Playwright', category: 'testing', context: 'Used since 2025', achievements: [
+                'Automated a nightly audit process and configuration flows at HotelKey.',
+                'Built a self-healing UI test framework with an LLM agent.'
             ], projects: ['project-self-healing-ui'] }
         ];
 
@@ -159,7 +155,7 @@ export function initTopology() {
             lastFocusedNode = topoMap.querySelector(`.topo-node[data-node-id="${nodeId}"]`);
             drawerCategory.textContent = CATEGORY_LABELS[node.category] || node.category;
             drawerTitle.textContent = node.label;
-            drawerYears.textContent = `${node.years} hands-on experience`;
+            drawerYears.textContent = node.context;
             drawerAchievements.textContent = '';
             node.achievements.forEach(a => {
                 const li = document.createElement('li');
@@ -168,14 +164,24 @@ export function initTopology() {
             });
 
             drawerProjects.textContent = '';
-            node.projects.forEach(pid => {
-                const li = document.createElement('li');
-                const aEl = document.createElement('a');
-                aEl.href = `#${pid}`;
-                aEl.textContent = projectTitleCache[pid] || pid;
-                li.appendChild(aEl);
-                drawerProjects.appendChild(li);
-            });
+
+            const projectsHeading = drawerProjects.previousElementSibling;
+            if (node.projects.length === 0) {
+                projectsHeading.hidden = true;
+                drawerProjects.hidden = true;
+            } else {
+                projectsHeading.hidden = false;
+                drawerProjects.hidden = false;
+                node.projects.forEach(pid => {
+                    const li = document.createElement('li');
+                    const aEl = document.createElement('a');
+                    aEl.href = `#${pid}`;
+                    aEl.textContent = projectTitleCache[pid] || pid;
+                    li.appendChild(aEl);
+                    drawerProjects.appendChild(li);
+                });
+            }
+
             topoDrawer.hidden = false;
             drawerPanel.focus({ preventScroll: true });
             document.addEventListener('keydown', onDrawerKeydown);

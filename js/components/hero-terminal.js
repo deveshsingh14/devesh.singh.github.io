@@ -10,29 +10,29 @@ export function initHeroTerminal() {
     if (heroTermOutput && heroTermInput) {
         const PORTFOLIO_DATA = {
             skills: {
-                'Languages': ['Python', 'JavaScript/Node.js', 'SQL', 'Bash'],
-                'IaC & Containers': ['Docker', 'Kubernetes', 'Terraform', 'Helm'],
-                'CI/CD': ['Jenkins', 'ArgoCD', 'GitOps', 'Bitbucket Pipelines'],
-                'Cloud': ['AWS (EC2, EKS, S3, IAM)'],
-                'Observability': ['Prometheus', 'Grafana', 'OpenTelemetry', 'SonarQube']
+                'Languages': ['Python', 'JavaScript/Node.js', 'SQL', 'Bash', 'Groovy'],
+                'IaC & Containers': ['Docker', 'Kubernetes', 'Terraform'],
+                'CI/CD': ['Jenkins', 'ArgoCD', 'GitHub Actions', 'Bitbucket'],
+                'Cloud': ['AWS (EC2, S3, IAM, RDS, CloudWatch)'],
+                'Observability': ['Grafana', 'Sentry', 'CloudWatch']
             },
             experience: [
-                { dates: 'Jun 2025 – Present', title: 'DevOps Engineer', company: 'HotelKey India Pvt Ltd' },
-                { dates: 'Jun 2024 – Dec 2024', title: 'Research Intern', company: 'ISRO' },
-                { dates: 'May 2024 – Jun 2024', title: 'DL/NLP Intern', company: 'Codemate IT Services' }
+                { dates: 'Aug 2026 - Present', title: 'DevOps Engineer', company: 'HotelKey India Pvt Ltd' },
+                { dates: 'Dec 2025 - Jul 2026', title: 'Automation Engineer', company: 'HotelKey India Pvt Ltd' },
+                { dates: 'Jun 2025 - Dec 2025', title: 'Implementation Engineer', company: 'HotelKey India Pvt Ltd' },
+                { dates: 'Jun 2024 - Dec 2024', title: 'Research Intern', company: 'ISRO' },
+                { dates: 'May 2024 - Jun 2024', title: 'DL/NLP Intern', company: 'Codemate IT Services' }
             ],
             projects: [
-                { name: 'Rajeshwari B2B E-Commerce & Management Portal', stack: 'Node.js, PostgreSQL, Prisma' },
+                { name: 'Radha - Live E-Commerce Platform', stack: 'Node.js, PostgreSQL, Prisma, GitHub Actions' },
                 { name: 'MCP-Based AI Agent for Jenkins', stack: 'Python, MCP, Claude API' },
                 { name: 'Self-Healing UI Test Framework', stack: 'Playwright, LLM' },
-                { name: 'GitOps-Driven Kubernetes Platform', stack: 'Kubernetes, ArgoCD, Terraform' },
-                { name: 'AI/ML Model Serving Infrastructure', stack: 'AWS EKS, KServe, MLOps' },
-                { name: 'DevSecOps Pipeline & Observability Stack', stack: 'Prometheus, Grafana, SonarQube' }
+                { name: 'Candle Predict - LSTM Stock Forecasting (Published)', stack: 'Python, LSTM, XGBoost' }
             ],
             contact: {
                 email: 'devesh141singh@gmail.com',
                 github: 'https://github.com/deveshsingh14',
-                linkedin: 'https://www.linkedin.com/in/devesh-s-4ab189263'
+                linkedin: 'https://www.linkedin.com/in/devesh-singh-4ab189263'
             }
         };
 
