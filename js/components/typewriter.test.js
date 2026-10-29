@@ -30,17 +30,17 @@ describe('Typewriter Component', () => {
         initTypewriter();
 
         // Initially, the first call happens synchronously.
-        expect(typewriterElement.innerHTML).toBe('A');
+        expect(typewriterElement.textContent).toBe('A');
 
         // Advance by 100ms -> 'AW'
         jest.advanceTimersByTime(100);
-        expect(typewriterElement.innerHTML).toBe('AW');
+        expect(typewriterElement.textContent).toBe('AW');
 
         // Advance to full phrase 'AWS infrastructure.' (19 characters)
         // We already did 1 char sync and 1 char async (100ms)
         // 17 more chars = 1700ms
         jest.advanceTimersByTime(1700);
-        expect(typewriterElement.innerHTML).toBe('AWS infrastructure.');
+        expect(typewriterElement.textContent).toBe('AWS infrastructure.');
     });
 
     it('pauses and then deletes the phrase', () => {
@@ -48,19 +48,19 @@ describe('Typewriter Component', () => {
 
         // Advance time to full phrase
         jest.advanceTimersByTime(1800);
-        expect(typewriterElement.innerHTML).toBe('AWS infrastructure.');
+        expect(typewriterElement.textContent).toBe('AWS infrastructure.');
 
         // It should pause for 2000ms before deleting
         jest.advanceTimersByTime(1999);
-        expect(typewriterElement.innerHTML).toBe('AWS infrastructure.');
+        expect(typewriterElement.textContent).toBe('AWS infrastructure.');
 
         jest.advanceTimersByTime(1);
         // After 2000ms, it deletes 1 char
-        expect(typewriterElement.innerHTML).toBe('AWS infrastructure');
+        expect(typewriterElement.textContent).toBe('AWS infrastructure');
 
         // Advance to completely deleted (18 more chars * 50ms = 900ms)
         jest.advanceTimersByTime(900);
-        expect(typewriterElement.innerHTML).toBe('');
+        expect(typewriterElement.textContent).toBe('');
     });
 
     it('cycles to the next phrase after deleting', () => {
@@ -73,17 +73,17 @@ describe('Typewriter Component', () => {
         // Advance deletion
         jest.advanceTimersByTime(900);
 
-        expect(typewriterElement.innerHTML).toBe('');
+        expect(typewriterElement.textContent).toBe('');
 
         // Pause before next phrase is 500ms
         jest.advanceTimersByTime(499);
-        expect(typewriterElement.innerHTML).toBe('');
+        expect(typewriterElement.textContent).toBe('');
 
         jest.advanceTimersByTime(1);
         // Starts typing the next phrase
-        expect(typewriterElement.innerHTML).toBe('f'); // First letter of "full-stack Node.js apps."
+        expect(typewriterElement.textContent).toBe('f'); // First letter of "full-stack Node.js apps."
 
         jest.advanceTimersByTime(100);
-        expect(typewriterElement.innerHTML).toBe('fu');
+        expect(typewriterElement.textContent).toBe('fu');
     });
 });

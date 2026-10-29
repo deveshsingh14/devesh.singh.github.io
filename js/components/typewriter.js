@@ -14,7 +14,7 @@ export function initTypewriter() {
             txt = fullTxt.substring(0, txt.length + 1);
         }
 
-        if(typewriterElement) typewriterElement.innerHTML = txt;
+        if(typewriterElement) typewriterElement.textContent = txt;
 
         let typeSpeed = 100;
 
