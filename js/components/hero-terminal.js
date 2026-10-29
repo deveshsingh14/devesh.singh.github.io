@@ -127,10 +127,11 @@ export function initHeroTerminal() {
             contact: buildContactLines
         };
 
+        const SHAKE_ANIMATION_DURATION_MS = 450;
         const triggerShake = () => {
             if (!heroTerminalEl || prefersReducedMotion()) return;
             heroTerminalEl.classList.add('shake');
-            setTimeout(() => heroTerminalEl.classList.remove('shake'), 450);
+            setTimeout(() => heroTerminalEl.classList.remove('shake'), SHAKE_ANIMATION_DURATION_MS);
         };
 
         const updateGhost = () => {
