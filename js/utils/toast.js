@@ -3,15 +3,7 @@ export function showToast(message, type = 'success') {
     if (!toastContainer) {
         toastContainer = document.createElement('div');
         toastContainer.id = 'toast-container';
-        toastContainer.style.cssText = `
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            z-index: 10000;
-        `;
+        toastContainer.className = 'toast-container';
         document.body.appendChild(toastContainer);
     }
 
