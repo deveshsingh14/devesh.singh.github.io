@@ -112,4 +112,32 @@ describe('theme toggling', () => {
             expect.any(Error)
         );
     });
+
+    it('handles restricted localStorage access (e.g. SecurityError)', () => {
+        const error = new Error('SecurityError: localStorage is restricted');
+
+        Object.defineProperty(global, 'localStorage', {
+            get: () => { throw error; },
+            configurable: true
+        });
+
+        initTheme();
+        const themeToggle = document.getElementById('theme-toggle');
+
+        // Should not throw and still toggle theme
+        expect(() => themeToggle.click()).not.toThrow();
+        expect(document.documentElement.getAttribute('data-theme')).toBe('light');
+
+        expect(console.warn).toHaveBeenCalledWith(
+            'localStorage is unavailable; theme preference will not persist.',
+            error
+        );
+
+        // originalLocalStorage is restored in afterEach which runs after this test, so no explicit finally is needed.
+    });
+
+    it('does nothing if theme toggle button is missing', () => {
+        document.body.innerHTML = ''; // Remove the button
+        expect(() => initTheme()).not.toThrow();
+    });
 });
