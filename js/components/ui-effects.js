@@ -45,6 +45,8 @@ export function initUIEffects() {
         // Update cache on resize to handle layout changes
         window.addEventListener('resize', throttle(updateLayoutCache));
 
+        let activeSectionId = '';
+
         window.addEventListener('scroll', throttle(() => {
             const scrollY = window.scrollY;
 
@@ -72,24 +74,27 @@ export function initUIEffects() {
                 }
             });
 
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                link.removeAttribute('aria-current');
-                if (link.getAttribute('href').includes(current)) {
-                    link.classList.add('active');
-                    link.setAttribute('aria-current', 'true');
-                }
-            });
+            if (current !== activeSectionId) {
+                activeSectionId = current;
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    link.removeAttribute('aria-current');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                        link.setAttribute('aria-current', 'true');
+                    }
+                });
 
-            // Sync the scroll-progress rail's dots/connectors to the same current section
-            const currentRailIndex = RAIL_SECTION_ORDER.indexOf(current);
-            railDots.forEach((dot, i) => {
-                dot.classList.toggle('active', i === currentRailIndex);
-                dot.classList.toggle('visited', i < currentRailIndex);
-            });
-            railConnectors.forEach((connector, i) => {
-                connector.classList.toggle('filled', i < currentRailIndex);
-            });
+                // Sync the scroll-progress rail's dots/connectors to the same current section
+                const currentRailIndex = RAIL_SECTION_ORDER.indexOf(current);
+                railDots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === currentRailIndex);
+                    dot.classList.toggle('visited', i < currentRailIndex);
+                });
+                railConnectors.forEach((connector, i) => {
+                    connector.classList.toggle('filled', i < currentRailIndex);
+                });
+            }
         }), { passive: true });
     }
 
