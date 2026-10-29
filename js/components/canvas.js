@@ -9,8 +9,10 @@ export function initCanvas() {
         let particles = [];
         let mouseX = null;
         let mouseY = null;
-        const REPEL_RADIUS = 90;
-        const CONNECT_RADIUS = 200;
+        const CONFIG = {
+            REPEL_RADIUS: 90,
+            CONNECT_RADIUS: 200
+        };
         let canvasOffsetX = 0;
         let canvasOffsetY = 0;
 
@@ -56,11 +58,11 @@ export function initCanvas() {
                     const dx = this.x - mouseX;
                     const dy = this.y - mouseY;
                     const distSq = dx * dx + dy * dy;
-                    if (distSq < REPEL_RADIUS * REPEL_RADIUS && distSq > 0.01) {
+                    if (distSq < CONFIG.REPEL_RADIUS * CONFIG.REPEL_RADIUS && distSq > 0.01) {
                         const absX = dx < 0 ? -dx : dx;
                         const absY = dy < 0 ? -dy : dy;
                         const dist = absX > absY ? absX + 0.428 * absY : absY + 0.428 * absX;
-                        const force = (REPEL_RADIUS - dist) / REPEL_RADIUS;
+                        const force = (CONFIG.REPEL_RADIUS - dist) / CONFIG.REPEL_RADIUS;
                         this.x += (dx / dist) * force * 1.8;
                         this.y += (dy / dist) * force * 1.8;
                     }
@@ -102,11 +104,11 @@ export function initCanvas() {
                     const mdx = pix - mouseX;
                     const mdy = piy - mouseY;
                     const mDistSq = mdx * mdx + mdy * mdy;
-                    if (mDistSq < CONNECT_RADIUS * CONNECT_RADIUS) {
+                    if (mDistSq < CONFIG.CONNECT_RADIUS * CONFIG.CONNECT_RADIUS) {
                         ctx.beginPath();
                         ctx.moveTo(pix, piy);
                         ctx.lineTo(mouseX, mouseY);
-                        ctx.globalAlpha = 0.65 * (1 - mDistSq / (CONNECT_RADIUS * CONNECT_RADIUS));
+                        ctx.globalAlpha = 0.65 * (1 - mDistSq / (CONFIG.CONNECT_RADIUS * CONFIG.CONNECT_RADIUS));
                         ctx.lineWidth = 1;
                         ctx.stroke();
                     }
