@@ -486,11 +486,11 @@ function initPasswordGenerator() {
             const randomValues = new Uint32Array(numWords);
             window.crypto.getRandomValues(randomValues);
             const limit = MAX_UINT32 - (MAX_UINT32 % wordlist.length);
+            const single = new Uint32Array(1);
 
             for (let i = 0; i < numWords; i++) {
                 let val = randomValues[i];
                 while (val >= limit) {
-                    const single = new Uint32Array(1);
                     window.crypto.getRandomValues(single);
                     val = single[0];
                 }
