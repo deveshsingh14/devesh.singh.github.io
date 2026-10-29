@@ -67,12 +67,22 @@ export function initUIEffects() {
             }
 
             // Scroll spy logic
-            let current = '';
-            sectionCache.forEach(section => {
-                if (scrollY >= (section.top - section.height / 3)) {
-                    current = section.id;
-                }
-            });
+            // Check if still within current active section bounds (with 33% threshold)
+            let current = activeSectionId;
+            const activeSection = current ? sectionCache.find(s => s.id === current) : null;
+            const nextSection = activeSection ? sectionCache[sectionCache.indexOf(activeSection) + 1] : null;
+
+            const isAboveActive = activeSection && scrollY < (activeSection.top - activeSection.height / 3);
+            const isBelowActive = nextSection && scrollY >= (nextSection.top - nextSection.height / 3);
+
+            if (!activeSection || isAboveActive || isBelowActive) {
+                current = '';
+                sectionCache.forEach(section => {
+                    if (scrollY >= (section.top - section.height / 3)) {
+                        current = section.id;
+                    }
+                });
+            }
 
             if (current !== activeSectionId) {
                 activeSectionId = current;
