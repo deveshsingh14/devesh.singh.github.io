@@ -114,7 +114,7 @@ const simulateFixPipeline = (input, container, onDone) => {
     typeLines(lines, container, onDone);
 };
 
-const simulateCidrCalc = (input, container, onDone) => {
+export const simulateCidrCalc = (input, container, onDone) => {
     if (!input) input = '10.0.0.0/24';
 
     let lines = [
