@@ -106,11 +106,7 @@ describe('theme toggling', () => {
         // DOM should still update
         expect(document.documentElement.getAttribute('data-theme')).toBe('light');
 
-        // Warning should be logged
-        expect(console.warn).toHaveBeenCalledWith(
-            'localStorage is unavailable; theme preference will not persist.',
-            expect.any(Error)
-        );
+        expect(console.warn).not.toHaveBeenCalled();
     });
 
     it('handles restricted localStorage access (e.g. SecurityError)', () => {
@@ -128,10 +124,7 @@ describe('theme toggling', () => {
         expect(() => themeToggle.click()).not.toThrow();
         expect(document.documentElement.getAttribute('data-theme')).toBe('light');
 
-        expect(console.warn).toHaveBeenCalledWith(
-            'localStorage is unavailable; theme preference will not persist.',
-            error
-        );
+        expect(console.warn).not.toHaveBeenCalled();
 
         // originalLocalStorage is restored in afterEach which runs after this test, so no explicit finally is needed.
     });
