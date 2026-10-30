@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals';
-import { createPasswordString, initTools } from './tools.js';
+import { createPasswordString, initTools, simulateCidrCalc } from './tools.js';
 
 describe('Clipboard Error Handling', () => {
     it('handles clipboard error', async () => {
@@ -242,5 +242,36 @@ describe('DOCX to PDF Conversion Error Handling', () => {
             consoleErrorMock.mockRestore();
             document.body.innerHTML = '';
         }
+    });
+});
+
+describe('simulateCidrCalc', () => {
+    beforeEach(() => {
+        global.DOMPurify = { sanitize: jest.fn(html => {
+            const template = document.createElement('template');
+            template.innerHTML = html;
+            return template.content;
+        }) };
+        global.requestAnimationFrame = jest.fn(cb => setTimeout(cb, 0));
+        jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+        delete global.DOMPurify;
+        delete global.requestAnimationFrame;
+        jest.useRealTimers();
+    });
+
+    it('handles Invalid IP error when less than 4 octets', () => {
+        const container = document.createElement('div');
+        const onDone = jest.fn();
+
+        simulateCidrCalc('10.0.0/24', container, onDone);
+
+        // Run all timers to complete typeLines
+        jest.runAllTimers();
+
+        // Check the container's output for the error message
+        expect(container.innerHTML).toContain('Error: Invalid CIDR format');
     });
 });
