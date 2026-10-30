@@ -18,8 +18,7 @@ export function initTheme() {
             applyTheme(nextTheme);
             try {
                 localStorage.setItem('theme', nextTheme);
-            } catch (e) {
-                console.warn('localStorage is unavailable; theme preference will not persist.', e);
+            } catch {
             }
         });
 
