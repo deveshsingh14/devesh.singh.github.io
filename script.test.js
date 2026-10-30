@@ -293,6 +293,24 @@ describe('Tools - CIDR Calculator', () => {
         const dynamicOutput = document.getElementById('dynamic-output');
         expect(dynamicOutput.textContent).toContain('Error: Invalid CIDR format. Please use x.x.x.x/y format.');
     });
+
+    it('displays an error message for a missing CIDR slash', () => {
+        jest.useFakeTimers();
+
+        const cidrCalcItem = document.querySelector('.script-item[data-script="cidr-calc"]');
+        cidrCalcItem.click();
+
+        const input = document.getElementById('tool-input');
+        input.value = '192.168.1.1';
+
+        const runBtn = document.getElementById('run-btn');
+        runBtn.click();
+
+        jest.advanceTimersByTime(3000);
+
+        const dynamicOutput = document.getElementById('dynamic-output');
+        expect(dynamicOutput.textContent).toContain('Error: Invalid CIDR format. Please use x.x.x.x/y format.');
+    });
 });
 
 describe('Pipeline Visualizer', () => {
