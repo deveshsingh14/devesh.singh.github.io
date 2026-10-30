@@ -1,4 +1,7 @@
 import { showToast } from '../utils/toast.js';
+
+const RESET_TIMEOUT_MS = 3000;
+
 export function initContactForm() {
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
@@ -75,7 +78,7 @@ export function initContactForm() {
                     submitBtn.style.backgroundColor = '';
                     submitBtn.style.color = '';
                     submitBtn.style.borderColor = '';
-                }, 3000);
+                }, RESET_TIMEOUT_MS);
             }
         });
     }
