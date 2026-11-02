@@ -24,7 +24,7 @@ export function initHeroTerminal() {
                 { dates: 'Jul 2023 - Aug 2023', title: 'NLP Intern', company: 'Codemate IT Services' }
             ],
             projects: [
-                { name: 'Radha - Live E-Commerce Platform', stack: 'Node.js, PostgreSQL, Prisma, GitHub Actions' },
+                { name: 'Radha - Live E-Commerce PWA', stack: 'Node.js, PostgreSQL, Prisma, PWA, Web Push' },
                 { name: 'MCP-Based AI Agent for Jenkins', stack: 'Python, MCP, Claude API' },
                 { name: 'Self-Healing UI Test Framework', stack: 'Playwright, LLM' },
                 { name: 'Candle Predict - LSTM Stock Forecasting (Published)', stack: 'Python, LSTM, XGBoost' }
