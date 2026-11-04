@@ -149,6 +149,12 @@
                     </ul>
                 </div>
 
+                <div class="hero-side">
+                <div id="hero-hologram" class="hero-hologram" role="img" aria-label="DSB logo as an animated 3D hologram">
+                    <div class="hero-hologram-fallback" hidden>
+                        <img src="assets/nav-logo.png" alt="" width="218" height="96">
+                    </div>
+                </div>
                 <div class="hero-terminal" role="region" aria-label="Interactive portfolio terminal">
                     <div class="terminal-topbar">
                         <div class="window-controls" aria-hidden="true">
@@ -169,6 +175,7 @@
                         </div>
                     </div>
                 </div>
+                </div>
             </div>
         </div>
     </header>
@@ -180,7 +187,7 @@
             <div class="about-content">
                 <div class="text-block stagger-children">
                     <p>
-                        Back in 2021, I started my journey in Computer Science and Engineering at G.H. Raisoni College, Nagpur. Since then, I've built software and infrastructure in very different environments: improving Doppler weather radar data quality with Python as a research intern at <a href="https://www.isro.gov.in/SpaceApplicationsCentre.html" target="_blank" rel="noreferrer" class="highlight-link">ISRO's Space Applications Centre</a>, and growing from Implementation Engineer to DevOps Engineer at <a href="https://hotelkeyapp.com/" target="_blank" rel="noreferrer" class="highlight-link">HotelKey</a> in just over a year.
+                        Back in 2021, I started my journey in Computer Science and Engineering at G.H. Raisoni College, Nagpur. Since then, I've built software and infrastructure in very different environments: improving Doppler weather radar data quality with Python as a research intern at <a href="https://www.isro.gov.in/SpaceApplicationsCentre.html" target="_blank" rel="noreferrer" class="highlight-link">ISRO's Space Applications Centre</a>, and growing from Implementation Specialist to DevOps Engineer at <a href="https://hotelkeyapp.com/" target="_blank" rel="noreferrer" class="highlight-link">HotelKey</a> in just over a year.
                     </p>
                     <p>
                         Today I work on AWS deployments, Kubernetes, Terraform and a Jenkins estate of ~500 jobs. On the side I run a live e-commerce platform as its sole developer, and I build LLM tooling with the Model Context Protocol (MCP) to make DevOps operations smarter.
@@ -262,7 +269,7 @@
                             <h3>DevOps Engineer <span class="company">@ HotelKey India Pvt Ltd</span></h3>
                             <p class="job-desc"><strong>DevOps Engineer</strong> (Aug 2026 to Present): Handle production and non-prod deployments, database and environment changes, and Terraform plans on AWS. Work daily with Kubernetes (cluster management, configuration, log tailing), Docker and Grafana, and administer a Jenkins estate of ~500 jobs running ~3,000 builds a day.</p>
                             <p class="job-desc"><strong>Automation Engineer, Intelligent Automation</strong> (Dec 2025 to Jul 2026): Redesigned the Jenkins role-based access model (70+ roles, 1,000+ users) with least-privilege regex patterns. Built a centralized Python database-execution engine for a sharded, multi-tenant MySQL fleet with read-only isolation and PII guardrails. Turned manual client go-live work into one-click Jenkins pipelines, including 456 report schedulers automated across 24 properties.</p>
-                            <p class="job-desc"><strong>Implementation Engineer</strong> (Jun 2025 to Dec 2025): Automated manual configuration work with Python, SQL, REST API integrations and Playwright, cutting turnaround from weeks to hours, and hardened it into Jenkins jobs. Moved to the new Intelligent Automation team within six months.</p>
+                            <p class="job-desc"><strong>Implementation Specialist</strong> (Jun 2025 to Dec 2025): Automated manual configuration work with Python, SQL, REST API integrations and Playwright, cutting turnaround from weeks to hours, and hardened it into Jenkins jobs. Moved to the new Intelligent Automation team within six months.</p>
                             <ul class="skill-tags">
                                 <li>Python</li>
                                 <li>SQL</li>
@@ -700,6 +707,14 @@
         </div>
     </footer>
 
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
     <script type="module" src="js/main.js"></script>
 </body>
 </html>
