@@ -3,6 +3,7 @@ import './components/command-palette.js';
 import './components/ui-effects.js';
 import './components/typewriter.js';
 import './components/canvas.js';
+import './components/hero-hologram.js';
 import './components/experience.js';
 import './components/projects.js';
 import './components/hero-terminal.js';

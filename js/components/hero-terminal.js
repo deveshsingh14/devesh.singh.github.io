@@ -19,7 +19,7 @@ export function initHeroTerminal() {
             experience: [
                 { dates: 'Aug 2026 - Present', title: 'DevOps Engineer', company: 'HotelKey India Pvt Ltd' },
                 { dates: 'Dec 2025 - Jul 2026', title: 'Automation Engineer', company: 'HotelKey India Pvt Ltd' },
-                { dates: 'Jun 2025 - Dec 2025', title: 'Implementation Engineer', company: 'HotelKey India Pvt Ltd' },
+                { dates: 'Jun 2025 - Dec 2025', title: 'Implementation Specialist', company: 'HotelKey India Pvt Ltd' },
                 { dates: 'Jun 2024 - Dec 2024', title: 'Research Intern', company: 'ISRO' },
                 { dates: 'Jul 2023 - Aug 2023', title: 'NLP Intern', company: 'Codemate IT Services' }
             ],
