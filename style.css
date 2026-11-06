@@ -138,6 +138,11 @@
   padding: 0;
 }
 
+/* Safety net: no sideways page scroll on phones from wide children. */
+html {
+  overflow-x: clip;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -795,12 +800,10 @@ ul, ol {
 
 @media (max-width: 900px) {
   .hero {
-    /* The hero-grid stacks identity + terminal on narrow screens, which can
-       make the hero taller than 100vh. Centering would then push the top of
-       the content above the viewport, behind the fixed nav. Flow from the
-       top instead, with enough padding to clear the fixed nav. */
+    /* On narrow screens the hero stack can be taller than 100vh. Centering
+       would then push the top of the content behind the fixed nav, so flow
+       from the top; .hero-stack's own padding clears the nav. */
     justify-content: flex-start;
-    padding: 110px 0 60px;
   }
 }
 
@@ -877,37 +880,100 @@ ul, ol {
   50% { opacity: 0; }
 }
 
+/* Centered hero: hologram on top, then name and headline on one line each. */
+.hero-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 96px 0 48px;
+}
+
 .hero-intro {
   color: var(--teal);
   font-family: var(--font-mono);
-  margin-bottom: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .hero-title {
-  font-size: clamp(40px, 8vw, 80px);
+  font-size: clamp(28px, 8vw, 76px);
   font-weight: 800;
   color: var(--lightest-slate);
-  line-height: 1.1;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
 }
 
 .hero-subtitle {
-  font-size: clamp(30px, 6vw, 60px);
+  font-size: clamp(18px, 4.8vw, 40px);
   font-weight: 700;
   color: var(--slate);
-  line-height: 1.1;
-  margin-top: 0.5rem;
+  line-height: 1.2;
+  margin-top: 0.75rem;
+  white-space: nowrap;
+}
+
+/* Fixed-width slot so the centered line does not shift while typing. */
+.hero-typed {
+  display: inline-block;
+  min-width: 12.6em;
+  text-align: left;
+  color: var(--lightest-slate);
 }
 
 .hero-desc {
-  margin-top: 20px;
-  max-width: 540px;
+  margin-top: 1.25rem;
+  max-width: 560px;
   font-size: 1.125rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.hero-btn {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  padding: 0.8rem 1.4rem;
+  border-radius: 6px;
+  border: 1px solid var(--teal);
+  transition: var(--transition);
+}
+
+.hero-btn-primary {
+  background: var(--teal);
+  color: var(--navy);
+}
+
+.hero-btn-primary:hover,
+.hero-btn-primary:focus-visible {
+  box-shadow: var(--glow-teal);
+  transform: translateY(-2px);
+}
+
+.hero-btn-ghost {
+  color: var(--teal);
+  background: transparent;
+}
+
+.hero-btn-ghost:hover,
+.hero-btn-ghost:focus-visible {
+  background: var(--teal-tint);
+  transform: translateY(-2px);
 }
 
 .hero-socials {
   display: flex;
+  justify-content: center;
   gap: 1.5rem;
-  margin-top: 2.5rem;
+  margin-top: 1.75rem;
 }
 
 .hero-socials a {
@@ -926,31 +992,14 @@ ul, ol {
 }
 
 /* =========================================
-   Hero Terminal Panel
+   Hero Hologram + Portfolio Terminal
+   The terminal lives in the Experience section (.career-terminal) but
+   keeps its original hero-* class names, which hero-terminal.js uses.
 ========================================= */
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 3rem;
-  align-items: center;
-}
-
-@media (max-width: 900px) {
-  .hero-grid {
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
-  }
-}
-
-.hero-side {
-  display: grid;
-  gap: 1.25rem;
-  min-width: 0;
-}
-
 .hero-hologram {
   position: relative;
-  height: clamp(190px, 28vh, 270px);
+  width: min(760px, 100%);
+  height: clamp(220px, 36vh, 380px);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
@@ -977,6 +1026,22 @@ ul, ol {
   height: auto;
   /* The logo file is blue; shift it to the site orange. */
   filter: hue-rotate(165deg) saturate(1.25);
+}
+
+.career-terminal {
+  max-width: 860px;
+  margin: 4.5rem auto 0;
+}
+
+.career-terminal-lead {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--slate);
+  margin-bottom: 1rem;
+}
+
+.career-terminal-lead code {
+  color: var(--teal);
 }
 
 .hero-terminal {
