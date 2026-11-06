@@ -4,6 +4,7 @@ import './components/ui-effects.js';
 import './components/typewriter.js';
 import './components/canvas.js';
 import './components/hero-hologram.js';
+import './components/about-crew.js';
 import './components/experience.js';
 import './components/projects.js';
 import './components/hero-terminal.js';
