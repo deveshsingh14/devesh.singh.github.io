@@ -2507,6 +2507,210 @@ select.form-input {
 }
 
 /* =========================================
+   About: Cursor Crew
+   The section starts as a blueprint while a crew of cursors builds it
+   (js/components/about-crew.js), then the crew mirrors the visitor's
+   cursor. Every hidden state is scoped to .crew-pending, so the section
+   always ends fully visible.
+========================================= */
+#about.crew-on {
+  position: relative;
+  overflow: hidden;
+}
+
+#about.crew-on::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1s ease;
+  background-image: linear-gradient(var(--teal-tint) 1px, transparent 1px), linear-gradient(90deg, var(--teal-tint) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+#about.crew-pending::before {
+  opacity: 1;
+}
+
+.crew-title::after {
+  content: "|";
+  color: var(--teal);
+  margin-left: 2px;
+  animation: desk-cursor-blink 1s step-end infinite;
+}
+
+.crew-title.done::after {
+  display: none;
+}
+
+.crew-blk,
+.crew-art {
+  position: relative;
+}
+
+.crew-blk::before,
+.crew-art::before {
+  content: attr(data-tag);
+  position: absolute;
+  top: -18px;
+  left: 0;
+  font: 11px var(--font-mono);
+  color: var(--teal);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.crew-blk::after,
+.crew-art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px dashed var(--teal);
+  border-radius: 4px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.crew-blk::after {
+  background: repeating-linear-gradient(transparent 0 calc(1.6em - 7px), var(--lightest-navy) calc(1.6em - 7px) 1.6em);
+}
+
+.crew-pending .crew-blk:not(.done)::before,
+.crew-pending .crew-blk:not(.done)::after,
+.crew-pending .crew-art:not(.done)::before,
+.crew-pending .crew-art:not(.done)::after {
+  opacity: 0.6;
+}
+
+.crew-pending .crew-blk p {
+  clip-path: inset(0 calc(100% - var(--crew-r, 0%)) 0 0);
+}
+
+.crew-pending .highlight-link:not(.crew-lit) {
+  color: inherit;
+}
+
+.crew-pending .crew-part {
+  opacity: 0;
+  transform: translateY(6px);
+  transform-box: fill-box;
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+.crew-pending .crew-part.on {
+  opacity: 1;
+  transform: none;
+}
+
+.crew-stamp {
+  position: absolute;
+  top: 104px;
+  right: 24px;
+  font: 12px var(--font-mono);
+  color: var(--teal);
+  border: 1px solid var(--teal);
+  border-radius: 4px;
+  padding: 3px 8px;
+  opacity: 0;
+  transform: rotate(-4deg) scale(1.3);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+}
+
+.crew-stamp.on {
+  opacity: 1;
+  transform: rotate(-4deg) scale(1);
+}
+
+#about.crew-playing,
+#about.crew-playing * {
+  cursor: none !important;
+}
+
+.crew-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.crew-ptr {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+  height: 24px;
+  will-change: transform;
+  transition: opacity 0.35s ease;
+}
+
+.crew-ptr svg {
+  width: 24px;
+  height: 24px;
+  overflow: visible;
+}
+
+.crew-ptr path {
+  fill: var(--teal);
+  stroke: var(--navy);
+  stroke-width: 1.4;
+  transition: fill 0.6s ease, stroke 0.6s ease;
+}
+
+.crew-ptr.plain path {
+  fill: #111111;
+  stroke: #ffffff;
+}
+
+.crew-name {
+  position: absolute;
+  left: 16px;
+  top: 18px;
+  font: 500 11px var(--font-mono);
+  color: #ffffff;
+  background: var(--teal);
+  padding: 1px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+  transition: opacity 0.4s ease;
+}
+
+.crew-ptr.plain .crew-name {
+  opacity: 0;
+}
+
+.crew-ripple {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  margin: -15px 0 0 -15px;
+  border: 2px solid var(--teal);
+  border-radius: 50%;
+  animation: crew-ripple 0.5s forwards;
+}
+
+.crew-tick {
+  position: absolute;
+  font: 600 13px var(--font-mono);
+  color: var(--teal);
+  animation: crew-tick 1.2s forwards;
+}
+
+@keyframes crew-ripple {
+  from { transform: scale(0.2); opacity: 1; }
+  to { transform: scale(1.4); opacity: 0; }
+}
+
+@keyframes crew-tick {
+  0% { opacity: 0; transform: scale(0.4); }
+  20% { opacity: 1; transform: scale(1); }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+
+/* =========================================
    Animations
 ========================================= */
 .reveal {
